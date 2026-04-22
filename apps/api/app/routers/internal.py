@@ -42,3 +42,17 @@ async def cron_reminders(
         enqueued += 1
 
     return {"enqueued": enqueued}
+
+
+@router.get("/cron/digest")
+async def cron_digest(
+    _: None = Depends(_verify_cron_secret),
+):
+    from app.database_sync import SyncSessionLocal
+    from app.services.digest_service import send_weekly_digest_sync
+    db = SyncSessionLocal()
+    try:
+        sent = send_weekly_digest_sync(db)
+        return {"sent": sent}
+    finally:
+        db.close()
