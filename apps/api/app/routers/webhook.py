@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+import json
 import logging
 
 from fastapi import APIRouter, Header, HTTPException, Request
@@ -29,7 +30,7 @@ async def sendblue_webhook(
     if settings.sendblue_webhook_secret and not _verify_hmac(body, x_sendblue_signature):
         raise HTTPException(status_code=401, detail="Invalid signature")
 
-    payload = await request.json()
+    payload = json.loads(body)
     logger.info("Sendblue webhook: %s", payload)
 
     from_number = payload.get("number") or payload.get("from_number", "")
