@@ -1,19 +1,13 @@
 import httpx
 from app.config import settings
 
-SENDBLUE_BASE = "https://api.sendblue.co/api"
-
 
 async def send_message(to_number: str, content: str) -> dict:
     async with httpx.AsyncClient() as client:
         resp = await client.post(
-            f"{SENDBLUE_BASE}/send-message",
-            headers={
-                "sb-api-key-id": settings.sendblue_api_key,
-                "sb-api-secret-key": settings.sendblue_api_secret,
-                "Content-Type": "application/json",
-            },
-            json={"number": to_number, "content": content},
+            f"{settings.bluebubbles_url}/api/v1/message/text",
+            params={"guid": settings.bluebubbles_password},
+            json={"chatGuid": f"any;-;{to_number}", "message": content},
             timeout=30,
         )
         resp.raise_for_status()

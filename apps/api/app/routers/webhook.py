@@ -1,5 +1,3 @@
-import hashlib
-import hmac
 import json
 import logging
 import re
@@ -7,7 +5,7 @@ import uuid
 from datetime import datetime, timezone
 
 import dateparser
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
 from app.config import settings
@@ -23,20 +21,6 @@ URL_PATTERN = re.compile(
     r"(?:tiktok\.com|vm\.tiktok\.com|vt\.tiktok\.com|instagram\.com)"
     r"\S+"
 )
-
-CATEGORY_SLUGS = {
-    "professional", "things-to-do", "places-to-eat", "coding-projects",
-    "shopping", "fitness", "recipes", "other",
-}
-
-
-def _verify_hmac(body: bytes, signature: str) -> bool:
-    expected = hmac.new(
-        settings.sendblue_webhook_secret.encode(),
-        body,
-        hashlib.sha256,
-    ).hexdigest()
-    return hmac.compare_digest(expected, signature)
 
 
 async def _get_or_create_user(db: AsyncSession, phone: str) -> User:
@@ -157,22 +141,26 @@ async def _handle_category_override(db: AsyncSession, user: User, category_slug:
     await sendblue.send_message(phone, f"Updated category to {cat.label}.")
 
 
-@router.post("/webhook/sendblue")
-async def sendblue_webhook(
+@router.post("/webhook/bluebubbles")
+async def bluebubbles_webhook(
     request: Request,
     db: AsyncSession = Depends(get_db),
-    x_sendblue_signature: str = Header(default=""),
 ):
-    body = await request.body()
+    payload = await request.json()
+    logger.info("BlueBubbles webhook: type=%s", payload.get("type"))
 
-    if settings.sendblue_webhook_secret and not _verify_hmac(body, x_sendblue_signature):
-        raise HTTPException(status_code=401, detail="Invalid signature")
+    # Only process incoming messages
+    if payload.get("type") != "new-message":
+        return {"ok": True}
 
-    payload = json.loads(body)
-    logger.info("Sendblue webhook: %s", payload)
+    data = payload.get("data", {})
 
-    from_number = payload.get("number") or payload.get("from_number", "")
-    content = (payload.get("content") or "").strip()
+    # Skip outbound echoes
+    if data.get("isFromMe"):
+        return {"ok": True}
+
+    from_number = (data.get("handle") or {}).get("address", "")
+    content = (data.get("text") or "").strip()
 
     if not from_number:
         return {"ok": True}
