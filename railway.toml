@@ -1,0 +1,25 @@
+[build]
+builder = "NIXPACKS"
+
+[[services]]
+name = "api"
+startCommand = "uvicorn main:app --host 0.0.0.0 --port $PORT"
+rootDirectory = "apps/api"
+
+[[services]]
+name = "worker"
+startCommand = "python worker.py"
+rootDirectory = "apps/api"
+
+[[services]]
+name = "web"
+startCommand = "npm run start"
+rootDirectory = "apps/web"
+
+[[crons]]
+schedule = "* * * * *"
+command = "curl -s -H 'X-Cron-Secret: $INTERNAL_CRON_SECRET' $APP_URL/internal/cron/reminders"
+
+[[crons]]
+schedule = "0 * * * *"
+command = "curl -s -H 'X-Cron-Secret: $INTERNAL_CRON_SECRET' $APP_URL/internal/cron/digest"
