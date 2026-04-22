@@ -1,3 +1,5 @@
+import hashlib
+import hmac
 import json
 import logging
 import re
@@ -5,7 +7,7 @@ import uuid
 from datetime import datetime, timezone
 
 import dateparser
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
 from app.config import settings
@@ -21,6 +23,15 @@ URL_PATTERN = re.compile(
     r"(?:tiktok\.com|vm\.tiktok\.com|vt\.tiktok\.com|instagram\.com)"
     r"\S+"
 )
+
+
+def _verify_hmac(body: bytes, signature: str) -> bool:
+    expected = hmac.new(
+        settings.sendblue_webhook_secret.encode(),
+        body,
+        hashlib.sha256,
+    ).hexdigest()
+    return hmac.compare_digest(expected, signature)
 
 
 async def _get_or_create_user(db: AsyncSession, phone: str) -> User:
@@ -141,26 +152,22 @@ async def _handle_category_override(db: AsyncSession, user: User, category_slug:
     await sendblue.send_message(phone, f"Updated category to {cat.label}.")
 
 
-@router.post("/webhook/bluebubbles")
-async def bluebubbles_webhook(
+@router.post("/webhook/sendblue")
+async def sendblue_webhook(
     request: Request,
     db: AsyncSession = Depends(get_db),
+    x_sendblue_signature: str = Header(default=""),
 ):
-    payload = await request.json()
-    logger.info("BlueBubbles webhook: type=%s", payload.get("type"))
+    body = await request.body()
 
-    # Only process incoming messages
-    if payload.get("type") != "new-message":
-        return {"ok": True}
+    if settings.sendblue_webhook_secret and not _verify_hmac(body, x_sendblue_signature):
+        raise HTTPException(status_code=401, detail="Invalid signature")
 
-    data = payload.get("data", {})
+    payload = json.loads(body)
+    logger.info("Sendblue webhook: %s", payload)
 
-    # Skip outbound echoes
-    if data.get("isFromMe"):
-        return {"ok": True}
-
-    from_number = (data.get("handle") or {}).get("address", "")
-    content = (data.get("text") or "").strip()
+    from_number = payload.get("number") or payload.get("from_number", "")
+    content = (payload.get("content") or "").strip()
 
     if not from_number:
         return {"ok": True}

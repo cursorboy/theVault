@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_wait_for",
+      "mcp__obsidian__read-note",
+      "mcp__obsidian__search-vault",
+      "mcp__obsidian__list-available-vaults",
+      "Bash(pnpm check *)"
+    ]
+  }
+}

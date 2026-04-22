@@ -17,8 +17,9 @@ class Settings(BaseSettings):
     r2_bucket: str
     r2_public_url: str
 
-    bluebubbles_url: str
-    bluebubbles_password: str
+    sendblue_api_key: str
+    sendblue_api_secret: str
+    sendblue_webhook_secret: str
 
     app_url: str
     internal_cron_secret: str
