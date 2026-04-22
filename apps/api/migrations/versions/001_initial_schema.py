@@ -112,3 +112,4 @@ def downgrade() -> None:
     op.drop_table("categories")
     op.drop_table("users")
     op.execute("DROP EXTENSION IF EXISTS vector")
+    op.execute("DROP EXTENSION IF EXISTS pgcrypto")
