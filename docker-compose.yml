@@ -2,6 +2,7 @@ version: "3.9"
 services:
   postgres:
     image: pgvector/pgvector:pg16
+    # dev credentials - do not use in production
     environment:
       POSTGRES_DB: reelvault
       POSTGRES_USER: reelvault
@@ -15,6 +16,9 @@ services:
     image: redis:7-alpine
     ports:
       - "6379:6379"
+    volumes:
+      - redisdata:/data
 
 volumes:
   pgdata:
+  redisdata:
