@@ -36,6 +36,7 @@ export interface Save {
   duration_secs: number | null;
   title: string | null;
   summary: string | null;
+  transcript: string | null;
   tags: string[] | null;
   action_items: string[] | null;
   category_id: number | null;
