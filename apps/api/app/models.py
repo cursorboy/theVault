@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, SmallInteger, Text, TIMESTAMP, ARRAY
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy.sql import func
 from pgvector.sqlalchemy import Vector
@@ -20,12 +20,14 @@ class User(Base):
     digest_enabled = Column(Boolean, default=True)
     digest_day = Column(SmallInteger, default=0)
     digest_hour = Column(SmallInteger, default=9)
+    profile = Column(JSONB, default=dict)  # learned interests, patterns, notes
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
     saves = relationship("Save", back_populates="user", cascade="all, delete-orphan")
     clusters = relationship("Cluster", back_populates="user", cascade="all, delete-orphan")
     reminders = relationship("Reminder", back_populates="user", cascade="all, delete-orphan")
     digest_logs = relationship("DigestLog", back_populates="user", cascade="all, delete-orphan")
+    conversations = relationship("Conversation", back_populates="user", cascade="all, delete-orphan")
 
 
 class Category(Base):
@@ -104,3 +106,16 @@ class DigestLog(Base):
     save_count = Column(Integer)
 
     user = relationship("User", back_populates="digest_logs")
+
+
+class Conversation(Base):
+    __tablename__ = "conversations"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"))
+    role = Column(Text, nullable=False)  # 'user' | 'assistant'
+    content = Column(Text, nullable=False)
+    save_id = Column(UUID(as_uuid=True), ForeignKey("saves.id", ondelete="SET NULL"), nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+
+    user = relationship("User", back_populates="conversations")

@@ -13,7 +13,7 @@ def send_message_sync(to_number: str, content: str) -> dict:
                 "sb-api-secret-key": settings.sendblue_api_secret,
                 "Content-Type": "application/json",
             },
-            json={"number": to_number, "content": content},
+            json={"number": to_number, "content": content, "from_number": "+17862139361"},
             timeout=30,
         )
         resp.raise_for_status()

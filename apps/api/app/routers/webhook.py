@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import hashlib
 import hmac
 import json
@@ -134,6 +136,28 @@ async def _handle_query_saves(db: AsyncSession, user: User, query: str, phone: s
     await sendblue.send_message(phone, "\n".join(lines))
 
 
+async def _handle_chat(db: AsyncSession, user: User, message: str, phone: str) -> None:
+    """Route conversational messages to the AI assistant (sync, via thread)."""
+    import asyncio
+    from app.database_sync import SyncSessionLocal
+    from app.services import ai_assistant
+
+    def _sync_chat() -> str:
+        sync_db = SyncSessionLocal()
+        try:
+            sync_user = sync_db.get(User, user.id)
+            return ai_assistant.chat(sync_db, sync_user, message)
+        finally:
+            sync_db.close()
+
+    try:
+        reply = await asyncio.to_thread(_sync_chat)
+        await sendblue.send_message(phone, reply)
+    except Exception:
+        logger.exception("AI chat failed")
+        await sendblue.send_message(phone, "Hmm, something went sideways on my end. Try again?")
+
+
 async def _handle_category_override(db: AsyncSession, user: User, category_slug: str, phone: str) -> None:
     last_save = await _get_last_save(db, user.id)
     if not last_save:
@@ -195,11 +219,10 @@ async def sendblue_webhook(
         await _handle_save_url(db, user, parsed.url, from_number)
     elif parsed.intent == "remind_me" and parsed.time_str:
         await _handle_remind_me(db, user, parsed.time_str, from_number)
-    elif parsed.intent == "query_saves" and parsed.query:
-        await _handle_query_saves(db, user, parsed.query, from_number)
     elif parsed.intent == "category_override" and parsed.category_slug:
         await _handle_category_override(db, user, parsed.category_slug, from_number)
     else:
-        logger.info("Unhandled intent %s from %s: %s", parsed.intent, from_number, content)
+        # Everything else (including query_saves) goes to the AI assistant
+        await _handle_chat(db, user, content, from_number)
 
     return {"ok": True}

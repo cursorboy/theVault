@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from app.database_sync import SyncSessionLocal
 from app.models import Save
-from app.services import downloader, transcriber, vision, synthesizer, embedder, clusterer, sendblue_sync
+from app.services import downloader, transcriber, vision, synthesizer, embedder, clusterer, sendblue_sync, ai_assistant
 from app.config import settings
 
 logger = logging.getLogger(__name__)
@@ -65,11 +65,25 @@ def process_video(save_id: str) -> None:
 
         save.status = "done"
         db.commit()
+        db.refresh(save)
 
-        # Send confirmation iMessage
-        dashboard_url = f"{settings.app_url}/save/{save_id}"
-        msg = f"Saved: {save.title} ({synthesis.category}) — {dashboard_url}"
+        # Personalized AI reaction
+        try:
+            reaction = ai_assistant.react_to_save(db, save.user, save)
+            dashboard_url = f"{settings.app_url}/save/{save_id}"
+            msg = f"{reaction}\n\n{dashboard_url}"
+        except Exception:
+            logger.exception("AI reaction failed, falling back to default message")
+            dashboard_url = f"{settings.app_url}/save/{save_id}"
+            msg = f"Saved: {save.title} ({synthesis.category}) — {dashboard_url}"
+
         sendblue_sync.send_message_sync(save.user.phone, msg)
+
+        # Update profile every 10 saves
+        try:
+            ai_assistant.update_profile_if_needed(db, save.user)
+        except Exception:
+            logger.exception("Profile update failed")
 
     except Exception as exc:
         logger.exception("process_video failed for %s", save_id)
