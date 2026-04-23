@@ -116,6 +116,25 @@ class Conversation(Base):
     role = Column(Text, nullable=False)  # 'user' | 'assistant'
     content = Column(Text, nullable=False)
     save_id = Column(UUID(as_uuid=True), ForeignKey("saves.id", ondelete="SET NULL"), nullable=True)
+    embedding = Column(Vector(1536))
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="conversations")
+
+
+class Memory(Base):
+    __tablename__ = "memories"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    content = Column(Text, nullable=False)
+    kind = Column(Text, nullable=False)  # fact | preference | goal | relationship | project | trait
+    importance = Column(SmallInteger, default=5)
+    embedding = Column(Vector(1536))
+    source_conversation_id = Column(UUID(as_uuid=True), ForeignKey("conversations.id", ondelete="SET NULL"), nullable=True)
+    source_save_id = Column(UUID(as_uuid=True), ForeignKey("saves.id", ondelete="SET NULL"), nullable=True)
+    meta = Column("metadata", JSONB, default=dict)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+    last_accessed_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+    access_count = Column(Integer, default=0)
+    superseded_by = Column(UUID(as_uuid=True), nullable=True)
