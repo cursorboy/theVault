@@ -77,14 +77,8 @@ Guidelines:
 
 
 def store_conversation_turn(db: Session, user_id, role: str, content: str, save_id=None) -> Conversation:
-    """Store a conversation message with its embedding."""
-    try:
-        emb = embed_text(content)
-    except Exception:
-        logger.exception("Failed to embed conversation")
-        emb = None
-
-    conv = Conversation(user_id=user_id, role=role, content=content, save_id=save_id, embedding=emb)
+    """Store a conversation message. Embedding computed lazily in background."""
+    conv = Conversation(user_id=user_id, role=role, content=content, save_id=save_id, embedding=None)
     db.add(conv)
     db.commit()
     db.refresh(conv)

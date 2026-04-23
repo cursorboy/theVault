@@ -30,9 +30,9 @@ from app.services.embedder import embed_text
 
 logger = logging.getLogger(__name__)
 
-MODEL = "claude-sonnet-4-6"  # fast, capable — used for chat
-REACTION_MODEL = "claude-opus-4-7"  # deepest reasoning for video reactions
-MAX_TOOL_ITERATIONS = 5
+MODEL = "claude-haiku-4-5-20251001"  # haiku for chat - much faster
+REACTION_MODEL = "claude-sonnet-4-6"  # sonnet for reactions - good balance
+MAX_TOOL_ITERATIONS = 3
 
 ERROR_REPLIES = [
     "brain fart. say that again?",
@@ -442,19 +442,16 @@ def _dispatch_tool(db: Session, user: User, tool_name: str, tool_input: dict) ->
 # ==================== CONTEXT ASSEMBLY ====================
 
 def _build_context_block(db: Session, user: User, current_message: str) -> str:
-    """Assemble memory + library stats + retrieved conversation snippets."""
-    # Top relevant memories via semantic search
-    relevant_memories = mem.retrieve_relevant_memories(db, user.id, current_message, limit=6)
-    # Plus top-importance memories (always include)
+    """Assemble memory + library stats. Trimmed for speed."""
+    # Only fetch top-importance memories (skip semantic retrieval — recent thread covers it)
     top_mems = (
         db.query(Memory)
-        .filter(Memory.user_id == user.id, Memory.superseded_by.is_(None), Memory.importance >= 7)
-        .order_by(Memory.importance.desc())
-        .limit(4)
+        .filter(Memory.user_id == user.id, Memory.superseded_by.is_(None))
+        .order_by(Memory.importance.desc(), Memory.created_at.desc())
+        .limit(8)
         .all()
     )
-    seen = {m.id for m in relevant_memories}
-    merged_memories = relevant_memories + [m for m in top_mems if m.id not in seen]
+    merged_memories = top_mems
 
     # Library stats
     total_saves = db.query(Save).filter(Save.user_id == user.id, Save.status == "done").count()
@@ -467,8 +464,7 @@ def _build_context_block(db: Session, user: User, current_message: str) -> str:
         .all()
     )
 
-    # Retrieve relevant past conversations (not the current thread)
-    relevant_convos = mem.retrieve_relevant_conversations(db, user.id, current_message, limit=2)
+    relevant_convos: list = []
 
     # Check what we know vs what's missing for the profile
     all_mem_content = " ".join(m.content.lower() for m in merged_memories)
