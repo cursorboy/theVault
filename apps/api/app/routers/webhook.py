@@ -217,7 +217,7 @@ async def _process_message_async(from_number: str, content: str):
         try:
             user = await _get_or_create_user(db, from_number)
 
-            # Fast path: raw URL
+            # Fast path: raw URL = save
             url_match = URL_PATTERN.search(content)
             if url_match:
                 await _handle_save_url(db, user, url_match.group(0), from_number)
@@ -226,21 +226,8 @@ async def _process_message_async(from_number: str, content: str):
             if not content:
                 return
 
-            last_save = await _get_last_save(db, user.id)
-            parsed = bot_parser.parse_message(
-                message_text=content,
-                last_save_title=last_save.title or "" if last_save else "",
-                last_save_id=str(last_save.id) if last_save else "",
-            )
-
-            if parsed.intent == "save_url" and parsed.url:
-                await _handle_save_url(db, user, parsed.url, from_number)
-            elif parsed.intent == "remind_me" and parsed.time_str:
-                await _handle_remind_me(db, user, parsed.time_str, from_number)
-            elif parsed.intent == "category_override" and parsed.category_slug:
-                await _handle_category_override(db, user, parsed.category_slug, from_number)
-            else:
-                await _handle_chat(db, user, content, from_number)
+            # Everything else goes to the AI assistant (it has tools for reminders, memory, etc)
+            await _handle_chat(db, user, content, from_number)
         except Exception:
             logger.exception("Background message processing failed")
         finally:
