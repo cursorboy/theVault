@@ -9,7 +9,7 @@ import uuid
 from datetime import datetime, timezone
 
 import dateparser
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
 from app.config import settings
@@ -42,7 +42,8 @@ async def _get_or_create_user(db: AsyncSession, phone: str) -> User:
     if not user:
         user = User(phone=phone)
         db.add(user)
-        await db.flush()
+        await db.commit()
+        await db.refresh(user)
     return user
 
 
@@ -146,6 +147,14 @@ async def _handle_chat(db: AsyncSession, user: User, message: str, phone: str) -
         sync_db = SyncSessionLocal()
         try:
             sync_user = sync_db.get(User, user.id)
+            if sync_user is None:
+                from sqlalchemy import select as sync_select
+                sync_user = sync_db.execute(sync_select(User).where(User.phone == phone)).scalar_one_or_none()
+                if sync_user is None:
+                    sync_user = User(phone=phone)
+                    sync_db.add(sync_user)
+                    sync_db.commit()
+                    sync_db.refresh(sync_user)
             return ai_assistant.chat(sync_db, sync_user, message)
         finally:
             sync_db.close()
@@ -153,9 +162,10 @@ async def _handle_chat(db: AsyncSession, user: User, message: str, phone: str) -
     try:
         reply = await asyncio.to_thread(_sync_chat)
         await sendblue.send_message(phone, reply)
-    except Exception:
-        logger.exception("AI chat failed")
-        await sendblue.send_message(phone, "Hmm, something went sideways on my end. Try again?")
+    except Exception as e:
+        logger.exception("AI chat failed: %s", e)
+        from app.services.ai_assistant import _random_error
+        await sendblue.send_message(phone, _random_error())
 
 
 async def _handle_category_override(db: AsyncSession, user: User, category_slug: str, phone: str) -> None:
@@ -176,10 +186,75 @@ async def _handle_category_override(db: AsyncSession, user: User, category_slug:
     await sendblue.send_message(phone, f"Updated category to {cat.label}.")
 
 
+async def _typing_loop(phone: str, stop_event):
+    """Keep the typing bubble alive by refreshing every 4 seconds until stop_event is set."""
+    import asyncio
+    while not stop_event.is_set():
+        await sendblue.send_typing_indicator(phone)
+        try:
+            await asyncio.wait_for(stop_event.wait(), timeout=4.0)
+        except asyncio.TimeoutError:
+            pass
+
+
+async def _process_message_async(from_number: str, content: str):
+    """Full message processing runs in background so webhook returns immediately."""
+    import asyncio
+    from app.database import async_session_factory
+
+    # Fire read receipt + typing indicator IMMEDIATELY, in parallel
+    await asyncio.gather(
+        sendblue.mark_read(from_number),
+        sendblue.send_typing_indicator(from_number),
+        return_exceptions=True,
+    )
+
+    # Start typing refresh loop in background so bubble persists through entire AI call
+    stop_typing = asyncio.Event()
+    typing_task = asyncio.create_task(_typing_loop(from_number, stop_typing))
+
+    async with async_session_factory() as db:
+        try:
+            user = await _get_or_create_user(db, from_number)
+
+            # Fast path: raw URL
+            url_match = URL_PATTERN.search(content)
+            if url_match:
+                await _handle_save_url(db, user, url_match.group(0), from_number)
+                return
+
+            if not content:
+                return
+
+            last_save = await _get_last_save(db, user.id)
+            parsed = bot_parser.parse_message(
+                message_text=content,
+                last_save_title=last_save.title or "" if last_save else "",
+                last_save_id=str(last_save.id) if last_save else "",
+            )
+
+            if parsed.intent == "save_url" and parsed.url:
+                await _handle_save_url(db, user, parsed.url, from_number)
+            elif parsed.intent == "remind_me" and parsed.time_str:
+                await _handle_remind_me(db, user, parsed.time_str, from_number)
+            elif parsed.intent == "category_override" and parsed.category_slug:
+                await _handle_category_override(db, user, parsed.category_slug, from_number)
+            else:
+                await _handle_chat(db, user, content, from_number)
+        except Exception:
+            logger.exception("Background message processing failed")
+        finally:
+            stop_typing.set()
+            try:
+                await asyncio.wait_for(typing_task, timeout=1.0)
+            except Exception:
+                pass
+
+
 @router.post("/webhook/sendblue")
 async def sendblue_webhook(
     request: Request,
-    db: AsyncSession = Depends(get_db),
+    background: BackgroundTasks,
     x_sendblue_signature: str = Header(default=""),
 ):
     body = await request.body()
@@ -196,33 +271,6 @@ async def sendblue_webhook(
     if not from_number:
         return {"ok": True}
 
-    user = await _get_or_create_user(db, from_number)
-
-    # Fast path: raw URL detected before calling Claude
-    url_match = URL_PATTERN.search(content)
-    if url_match:
-        await _handle_save_url(db, user, url_match.group(0), from_number)
-        return {"ok": True}
-
-    if not content:
-        return {"ok": True}
-
-    # Get last save context for Claude
-    last_save = await _get_last_save(db, user.id)
-    parsed = bot_parser.parse_message(
-        message_text=content,
-        last_save_title=last_save.title or "" if last_save else "",
-        last_save_id=str(last_save.id) if last_save else "",
-    )
-
-    if parsed.intent == "save_url" and parsed.url:
-        await _handle_save_url(db, user, parsed.url, from_number)
-    elif parsed.intent == "remind_me" and parsed.time_str:
-        await _handle_remind_me(db, user, parsed.time_str, from_number)
-    elif parsed.intent == "category_override" and parsed.category_slug:
-        await _handle_category_override(db, user, parsed.category_slug, from_number)
-    else:
-        # Everything else (including query_saves) goes to the AI assistant
-        await _handle_chat(db, user, content, from_number)
-
+    # Return 200 immediately so Sendblue doesn't retry; do all work in background
+    background.add_task(_process_message_async, from_number, content)
     return {"ok": True}

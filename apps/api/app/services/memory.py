@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Deep memory layer: episodic (conversations) + semantic (extracted facts).
 
 Uses vector similarity for retrieval, not just recency. Extracts durable facts
@@ -351,7 +353,7 @@ def consolidate_similar(db: Session, user_id, new_memory: Memory, threshold: flo
             ORDER BY distance ASC
             LIMIT 3
         """),
-        {"emb": json.dumps(list(new_memory.embedding)), "uid": str(user_id), "mid": str(new_memory.id)},
+        {"emb": json.dumps([float(x) for x in new_memory.embedding]), "uid": str(user_id), "mid": str(new_memory.id)},
     )
     similars = [r for r in result.fetchall() if r.distance < threshold]
 
