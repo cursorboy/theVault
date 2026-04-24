@@ -137,7 +137,7 @@ async def _handle_query_saves(db: AsyncSession, user: User, query: str, phone: s
     await sendblue.send_message(phone, "\n".join(lines))
 
 
-async def _handle_chat(db: AsyncSession, user: User, message: str, phone: str) -> None:
+async def _handle_chat(db: AsyncSession, user: User, message: str, phone: str, image_urls: list[str] | None = None) -> None:
     """Route conversational messages to the AI assistant (sync, via thread)."""
     import asyncio
     from app.database_sync import SyncSessionLocal
@@ -155,7 +155,7 @@ async def _handle_chat(db: AsyncSession, user: User, message: str, phone: str) -
                     sync_db.add(sync_user)
                     sync_db.commit()
                     sync_db.refresh(sync_user)
-            return ai_assistant.chat(sync_db, sync_user, message)
+            return ai_assistant.chat(sync_db, sync_user, message, image_urls=image_urls)
         finally:
             sync_db.close()
 
@@ -197,7 +197,32 @@ async def _typing_loop(phone: str, stop_event):
             pass
 
 
-async def _process_message_async(from_number: str, content: str):
+def _extract_image_urls(payload: dict) -> list[str]:
+    """Pull image media URLs from a Sendblue webhook payload. Handles singular/array fields."""
+    urls: list[str] = []
+    media = payload.get("media_url")
+    if isinstance(media, str) and media:
+        urls.append(media)
+    media_list = payload.get("media_urls")
+    if isinstance(media_list, list):
+        urls.extend(m for m in media_list if isinstance(m, str) and m)
+    # Dedup + filter to likely image types by extension
+    seen = set()
+    out = []
+    for u in urls:
+        if u in seen:
+            continue
+        seen.add(u)
+        lower = u.lower().split("?")[0]
+        if lower.endswith((".jpg", ".jpeg", ".png", ".gif", ".webp", ".heic", ".heif")) or "/image" in lower:
+            out.append(u)
+        else:
+            # Unknown type — still include, Claude will reject non-images gracefully
+            out.append(u)
+    return out
+
+
+async def _process_message_async(from_number: str, content: str, image_urls: list[str] | None = None):
     """Full message processing runs in background so webhook returns immediately."""
     import asyncio
     from app.database import async_session_factory
@@ -223,11 +248,12 @@ async def _process_message_async(from_number: str, content: str):
                 await _handle_save_url(db, user, url_match.group(0), from_number)
                 return
 
-            if not content:
+            # If we have neither text nor images, nothing to do
+            if not content and not image_urls:
                 return
 
             # Everything else goes to the AI assistant (it has tools for reminders, memory, etc)
-            await _handle_chat(db, user, content, from_number)
+            await _handle_chat(db, user, content, from_number, image_urls=image_urls)
         except Exception:
             logger.exception("Background message processing failed")
         finally:
@@ -254,10 +280,11 @@ async def sendblue_webhook(
 
     from_number = payload.get("number") or payload.get("from_number", "")
     content = (payload.get("content") or "").strip()
+    image_urls = _extract_image_urls(payload)
 
     if not from_number:
         return {"ok": True}
 
     # Return 200 immediately so Sendblue doesn't retry; do all work in background
-    background.add_task(_process_message_async, from_number, content)
+    background.add_task(_process_message_async, from_number, content, image_urls)
     return {"ok": True}

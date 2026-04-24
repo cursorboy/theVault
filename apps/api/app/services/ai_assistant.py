@@ -188,6 +188,7 @@ use tools. dont guess. dont claim u dont know something without searching first.
 - asked a general question (not about saves): if relevant to their interests check library first, otherwise web_search and share links
 - chatting: be their friend who remembers them. occasionally ask a profile-filling question if natural
 - they share a fact about themselves: acknowledge it genuinely (not with hype), remember_fact it
+- they send an image: u can see it. describe what u see naturally, tie to their context/saves if relevant. if it looks like a screenshot of something savable (recipe, workout, place, etc) offer to remember it. if its a pic of them or their stuff, react like a friend would. never say "i cant see images" — u can
 
 examples of good voice:
 - "oh thats the zone 2 cardio one right. want a reminder tmrw morning?"
@@ -510,21 +511,43 @@ def _recent_thread(db: Session, user_id) -> list[dict]:
 
 # ==================== MAIN ENTRYPOINTS ====================
 
-def chat(db: Session, user: User, user_message: str, save_id=None) -> str:
-    """Handle a conversational message with tool use + deep memory."""
+def chat(db: Session, user: User, user_message: str, save_id=None, image_urls: list[str] | None = None) -> str:
+    """Handle a conversational message with tool use + deep memory. Supports images."""
     client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
 
-    # Store user message with embedding
-    user_conv = mem.store_conversation_turn(db, user.id, "user", user_message, save_id=save_id)
+    image_urls = image_urls or []
+
+    # Record in conversation log what the user said, noting any attached images
+    stored_content = user_message
+    if image_urls:
+        stored_content = f"[user sent {len(image_urls)} image{'s' if len(image_urls) > 1 else ''}] {user_message}".strip()
+    user_conv = mem.store_conversation_turn(db, user.id, "user", stored_content, save_id=save_id)
 
     # Assemble context
-    context_block = _build_context_block(db, user, user_message)
+    context_block = _build_context_block(db, user, user_message or "image from user")
     system = f"{SYSTEM_PROMPT}\n\n{context_block}"
 
-    # Build messages: recent thread + current turn (already stored)
+    # Build current-turn content: image blocks first, then text (Claude multimodal format)
+    if image_urls:
+        current_turn_content: list[dict] = []
+        for url in image_urls:
+            current_turn_content.append({
+                "type": "image",
+                "source": {"type": "url", "url": url},
+            })
+        current_turn_content.append({
+            "type": "text",
+            "text": user_message or "what do you see",
+        })
+    else:
+        current_turn_content = user_message
+
+    # Build messages: recent thread + current turn
     messages = _recent_thread(db, user.id)
-    if not messages or messages[-1]["content"] != user_message:
-        messages.append({"role": "user", "content": user_message})
+    # Strip the last stored turn if it matches the current (avoid duplication)
+    if messages and messages[-1]["role"] == "user" and messages[-1]["content"] == stored_content:
+        messages = messages[:-1]
+    messages.append({"role": "user", "content": current_turn_content})
 
     # Tool-use loop
     final_text = ""
