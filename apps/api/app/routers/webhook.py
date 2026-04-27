@@ -155,7 +155,7 @@ async def _handle_chat(db: AsyncSession, user: User, message: str, phone: str, i
                     sync_db.add(sync_user)
                     sync_db.commit()
                     sync_db.refresh(sync_user)
-            return ai_assistant.chat(sync_db, sync_user, message, image_urls=image_urls)
+            return ai_assistant.chat(sync_db, sync_user, message, image_urls=image_urls, channel="imsg")
         finally:
             sync_db.close()
 
@@ -222,6 +222,59 @@ def _extract_image_urls(payload: dict) -> list[str]:
     return out
 
 
+def _looks_like_link_code(text: str) -> bool:
+    from app.services.account_linking import looks_like_code
+    return looks_like_code(text)
+
+
+async def _try_consume_link_code(code: str, phone: str) -> bool:
+    """Returns True if the code was a valid pending link and got consumed."""
+    import asyncio
+    from app.database_sync import SyncSessionLocal
+    from app.services import account_linking
+    from app.services import sendblue
+
+    def _sync_consume():
+        db = SyncSessionLocal()
+        try:
+            return account_linking.consume_code(db, code, phone)
+        finally:
+            db.close()
+
+    result = await asyncio.to_thread(_sync_consume)
+    if not result:
+        return False
+
+    platform = result.get("platform", "instagram")
+    handle = result.get("external_username") or f"ur {platform[:2]}"
+    label = "ig" if platform == "instagram" else "tiktok"
+    await sendblue.send_message(phone, f"linked @{handle} ({label}) to ur vault. dm me there or text here, same memory either way")
+
+    # Try to also confirm via the external channel
+    try:
+        if platform == "instagram":
+            from app.services import instagram as ig
+            await asyncio.to_thread(
+                ig.send_text,
+                None,
+                result["external_user_id"],
+                "linked! u can keep chatting here or thru imsg, same vault either way",
+            )
+        elif platform == "tiktok":
+            # tiktok bot is single-process — push to outbox redis list
+            import json as _json
+            from redis import Redis
+            r = Redis.from_url(settings.redis_url)
+            r.rpush("tt:outbox", _json.dumps({
+                "tt_user_id": result["external_user_id"],
+                "text": "linked! u can keep chatting here or thru imsg, same vault either way",
+            }))
+    except Exception:
+        logger.exception("external-channel confirm send failed")
+
+    return True
+
+
 async def _process_message_async(from_number: str, content: str, image_urls: list[str] | None = None):
     """Full message processing runs in background so webhook returns immediately."""
     import asyncio
@@ -247,6 +300,12 @@ async def _process_message_async(from_number: str, content: str, image_urls: lis
             if url_match:
                 await _handle_save_url(db, user, url_match.group(0), from_number)
                 return
+
+            # IG link code: 6-char alphanumeric uppercase
+            if content and _looks_like_link_code(content):
+                handled = await _try_consume_link_code(content, from_number)
+                if handled:
+                    return
 
             # If we have neither text nor images, nothing to do
             if not content and not image_urls:

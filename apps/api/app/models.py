@@ -14,13 +14,17 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    phone = Column(Text, unique=True, nullable=False)
+    phone = Column(Text, unique=True, nullable=True)
+    ig_user_id = Column(Text, unique=True, nullable=True)
+    ig_username = Column(Text, nullable=True)
+    tt_user_id = Column(Text, unique=True, nullable=True)
+    tt_username = Column(Text, nullable=True)
     auth_token = Column(Text, unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
     timezone = Column(Text, nullable=False, default="America/New_York")
     digest_enabled = Column(Boolean, default=True)
     digest_day = Column(SmallInteger, default=0)
     digest_hour = Column(SmallInteger, default=9)
-    profile = Column(JSONB, default=dict)  # learned interests, patterns, notes
+    profile = Column(JSONB, default=dict)
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
     saves = relationship("Save", back_populates="user", cascade="all, delete-orphan")
@@ -87,9 +91,12 @@ class Reminder(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"))
-    save_id = Column(UUID(as_uuid=True), ForeignKey("saves.id", ondelete="CASCADE"))
+    save_id = Column(UUID(as_uuid=True), ForeignKey("saves.id", ondelete="CASCADE"), nullable=True)
+    body = Column(Text, nullable=True)  # for save-less reminders ("call mom")
+    note = Column(Text, nullable=True)  # extra context AI can attach
+    preferred_channel = Column(Text, nullable=True)  # imsg | instagram | tiktok
     fire_at = Column(TIMESTAMP(timezone=True), nullable=False)
-    recur = Column(Text)
+    recur = Column(Text)  # daily | weekly | monthly | null
     status = Column(Text, default="pending")
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
@@ -138,3 +145,28 @@ class Memory(Base):
     last_accessed_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     access_count = Column(Integer, default=0)
     superseded_by = Column(UUID(as_uuid=True), nullable=True)
+
+
+class PendingLink(Base):
+    __tablename__ = "pending_links"
+
+    code = Column(Text, primary_key=True)
+    platform = Column(Text, nullable=False, default="instagram")
+    external_user_id = Column(Text, nullable=False)
+    external_username = Column(Text, nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+    expires_at = Column(TIMESTAMP(timezone=True), nullable=False)
+
+
+class IGProcessedMessage(Base):
+    __tablename__ = "ig_processed_messages"
+
+    message_id = Column(Text, primary_key=True)
+    processed_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+
+
+class TTProcessedMessage(Base):
+    __tablename__ = "tt_processed_messages"
+
+    message_id = Column(Text, primary_key=True)
+    processed_at = Column(TIMESTAMP(timezone=True), server_default=func.now())

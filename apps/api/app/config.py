@@ -20,6 +20,20 @@ class Settings(BaseSettings):
     sendblue_api_key: str
     sendblue_api_secret: str
     sendblue_webhook_secret: str
+    sendblue_from_number: str = "+17862139361"
+
+    instagram_username: str = ""
+    instagram_password: str = ""
+    instagram_verification_code: str = ""
+    instagram_session_dir: str = "./ig_sessions"
+    instagram_poll_seconds: int = 5
+
+    tiktok_username: str = ""
+    tiktok_password: str = ""
+    tiktok_profile_dir: str = "./tt_profile"
+    tiktok_poll_seconds: int = 5
+    tiktok_headless: bool = True
+    tiktok_proxy: str = ""
 
     app_url: str
     internal_cron_secret: str

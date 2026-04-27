@@ -175,7 +175,9 @@ then use the web_search tool. when u get results, share 1-3 of the most relevant
 - search_library: search their saves semantically
 - get_save_details: full transcript of a specific save
 - recent_saves: list by recency or category
-- set_reminder: schedule a reminder tied to a save
+- set_reminder: schedule a reminder. tie to a save (save_id) or use body for free-form ('call mom'). natural language time. supports daily/weekly/monthly recur. resolves in users timezone
+- list_reminders: show whats pending. use when they ask "what reminders do i have"
+- cancel_reminder: cancel by id. if they say "cancel the next one" or refer vaguely, list_reminders first then cancel by id
 - remember_fact: STORE new info about the user (name, goals, projects, traits). use this liberally when they share things
 - search_memories: recall specific facts
 - web_search: search the public web when library has no match or when they ask about current events / recs
@@ -243,15 +245,39 @@ TOOLS: list[dict[str, Any]] = [
     },
     {
         "name": "set_reminder",
-        "description": "Set a reminder tied to a specific save. Use natural language times like 'tomorrow at 9am', 'in 3 days', 'next monday'.",
+        "description": (
+            "Schedule a reminder. Tie it to a save via save_id (recipe to try, workout to do) "
+            "OR use body for free-form reminders ('call mom', 'leave for airport'). "
+            "Use natural language times: 'tomorrow at 9am', 'in 3 days', 'next monday', '6pm'. "
+            "Times resolve in the user's timezone. Set recur=daily/weekly/monthly for repeats."
+        ),
         "input_schema": {
             "type": "object",
             "properties": {
-                "save_id": {"type": "string"},
                 "when": {"type": "string", "description": "Natural language time"},
-                "note": {"type": "string", "description": "Optional reminder context"},
+                "save_id": {"type": "string", "description": "Optional: tie to a saved video"},
+                "body": {"type": "string", "description": "Required if no save_id: what to remind them about"},
+                "note": {"type": "string", "description": "Optional extra context to include in the reminder text"},
+                "recur": {"type": "string", "enum": ["daily", "weekly", "monthly"], "description": "Optional recurrence"},
             },
-            "required": ["save_id", "when"],
+            "required": ["when"],
+        },
+    },
+    {
+        "name": "list_reminders",
+        "description": "List the user's pending reminders, soonest first. Use when they ask 'what reminders do i have' or 'whats coming up'.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"limit": {"type": "integer", "default": 10}},
+        },
+    },
+    {
+        "name": "cancel_reminder",
+        "description": "Cancel a pending reminder by its id. If the user says 'cancel the next one' or 'cancel that reminder', call list_reminders first to find the id.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"reminder_id": {"type": "string"}},
+            "required": ["reminder_id"],
         },
     },
     {
@@ -364,26 +390,133 @@ def _tool_recent_saves(db: Session, user: User, limit: int = 10, category_slug: 
     ]
 
 
-def _tool_set_reminder(db: Session, user: User, save_id: str, when: str, note: str | None = None) -> dict:
-    import uuid
-    try:
-        save = db.get(Save, uuid.UUID(save_id))
-    except Exception:
-        return {"error": "invalid save id"}
-    if not save or save.user_id != user.id:
-        return {"error": "save not found"}
-    fire_at = dateparser.parse(when, settings={"RETURN_AS_TIMEZONE_AWARE": True, "PREFER_DATES_FROM": "future"})
+VALID_RECUR = {"daily", "weekly", "monthly"}
+
+
+def _tool_set_reminder(
+    db: Session,
+    user: User,
+    when: str,
+    save_id: str | None = None,
+    body: str | None = None,
+    note: str | None = None,
+    recur: str | None = None,
+    _channel_hint: str | None = None,
+) -> dict:
+    import uuid as _uuid
+
+    save = None
+    if save_id:
+        try:
+            save = db.get(Save, _uuid.UUID(save_id))
+        except Exception:
+            return {"error": "invalid save id"}
+        if not save or save.user_id != user.id:
+            return {"error": "save not found"}
+
+    if not save and not (body and body.strip()):
+        return {"error": "need either save_id or body for the reminder"}
+
+    user_tz = user.timezone or "America/New_York"
+    fire_at = dateparser.parse(
+        when,
+        settings={
+            "RETURN_AS_TIMEZONE_AWARE": True,
+            "PREFER_DATES_FROM": "future",
+            "TIMEZONE": user_tz,
+            "TO_TIMEZONE": "UTC",
+        },
+    )
     if not fire_at:
-        return {"error": f"couldn't parse time '{when}'"}
-    reminder = Reminder(user_id=user.id, save_id=save.id, fire_at=fire_at, status="pending")
+        return {"error": f"couldnt parse time '{when}'"}
+
+    if recur and recur not in VALID_RECUR:
+        return {"error": f"recur must be one of {sorted(VALID_RECUR)}"}
+
+    channel = _channel_hint or _default_channel_for_user(user)
+
+    reminder = Reminder(
+        user_id=user.id,
+        save_id=save.id if save else None,
+        body=(body or "").strip() or None,
+        note=(note or "").strip() or None,
+        preferred_channel=channel,
+        fire_at=fire_at,
+        recur=recur,
+        status="pending",
+    )
     db.add(reminder)
     db.commit()
+    db.refresh(reminder)
+
     return {
         "reminder_id": str(reminder.id),
         "fire_at": fire_at.isoformat(),
-        "fire_at_friendly": fire_at.strftime("%B %d at %I:%M %p"),
-        "for_save": save.title,
+        "fire_at_friendly": _format_local(fire_at, user_tz),
+        "for_save": save.title if save else None,
+        "body": reminder.body,
+        "recur": recur,
+        "channel": channel,
     }
+
+
+def _tool_list_reminders(db: Session, user: User, limit: int = 10) -> list[dict]:
+    rems = (
+        db.query(Reminder)
+        .filter(Reminder.user_id == user.id, Reminder.status == "pending")
+        .order_by(Reminder.fire_at.asc())
+        .limit(limit)
+        .all()
+    )
+    user_tz = user.timezone or "America/New_York"
+    save_titles = {}
+    save_ids = [r.save_id for r in rems if r.save_id]
+    if save_ids:
+        for s in db.query(Save).filter(Save.id.in_(save_ids)).all():
+            save_titles[s.id] = s.title
+    return [
+        {
+            "reminder_id": str(r.id),
+            "fire_at_friendly": _format_local(r.fire_at, user_tz),
+            "subject": save_titles.get(r.save_id) or r.body or "(no subject)",
+            "recur": r.recur,
+        }
+        for r in rems
+    ]
+
+
+def _tool_cancel_reminder(db: Session, user: User, reminder_id: str) -> dict:
+    import uuid as _uuid
+    try:
+        r = db.get(Reminder, _uuid.UUID(reminder_id))
+    except Exception:
+        return {"error": "invalid reminder id"}
+    if not r or r.user_id != user.id:
+        return {"error": "reminder not found"}
+    if r.status != "pending":
+        return {"error": f"already {r.status}"}
+    r.status = "cancelled"
+    db.commit()
+    return {"reminder_id": reminder_id, "cancelled": True}
+
+
+def _default_channel_for_user(user: User) -> str:
+    if user.phone:
+        return "imsg"
+    if user.ig_user_id:
+        return "instagram"
+    if user.tt_user_id:
+        return "tiktok"
+    return "imsg"
+
+
+def _format_local(dt, tz_name: str) -> str:
+    try:
+        from zoneinfo import ZoneInfo
+        local = dt.astimezone(ZoneInfo(tz_name))
+    except Exception:
+        local = dt
+    return local.strftime("%a %b %d at %I:%M %p").replace(" 0", " ")
 
 
 def _tool_remember_fact(db: Session, user: User, fact: str, kind: str, importance: int = 6) -> dict:
@@ -416,11 +549,12 @@ def _tool_search_memories(db: Session, user: User, query: str) -> list[dict]:
 
 CLIENT_TOOLS = {
     "search_library", "get_save_details", "recent_saves",
-    "set_reminder", "remember_fact", "search_memories",
+    "set_reminder", "list_reminders", "cancel_reminder",
+    "remember_fact", "search_memories",
 }
 
 
-def _dispatch_tool(db: Session, user: User, tool_name: str, tool_input: dict) -> Any:
+def _dispatch_tool(db: Session, user: User, tool_name: str, tool_input: dict, channel_hint: str | None = None) -> Any:
     try:
         if tool_name == "search_library":
             return _tool_search_library(db, user, **tool_input)
@@ -429,7 +563,11 @@ def _dispatch_tool(db: Session, user: User, tool_name: str, tool_input: dict) ->
         if tool_name == "recent_saves":
             return _tool_recent_saves(db, user, **tool_input)
         if tool_name == "set_reminder":
-            return _tool_set_reminder(db, user, **tool_input)
+            return _tool_set_reminder(db, user, _channel_hint=channel_hint, **tool_input)
+        if tool_name == "list_reminders":
+            return _tool_list_reminders(db, user, **tool_input)
+        if tool_name == "cancel_reminder":
+            return _tool_cancel_reminder(db, user, **tool_input)
         if tool_name == "remember_fact":
             return _tool_remember_fact(db, user, **tool_input)
         if tool_name == "search_memories":
@@ -511,7 +649,7 @@ def _recent_thread(db: Session, user_id) -> list[dict]:
 
 # ==================== MAIN ENTRYPOINTS ====================
 
-def chat(db: Session, user: User, user_message: str, save_id=None, image_urls: list[str] | None = None) -> str:
+def chat(db: Session, user: User, user_message: str, save_id=None, image_urls: list[str] | None = None, channel: str | None = None) -> str:
     """Handle a conversational message with tool use + deep memory. Supports images."""
     client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
 
@@ -571,7 +709,7 @@ def chat(db: Session, user: User, user_message: str, save_id=None, image_urls: l
             messages.append({"role": "assistant", "content": response.content})
             tool_results = []
             for tu in tool_uses:
-                result = _dispatch_tool(db, user, tu.name, tu.input)
+                result = _dispatch_tool(db, user, tu.name, tu.input, channel_hint=channel)
                 tool_results.append({
                     "type": "tool_result",
                     "tool_use_id": tu.id,
