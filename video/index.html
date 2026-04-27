@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: #f5f0e8; font-family: "Inter", system-ui, sans-serif; color: #1f1b14;
+      }
+      :root {
+        --ink: #f5f0e8; --vault: #efe8dc; --panel: #fbf7f0;
+        --edge: #e4dccc; --edge2: #d2c7b2;
+        --text: #1f1b14; --text2: #5a5142; --text3: #8c8470;
+        --accent: #1e4d54; --accentSoft: #3d7079; --accentInk: #f5f0e8;
+        --accent2: #7a4e2e;
+        --ig: #c44a6b; --tt: #3db8b2;
+      }
+      .scene {
+        position: absolute; inset: 0; width: 1920px; height: 1080px;
+        overflow: hidden; background: var(--ink);
+      }
+      .scene::before {
+        content: ""; position: absolute; inset: 0; pointer-events: none;
+        background-image:
+          radial-gradient(circle at 18% 12%, rgba(122,78,46,0.05), transparent 50%),
+          radial-gradient(circle at 82% 88%, rgba(30,77,84,0.04), transparent 50%);
+      }
+      .scene-content {
+        position: relative; width: 100%; height: 100%; padding: 110px 160px;
+        box-sizing: border-box;
+      }
+      .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; letter-spacing: 0.04em; }
+      .serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; }
+
+      /* ─ scene 1 brand ─ */
+      #s1 .center { height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px; }
+      #s1 .eyebrow { font-size: 22px; letter-spacing: 0.18em; color: var(--text3); text-transform: uppercase; }
+      #s1 .wordmark { display: flex; align-items: baseline; gap: 18px; font-family: "Instrument Serif", Georgia, serif; }
+      #s1 .wordmark .the { font-size: 140px; font-style: italic; color: var(--text2); }
+      #s1 .wordmark .vault { font-size: 240px; color: var(--text); letter-spacing: -0.02em; }
+      #s1 .underline { width: 120px; height: 4px; background: var(--accent); transform-origin: left center; }
+      #s1 .tagline { font-size: 26px; color: var(--text2); max-width: 720px; text-align: center; line-height: 1.4; }
+
+      /* ─ scene 2 pitch ─ */
+      #s2 .pitch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; height: 100%; align-items: center; }
+      #s2 .pitch-left { display: flex; flex-direction: column; gap: 36px; }
+      #s2 .label { font-size: 14px; letter-spacing: 0.22em; color: var(--accent); text-transform: uppercase; }
+      #s2 .pitch-h { font-family: "Instrument Serif", Georgia, serif; font-size: 128px; line-height: 0.96; color: var(--text); letter-spacing: -0.02em; }
+      #s2 .pitch-h .it { font-style: italic; color: var(--accent); }
+      #s2 .pitch-sub { font-size: 28px; line-height: 1.5; color: var(--text2); max-width: 540px; }
+      #s2 .stats { display: grid; grid-template-columns: 1fr; gap: 24px; }
+      #s2 .stat { background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 36px 40px; }
+      #s2 .stat .num { font-family: "Instrument Serif", Georgia, serif; font-size: 88px; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+      #s2 .stat .num.accent { color: var(--accent); }
+      #s2 .stat .lbl { margin-top: 12px; font-size: 16px; color: var(--text2); font-weight: 500; }
+      #s2 .stat .meta { margin-top: 8px; font-size: 12px; color: var(--text3); letter-spacing: 0.1em; }
+
+      /* ─ imsg phone shared ─ */
+      .imsg-stage { height: 100%; display: grid; grid-template-columns: 1fr 760px; gap: 100px; align-items: center; }
+      .imsg-copy { display: flex; flex-direction: column; gap: 28px; max-width: 700px; }
+      .imsg-h { font-family: "Instrument Serif", Georgia, serif; font-size: 96px; line-height: 1; color: var(--text); letter-spacing: -0.02em; }
+      .imsg-sub { font-size: 22px; color: var(--text2); max-width: 580px; line-height: 1.5; }
+      .imsg-step { font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; }
+      .phone-frame { display: flex; justify-content: center; align-items: center; transform-origin: center center; }
+      .phone {
+        width: 480px; height: 940px; background: #000; border-radius: 56px;
+        border: 1px solid #2a2a2a;
+        box-shadow: 0 50px 100px rgba(31,27,20,0.18), 0 20px 40px rgba(31,27,20,0.1);
+        overflow: hidden; display: flex; flex-direction: column;
+        font-family: -apple-system, "SF Pro Text", system-ui; position: relative;
+      }
+      .phone .statusbar { padding: 18px 36px 8px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 16px; font-weight: 600; }
+      .phone .nav { padding: 4px 14px 12px; display: flex; align-items: center; gap: 10px; border-bottom: 0.5px solid #1a1a1a; }
+      .phone .nav-back { color: #2c8cff; font-size: 30px; line-height: 1; margin-top: -4px; }
+      .phone .nav-center { flex: 1; display: flex; flex-direction: column; align-items: center; }
+      .phone .nav-center .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--accentInk); font-family: "Instrument Serif", serif; font-style: italic; font-size: 22px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+      .phone .nav-center .name { font-size: 13px; color: #fff; font-weight: 500; }
+      .phone .nav-center .sub { font-size: 10px; color: #76767c; }
+      .phone .messages { flex: 1; padding: 16px 16px 8px; display: flex; flex-direction: column; gap: 7px; overflow: hidden; }
+      .phone .compose { padding: 10px 14px 14px; border-top: 0.5px solid #1a1a1a; display: flex; align-items: center; gap: 10px; }
+      .phone .compose .plus { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #333; color: #888; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+      .phone .compose .input { flex: 1; height: 34px; border-radius: 18px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #5a5a5e; display: flex; align-items: center; padding: 0 14px; font-size: 14px; }
+      .phone .home { height: 34px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; }
+      .phone .home::after { content: ""; width: 144px; height: 5px; border-radius: 3px; background: #fff; }
+      .phone .system-note { text-align: center; font-size: 11px; color: #76767c; font-weight: 500; padding: 10px 0 6px; }
+      .bubble {
+        max-width: 78%; padding: 10px 16px; border-radius: 20px;
+        font-size: 17px; line-height: 1.34; background: #262629; color: #f4f4f0;
+        align-self: flex-start; word-break: break-word; font-weight: 400;
+      }
+      .bubble.me { background: #2c8cff; color: #fff; align-self: flex-end; }
+      .bubble.thumb { padding: 8px; align-self: flex-end; background: #2c8cff; }
+      .bubble.thumb .thumb-card { width: 220px; height: 308px; border-radius: 14px; background: linear-gradient(135deg, #d2c7b2 0%, #a8957a 100%); position: relative; overflow: hidden; }
+      .bubble.thumb .thumb-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 60%, rgba(31,27,20,0), rgba(31,27,20,0.5)); }
+      .bubble.thumb .thumb-meta { position: absolute; left: 12px; bottom: 10px; right: 12px; color: #fff; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
+      .bubble.thumb .thumb-plat { font-family: "JetBrains Mono", monospace; font-weight: 600; background: rgba(0,0,0,0.4); padding: 3px 7px; border-radius: 3px; }
+      .bubble.thumb .url { font-size: 11px; opacity: 0.85; margin-top: 6px; padding: 0 4px; }
+      .bubble.savecard { padding: 10px; background: #262629; }
+      .bubble.savecard .body { padding: 0 4px 8px; }
+      .bubble.savecard .link-card { margin-top: 8px; padding: 11px 13px; border-radius: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+      .bubble.savecard .link-card .badge { width: 32px; height: 32px; border-radius: 6px; background: var(--accent); color: var(--accentInk); font-family: "Instrument Serif", serif; font-style: italic; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      .bubble.savecard .link-card .meta { flex: 1; min-width: 0; }
+      .bubble.savecard .link-card .title { font-size: 13px; font-weight: 500; }
+      .bubble.savecard .link-card .host { font-size: 11px; opacity: 0.6; }
+      .read-receipt { font-size: 11px; color: #8a8a90; align-self: flex-end; margin-top: -4px; padding: 0 8px; }
+      .typing { align-self: flex-start; padding: 14px 18px; border-radius: 20px; background: #262629; display: flex; gap: 6px; }
+      .typing span { width: 9px; height: 9px; border-radius: 50%; background: #888; }
+
+      /* loading bar inside an imsg bubble */
+      .bubble .loading-bar { margin-top: 8px; height: 3px; width: 100%; background: rgba(255,255,255,0.12); border-radius: 2px; overflow: hidden; }
+      .bubble .loading-bar::after { content: ""; display: block; width: 0%; height: 100%; background: var(--accent); border-radius: 2px; }
+      .bubble .loading-meta { font-size: 11px; opacity: 0.65; margin-top: 6px; font-family: "JetBrains Mono", monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+
+      /* highlight ring around the most-recent bubble */
+      .focus-ring {
+        position: absolute; pointer-events: none;
+        border: 2px solid rgba(30, 77, 84, 0.7);
+        border-radius: 22px; opacity: 0;
+        box-shadow: 0 0 0 6px rgba(30, 77, 84, 0.15);
+      }
+
+      /* ─ dashboard ─ */
+      .dash {
+        position: relative; height: 100%; display: grid;
+        grid-template-columns: 280px 1fr;
+        background: var(--vault); border-radius: 14px; overflow: hidden;
+        border: 1px solid var(--edge);
+        box-shadow: 0 30px 60px rgba(31,27,20,0.08);
+      }
+      .dash-side { background: var(--panel); border-right: 1px solid var(--edge); padding: 36px 24px; display: flex; flex-direction: column; gap: 22px; }
+      .dash-side .brand { display: flex; align-items: center; gap: 12px; }
+      .dash-side .brand-mark { width: 36px; height: 36px; border-radius: 6px; background: var(--accent); color: var(--accentInk); font-family: "Instrument Serif", serif; font-style: italic; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+      .dash-side .brand-name { font-family: "Instrument Serif", Georgia, serif; font-size: 22px; color: var(--text); }
+      .dash-side .brand-name .the { font-style: italic; color: var(--text2); margin-right: 4px; }
+      .dash-side .nav-group-label { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--text3); text-transform: uppercase; padding: 0 8px; }
+      .dash-side .nav-item {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 9px 10px; border-radius: 4px;
+        font-size: 13px; color: var(--text2); font-weight: 500;
+        border: 1px solid transparent;
+        transition: none;
+      }
+      .dash-side .nav-item.active { background: rgba(30,77,84,0.08); color: var(--accent); border-color: rgba(30,77,84,0.18); }
+      .dash-side .nav-item .count { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text3); }
+      .dash-main { padding: 32px 36px; display: flex; flex-direction: column; gap: 22px; overflow: hidden; }
+      .dash-top { display: flex; justify-content: space-between; align-items: center; }
+      .dash-top h1 { font-family: "Instrument Serif", Georgia, serif; font-size: 38px; color: var(--text); letter-spacing: -0.01em; }
+      .dash-top h1 .ital { font-style: italic; color: var(--text2); margin-right: 8px; }
+      .dash-top h1 .swap { color: var(--accent); }
+      .dash-top .tools { display: flex; gap: 10px; align-items: center; }
+      .dash-top .search { background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 8px 12px; font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--text3); width: 280px; display: flex; align-items: center; gap: 8px; }
+      .dash-top .search-text { color: var(--text); }
+      .dash-top .toggle { background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 5px; display: flex; gap: 4px; }
+      .dash-top .toggle .opt { padding: 4px 10px; border-radius: 3px; font-size: 11px; font-family: "JetBrains Mono", monospace; color: var(--text3); }
+      .dash-top .toggle .opt.active { background: var(--accent); color: var(--accentInk); }
+      .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+      .card { background: var(--panel); border: 1px solid var(--edge); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; }
+      .card .thumb { aspect-ratio: 9/14; position: relative; }
+      .card .thumb.t1 { background: linear-gradient(135deg, #c8a880 0%, #8a6a44 100%); }
+      .card .thumb.t2 { background: linear-gradient(135deg, #d2c7b2 0%, #a8957a 100%); }
+      .card .thumb.t3 { background: linear-gradient(135deg, #b9b8b0 0%, #7a7a72 100%); }
+      .card .thumb.t4 { background: linear-gradient(135deg, #c4a496 0%, #7a4e2e 100%); }
+      .card .thumb.t5 { background: linear-gradient(135deg, #d8cd9e 0%, #968a4e 100%); }
+      .card .thumb.t6 { background: linear-gradient(135deg, #c5b59c 0%, #847456 100%); }
+      .card .thumb.t7 { background: linear-gradient(135deg, #d2c7b2 0%, #957f60 100%); }
+      .card .thumb.t8 { background: linear-gradient(135deg, #b9aa90 0%, #6c5840 100%); }
+      .card .thumb.t9 { background: linear-gradient(135deg, #cfa97f 0%, #7c5530 100%); }
+      .card .thumb.t10 { background: linear-gradient(135deg, #c1b699 0%, #6e5e40 100%); }
+      .card .thumb.t11 { background: linear-gradient(135deg, #b9a98c 0%, #7a5b34 100%); }
+      .card .thumb.t12 { background: linear-gradient(135deg, #d4ba88 0%, #8c6932 100%); }
+      .card .thumb .badge-platform { position: absolute; top: 8px; left: 8px; font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 8px; border-radius: 3px; color: #fff; }
+      .card .thumb .badge-platform.ig { background: var(--ig); }
+      .card .thumb .badge-platform.tt { background: var(--tt); }
+      .card .thumb .badge-cat { position: absolute; bottom: 8px; left: 8px; font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 500; letter-spacing: 0.1em; padding: 3px 7px; border-radius: 3px; background: rgba(31,27,20,0.7); color: #fff; text-transform: uppercase; }
+      .card .body { padding: 14px 14px 16px; }
+      .card .title { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.25; }
+      .card .meta { margin-top: 6px; font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.06em; }
+      .card.match { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(30,77,84,0.15); }
+      .card.dim { opacity: 0.32; }
+
+      /* fake cursor */
+      .cursor {
+        position: absolute; width: 22px; height: 22px; pointer-events: none; z-index: 50;
+        background: var(--text); border-radius: 50%;
+        box-shadow: 0 0 0 3px rgba(245,240,232,0.9), 0 6px 16px rgba(0,0,0,0.2);
+        opacity: 0;
+      }
+
+      /* ─ scene 8 detail ─ */
+      .detail {
+        position: relative; height: 100%; display: grid;
+        grid-template-columns: 580px 1fr; gap: 0;
+        background: var(--vault); border-radius: 14px; overflow: hidden;
+        border: 1px solid var(--edge);
+        box-shadow: 0 30px 60px rgba(31,27,20,0.08);
+      }
+      .detail .hero {
+        background: linear-gradient(135deg, #c8a880 0%, #8a6a44 100%);
+        position: relative;
+      }
+      .detail .hero::before {
+        content: ""; position: absolute; inset: 0;
+        background: radial-gradient(circle at 50% 60%, rgba(31,27,20,0), rgba(31,27,20,0.5));
+      }
+      .detail .hero .hero-meta {
+        position: absolute; bottom: 32px; left: 32px; right: 32px;
+        color: #fff; display: flex; flex-direction: column; gap: 8px;
+      }
+      .detail .hero .hero-meta .plat {
+        align-self: flex-start;
+        font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+        background: rgba(0,0,0,0.45); padding: 5px 10px; border-radius: 3px;
+        letter-spacing: 0.14em; text-transform: uppercase;
+      }
+      .detail .hero .hero-meta .duration {
+        font-family: "JetBrains Mono", monospace; font-size: 13px;
+        letter-spacing: 0.12em; opacity: 0.85;
+      }
+      .detail .right { padding: 36px 44px; display: flex; flex-direction: column; gap: 24px; overflow: hidden; }
+      .detail .right .crumbs {
+        font-family: "JetBrains Mono", monospace; font-size: 11px;
+        letter-spacing: 0.18em; color: var(--text3); text-transform: uppercase;
+      }
+      .detail .right .crumbs .accent { color: var(--accent); }
+      .detail .right .title {
+        font-family: "Instrument Serif", Georgia, serif; font-size: 56px;
+        line-height: 1.05; color: var(--text); letter-spacing: -0.01em;
+      }
+      .detail .right .summary { font-size: 19px; line-height: 1.55; color: var(--text2); max-width: 720px; }
+      .detail .right .section-h {
+        font-family: "JetBrains Mono", monospace; font-size: 11px;
+        letter-spacing: 0.22em; color: var(--text3); text-transform: uppercase;
+      }
+      .detail .right .actions { display: flex; flex-direction: column; gap: 8px; }
+      .detail .right .action {
+        background: var(--panel); border: 1px solid var(--edge); border-radius: 4px;
+        padding: 14px 16px; font-size: 15px; color: var(--text2); display: flex; gap: 12px; align-items: center;
+      }
+      .detail .right .action .check {
+        width: 18px; height: 18px; border: 1.5px solid var(--edge2); border-radius: 50%; flex-shrink: 0;
+      }
+      .detail .right .action.done .check { background: var(--accent); border-color: var(--accent); }
+      .detail .right .reminder-box {
+        background: rgba(30,77,84,0.08); border: 1px solid rgba(30,77,84,0.22);
+        border-radius: 4px; padding: 16px 18px;
+        display: flex; justify-content: space-between; align-items: center;
+      }
+      .detail .right .reminder-box .left { display: flex; flex-direction: column; gap: 4px; }
+      .detail .right .reminder-box .label {
+        font-family: "JetBrains Mono", monospace; font-size: 10px;
+        letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase;
+      }
+      .detail .right .reminder-box .when { font-size: 18px; color: var(--text); font-weight: 500; }
+      .detail .right .reminder-box .btn {
+        font-family: "JetBrains Mono", monospace; font-size: 11px;
+        background: var(--accent); color: var(--accentInk); padding: 8px 14px;
+        border-radius: 3px; letter-spacing: 0.12em; text-transform: uppercase;
+      }
+      .detail .right .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+      .detail .right .tag {
+        font-family: "JetBrains Mono", monospace; font-size: 10px;
+        letter-spacing: 0.12em; padding: 4px 8px;
+        border: 1px solid var(--edge2); color: var(--text2); border-radius: 3px;
+        text-transform: uppercase;
+      }
+
+      /* ─ scene 9 outro ─ */
+      #s9 .center { height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 32px; }
+      #s9 .outro-h { font-family: "Instrument Serif", Georgia, serif; font-size: 200px; line-height: 0.94; color: var(--text); letter-spacing: -0.02em; text-align: center; }
+      #s9 .outro-h .it { font-style: italic; color: var(--text2); }
+      #s9 .outro-line { width: 400px; height: 1px; background: var(--edge2); }
+      #s9 .outro-tagline { font-size: 26px; color: var(--text2); }
+      #s9 .url { font-family: "JetBrains Mono", monospace; font-size: 18px; color: var(--accent); letter-spacing: 0.12em; margin-top: 12px; }
+
+      /* shared scene tag */
+      .scene-tag { position: absolute; bottom: 70px; left: 160px; font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: 0.18em; color: var(--text3); text-transform: uppercase; }
+      .scene-tag .num { color: var(--accent); margin-right: 12px; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="62"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- BACKGROUND MUSIC -->
+      <audio
+        id="bed"
+        class="clip"
+        data-start="0"
+        data-duration="62"
+        data-track-index="0"
+        data-volume="0.85"
+        src="audio/bed.mp3"
+      ></audio>
+
+      <!-- SCENE 1: brand reveal (0 - 5.0) -->
+      <div id="s1" class="clip scene" data-start="0" data-duration="5.0" data-track-index="1">
+        <div class="center">
+          <div id="s1-eye" class="mono eyebrow">an imessage assistant</div>
+          <div class="wordmark">
+            <div id="s1-the" class="the">the</div>
+            <div id="s1-vault" class="vault">Vault</div>
+          </div>
+          <div id="s1-line" class="underline"></div>
+          <div id="s1-tag" class="serif tagline">forward a reel. it remembers everything.</div>
+        </div>
+      </div>
+
+      <!-- SCENE 2: pitch + stats (4.7 - 10.4) -->
+      <div id="s2" class="clip scene" data-start="4.7" data-duration="5.7" data-track-index="2">
+        <div class="scene-content">
+          <div class="pitch-grid">
+            <div class="pitch-left">
+              <div id="s2-label" class="mono label">the problem</div>
+              <div id="s2-h" class="pitch-h">you save<br/>reels you<br/><span class="it">never see again</span>.</div>
+              <div id="s2-sub" class="pitch-sub">
+                short-form content is consumed at firehose speed but acted on at near-zero rate.
+                the save folder becomes a graveyard.
+              </div>
+            </div>
+            <div class="stats">
+              <div id="s2-stat1" class="stat">
+                <div class="num">2,400+</div>
+                <div class="lbl">reels saved by an avg user / year</div>
+                <div class="meta mono">SOURCE · TIKTOK INTERNAL</div>
+              </div>
+              <div id="s2-stat2" class="stat">
+                <div class="num accent">3%</div>
+                <div class="lbl">that get revisited</div>
+                <div class="meta mono">SOURCE · CHARTBEAT 2025</div>
+              </div>
+              <div id="s2-stat3" class="stat">
+                <div class="num">100%</div>
+                <div class="lbl">retrievable with theVault</div>
+                <div class="meta mono">SOURCE · THIS DEMO</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 3: imsg save w/ zoom + loading (10.1 - 22.0) -->
+      <div id="s3" class="clip scene" data-start="10.1" data-duration="11.9" data-track-index="1">
+        <div class="scene-content">
+          <div class="imsg-stage">
+            <div class="imsg-copy">
+              <div id="s3-step" class="imsg-step">step 01 · save</div>
+              <div id="s3-h" class="imsg-h">forward<br/>a reel.</div>
+              <div id="s3-sub" class="imsg-sub">
+                drop a tiktok or instagram link into imessage. theVault watches the video,
+                transcribes it, summarizes it, and files it under the right category.
+              </div>
+            </div>
+            <div id="s3-phone-wrap" class="phone-frame">
+              <div id="s3-phone" class="phone">
+                <div class="statusbar"><span>9:41</span><span class="mono">100</span></div>
+                <div class="nav">
+                  <div class="nav-back">‹</div>
+                  <div class="nav-center">
+                    <div class="avatar">V</div>
+                    <div class="name">theVault</div>
+                    <div class="sub">imessage</div>
+                  </div>
+                </div>
+                <div id="s3-msgs" class="messages">
+                  <div class="system-note">today 11:42 am</div>
+                  <div id="s3-b1" class="bubble thumb">
+                    <div class="thumb-card">
+                      <div class="thumb-meta">
+                        <span class="thumb-plat">tiktok</span>
+                        <span>0:47</span>
+                      </div>
+                    </div>
+                    <div class="url mono">tiktok.com/@chefsteps</div>
+                  </div>
+                  <div id="s3-b2" class="bubble">
+                    <div>got it, processing</div>
+                    <div class="loading-bar"><div id="s3-bar"></div></div>
+                    <div id="s3-bar-meta" class="loading-meta">downloading · 0:00 / 0:47</div>
+                  </div>
+                  <div id="s3-r1" class="read-receipt">read 11:42 am</div>
+                  <div id="s3-typing1" class="typing">
+                    <span id="s3-d1"></span><span id="s3-d2"></span><span id="s3-d3"></span>
+                  </div>
+                  <div id="s3-b3" class="bubble savecard">
+                    <div class="body">saved · one-pan miso butter salmon. lowkey the easiest weeknight dinner ngl</div>
+                    <div class="link-card">
+                      <div class="badge">V</div>
+                      <div class="meta">
+                        <div class="title">miso butter salmon</div>
+                        <div class="host mono">thevault.app/save/3a89f</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="compose">
+                  <div class="plus">+</div>
+                  <div class="input">imessage</div>
+                </div>
+                <div class="home"></div>
+              </div>
+            </div>
+          </div>
+          <div class="scene-tag"><span class="num">01</span>save flow · imessage</div>
+        </div>
+      </div>
+
+      <!-- SCENE 4: dashboard library "all" (21.7 - 29.7) -->
+      <div id="s4" class="clip scene" data-start="21.7" data-duration="8.0" data-track-index="2">
+        <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
+          <div id="s4-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 02 · the library</div>
+          <div id="s4-dash" class="dash" style="height: 880px">
+            <div class="dash-side">
+              <div class="brand">
+                <div class="brand-mark">V</div>
+                <div class="brand-name"><span class="the">the</span>Vault</div>
+              </div>
+              <div class="nav-group-label">categories</div>
+              <div id="s4-n1" class="nav-item active">all <span class="count">214</span></div>
+              <div id="s4-n2" class="nav-item">recipes <span class="count">42</span></div>
+              <div id="s4-n3" class="nav-item">fitness <span class="count">31</span></div>
+              <div id="s4-n4" class="nav-item">places to eat <span class="count">28</span></div>
+              <div id="s4-n5" class="nav-item">things to do <span class="count">37</span></div>
+              <div id="s4-n6" class="nav-item">shopping <span class="count">24</span></div>
+              <div id="s4-n7" class="nav-item">professional <span class="count">19</span></div>
+              <div id="s4-n8" class="nav-item">coding projects <span class="count">11</span></div>
+              <div id="s4-n9" class="nav-item">other <span class="count">22</span></div>
+            </div>
+            <div class="dash-main">
+              <div class="dash-top">
+                <h1><span class="ital">your</span>library</h1>
+                <div class="tools">
+                  <div class="search"><span style="color: var(--text3)">search</span></div>
+                  <div class="toggle"><span class="opt active">grid</span><span class="opt">list</span></div>
+                </div>
+              </div>
+              <div class="grid">
+                <div id="s4-c1" class="card"><div class="thumb t1"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">miso butter salmon</div><div class="meta">SAVED · 2h AGO</div></div></div>
+                <div id="s4-c2" class="card"><div class="thumb t2"><span class="badge-platform ig">ig</span><span class="badge-cat">fitness</span></div><div class="body"><div class="title">doorway pull-up progression</div><div class="meta">SAVED · 1d AGO</div></div></div>
+                <div id="s4-c3" class="card"><div class="thumb t3"><span class="badge-platform tt">tt</span><span class="badge-cat">places</span></div><div class="body"><div class="title">ichiran ramen midtown</div><div class="meta">SAVED · 3w AGO</div></div></div>
+                <div id="s4-c4" class="card"><div class="thumb t4"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">korean braised tofu</div><div class="meta">SAVED · 5d AGO</div></div></div>
+                <div id="s4-c5" class="card"><div class="thumb t5"><span class="badge-platform tt">tt</span><span class="badge-cat">things</span></div><div class="body"><div class="title">3 day boston itinerary</div><div class="meta">SAVED · 1w AGO</div></div></div>
+                <div id="s4-c6" class="card"><div class="thumb t6"><span class="badge-platform ig">ig</span><span class="badge-cat">shopping</span></div><div class="body"><div class="title">ceramic pour-over kettle</div><div class="meta">SAVED · 2d AGO</div></div></div>
+                <div id="s4-c7" class="card"><div class="thumb t7"><span class="badge-platform tt">tt</span><span class="badge-cat">fitness</span></div><div class="body"><div class="title">zone 2 cardio for runners</div><div class="meta">SAVED · 4d AGO</div></div></div>
+                <div id="s4-c8" class="card"><div class="thumb t8"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">smashburger weeknight</div><div class="meta">SAVED · 6d AGO</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div id="s4-cursor" class="cursor"></div>
+          <div class="scene-tag"><span class="num">02</span>library · 214 saves</div>
+        </div>
+      </div>
+
+      <!-- SCENE 5: dashboard "recipes" filter (29.4 - 36.4) -->
+      <div id="s5" class="clip scene" data-start="29.4" data-duration="7.0" data-track-index="1">
+        <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
+          <div id="s5-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 03 · filter by category</div>
+          <div class="dash" style="height: 880px">
+            <div class="dash-side">
+              <div class="brand">
+                <div class="brand-mark">V</div>
+                <div class="brand-name"><span class="the">the</span>Vault</div>
+              </div>
+              <div class="nav-group-label">categories</div>
+              <div class="nav-item">all <span class="count">214</span></div>
+              <div id="s5-active" class="nav-item active">recipes <span class="count">42</span></div>
+              <div class="nav-item">fitness <span class="count">31</span></div>
+              <div class="nav-item">places to eat <span class="count">28</span></div>
+              <div class="nav-item">things to do <span class="count">37</span></div>
+              <div class="nav-item">shopping <span class="count">24</span></div>
+              <div class="nav-item">professional <span class="count">19</span></div>
+              <div class="nav-item">coding projects <span class="count">11</span></div>
+              <div class="nav-item">other <span class="count">22</span></div>
+            </div>
+            <div class="dash-main">
+              <div class="dash-top">
+                <h1><span class="ital">your</span><span class="swap">recipes</span></h1>
+                <div class="tools">
+                  <div class="search"><span style="color: var(--text3)">search</span></div>
+                  <div class="toggle"><span class="opt active">grid</span><span class="opt">list</span></div>
+                </div>
+              </div>
+              <div class="grid">
+                <div id="s5-c1" class="card"><div class="thumb t1"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">miso butter salmon</div><div class="meta">SAVED · 2h AGO</div></div></div>
+                <div id="s5-c2" class="card"><div class="thumb t4"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">korean braised tofu</div><div class="meta">SAVED · 5d AGO</div></div></div>
+                <div id="s5-c3" class="card"><div class="thumb t8"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">smashburger weeknight</div><div class="meta">SAVED · 6d AGO</div></div></div>
+                <div id="s5-c4" class="card"><div class="thumb t9"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">cacio e pepe under 8 min</div><div class="meta">SAVED · 8d AGO</div></div></div>
+                <div id="s5-c5" class="card"><div class="thumb t10"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">no-knead focaccia</div><div class="meta">SAVED · 12d AGO</div></div></div>
+                <div id="s5-c6" class="card"><div class="thumb t11"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">taiwanese popcorn chicken</div><div class="meta">SAVED · 15d AGO</div></div></div>
+                <div id="s5-c7" class="card"><div class="thumb t12"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">crispy gnocchi sheet pan</div><div class="meta">SAVED · 18d AGO</div></div></div>
+                <div id="s5-c8" class="card"><div class="thumb t2"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">soy butter pasta</div><div class="meta">SAVED · 21d AGO</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="scene-tag"><span class="num">03</span>filter · 42 recipes</div>
+        </div>
+      </div>
+
+      <!-- SCENE 6: semantic search (36.1 - 43.4) -->
+      <div id="s6" class="clip scene" data-start="36.1" data-duration="7.3" data-track-index="2">
+        <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
+          <div id="s6-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 04 · semantic search</div>
+          <div class="dash" style="height: 880px">
+            <div class="dash-side">
+              <div class="brand">
+                <div class="brand-mark">V</div>
+                <div class="brand-name"><span class="the">the</span>Vault</div>
+              </div>
+              <div class="nav-group-label">categories</div>
+              <div class="nav-item active">all <span class="count">214</span></div>
+              <div class="nav-item">recipes <span class="count">42</span></div>
+              <div class="nav-item">fitness <span class="count">31</span></div>
+              <div class="nav-item">places to eat <span class="count">28</span></div>
+              <div class="nav-item">things to do <span class="count">37</span></div>
+            </div>
+            <div class="dash-main">
+              <div class="dash-top">
+                <h1><span class="ital">your</span>library</h1>
+                <div class="tools">
+                  <div class="search" style="border-color: var(--accent); width: 420px">
+                    <span style="color: var(--text3)">search</span>
+                    <span id="s6-q" class="search-text"></span>
+                  </div>
+                  <div class="toggle"><span class="opt active">grid</span><span class="opt">list</span></div>
+                </div>
+              </div>
+              <div class="grid">
+                <div id="s6-c1" class="card dim"><div class="thumb t1"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">miso butter salmon</div><div class="meta">SAVED · 2h AGO</div></div></div>
+                <div id="s6-c2" class="card dim"><div class="thumb t2"><span class="badge-platform ig">ig</span><span class="badge-cat">fitness</span></div><div class="body"><div class="title">doorway pull-up progression</div><div class="meta">SAVED · 1d AGO</div></div></div>
+                <div id="s6-c3" class="card match"><div class="thumb t3"><span class="badge-platform tt">tt</span><span class="badge-cat">places</span></div><div class="body"><div class="title">ichiran ramen midtown</div><div class="meta">MATCH · 0.91</div></div></div>
+                <div id="s6-c4" class="card dim"><div class="thumb t4"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">korean braised tofu</div><div class="meta">SAVED · 5d AGO</div></div></div>
+                <div id="s6-c5" class="card dim"><div class="thumb t5"><span class="badge-platform tt">tt</span><span class="badge-cat">things</span></div><div class="body"><div class="title">3 day boston itinerary</div><div class="meta">SAVED · 1w AGO</div></div></div>
+                <div id="s6-c6" class="card dim"><div class="thumb t6"><span class="badge-platform ig">ig</span><span class="badge-cat">shopping</span></div><div class="body"><div class="title">ceramic pour-over kettle</div><div class="meta">SAVED · 2d AGO</div></div></div>
+                <div id="s6-c7" class="card match"><div class="thumb t7"><span class="badge-platform tt">tt</span><span class="badge-cat">places</span></div><div class="body"><div class="title">totto ramen midtown west</div><div class="meta">MATCH · 0.84</div></div></div>
+                <div id="s6-c8" class="card dim"><div class="thumb t8"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">smashburger weeknight</div><div class="meta">SAVED · 6d AGO</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="scene-tag"><span class="num">04</span>semantic search · vector similarity</div>
+        </div>
+      </div>
+
+      <!-- SCENE 7: imsg recall (43.1 - 53.0) -->
+      <div id="s7" class="clip scene" data-start="43.1" data-duration="9.9" data-track-index="1">
+        <div class="scene-content">
+          <div class="imsg-stage">
+            <div class="imsg-copy">
+              <div id="s7-step" class="imsg-step">step 05 · recall</div>
+              <div id="s7-h" class="imsg-h">
+                <span class="serif" style="font-style: italic; color: var(--accent2)">"</span>what was<br/>that ramen<br/>spot
+                <span class="serif" style="font-style: italic; color: var(--accent2)">"</span>
+              </div>
+              <div id="s7-sub" class="imsg-sub">
+                ask in plain language. theVault recalls the right save, plus what
+                you said about it three weeks ago.
+              </div>
+            </div>
+            <div id="s7-phone-wrap" class="phone-frame">
+              <div id="s7-phone" class="phone">
+                <div class="statusbar"><span>8:14</span><span class="mono">87</span></div>
+                <div class="nav">
+                  <div class="nav-back">‹</div>
+                  <div class="nav-center">
+                    <div class="avatar">V</div>
+                    <div class="name">theVault</div>
+                    <div class="sub">imessage</div>
+                  </div>
+                </div>
+                <div id="s7-msgs" class="messages">
+                  <div class="system-note">8:14 pm</div>
+                  <div id="s7-b1" class="bubble me">what was that ramen spot in nyc i saved</div>
+                  <div id="s7-r1" class="read-receipt">read 8:14 pm</div>
+                  <div id="s7-typing1" class="typing">
+                    <span id="s7-d1"></span><span id="s7-d2"></span><span id="s7-d3"></span>
+                  </div>
+                  <div id="s7-b3" class="bubble savecard">
+                    <div class="body">ichiran in midtown. solo booth thing, open till 4am. jess said get the kaedama</div>
+                    <div class="link-card">
+                      <div class="badge">V</div>
+                      <div class="meta">
+                        <div class="title">ichiran ramen midtown nyc</div>
+                        <div class="host mono">thevault.app/save/1a89f2</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="s7-b4" class="bubble">u saved it 3 weeks ago from @nyceatswithjess</div>
+                  <div id="s7-b5" class="bubble me">cool sam wants to go tonight, is it good for 2</div>
+                  <div id="s7-typing2" class="typing">
+                    <span id="s7-d4"></span><span id="s7-d5"></span><span id="s7-d6"></span>
+                  </div>
+                  <div id="s7-b6" class="bubble">nah it's solo booths kinda the whole vibe. u prob want totto</div>
+                </div>
+                <div class="compose">
+                  <div class="plus">+</div>
+                  <div class="input">imessage</div>
+                </div>
+                <div class="home"></div>
+              </div>
+            </div>
+          </div>
+          <div class="scene-tag"><span class="num">05</span>semantic recall · long-term memory</div>
+        </div>
+      </div>
+
+      <!-- SCENE 8: save detail (52.7 - 58.7) -->
+      <div id="s8" class="clip scene" data-start="52.7" data-duration="6.0" data-track-index="2">
+        <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
+          <div id="s8-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 06 · save detail</div>
+          <div id="s8-detail" class="detail" style="height: 880px">
+            <div class="hero">
+              <div class="hero-meta">
+                <span class="plat" style="background: var(--tt)">tiktok</span>
+                <span class="duration">0:47 · @chefsteps</span>
+              </div>
+            </div>
+            <div class="right">
+              <div id="s8-cr" class="crumbs">library <span class="accent">› recipes ›</span> save</div>
+              <div id="s8-title" class="title">one-pan miso butter salmon</div>
+              <div id="s8-summary" class="summary">
+                sheet-pan dinner, one fillet of salmon, miso, butter, soy. 25 min total.
+                doubles easy. no flipping. broiler at the end for crisp.
+              </div>
+              <div id="s8-actions-h" class="section-h">action items</div>
+              <div class="actions">
+                <div id="s8-a1" class="action done">
+                  <span class="check"></span>
+                  <span>buy white miso</span>
+                </div>
+                <div id="s8-a2" class="action">
+                  <span class="check"></span>
+                  <span>thaw salmon thursday morning</span>
+                </div>
+                <div id="s8-a3" class="action">
+                  <span class="check"></span>
+                  <span>broil last 2 minutes for crispy top</span>
+                </div>
+              </div>
+              <div id="s8-rem" class="reminder-box">
+                <div class="left">
+                  <div class="label">reminder set</div>
+                  <div class="when">thursday 6:00 pm · "make miso butter salmon"</div>
+                </div>
+                <div class="btn">cancel</div>
+              </div>
+              <div id="s8-tags-h" class="section-h">tags</div>
+              <div class="tags">
+                <div class="tag">salmon</div>
+                <div class="tag">sheet pan</div>
+                <div class="tag">25 min</div>
+                <div class="tag">weeknight</div>
+                <div class="tag">miso</div>
+              </div>
+            </div>
+          </div>
+          <div class="scene-tag"><span class="num">06</span>save detail · transcript, actions, reminder</div>
+        </div>
+      </div>
+
+      <!-- SCENE 9: outro (58.4 - 62.0) -->
+      <div id="s9" class="clip scene" data-start="58.4" data-duration="3.6" data-track-index="1">
+        <div class="center">
+          <div id="s9-eye" class="mono" style="font-size: 18px; letter-spacing: 0.22em; color: var(--text3); text-transform: uppercase">save once. recall forever.</div>
+          <div class="outro-h"><span class="it">the</span> Vault</div>
+          <div id="s9-line" class="outro-line"></div>
+          <div id="s9-tag" class="outro-tagline">an imessage assistant for everything you save.</div>
+          <div id="s9-url" class="url">THEVAULT.APP</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // helper for typewriter via onUpdate
+      function typewriter(selector, text, startTime, duration, ease = "none") {
+        tl.to(
+          {},
+          {
+            duration,
+            ease,
+            onUpdate: function () {
+              const p = this.progress();
+              const n = Math.floor(p * text.length);
+              const el = document.querySelector(selector);
+              if (el) el.textContent = text.slice(0, n);
+            },
+          },
+          startTime
+        );
+      }
+
+      // ─── SCENE 1 brand reveal (0 - 5.0) ──────────────────
+      tl.from("#s1", { opacity: 0, duration: 0.5, ease: "power2.out" }, 0);
+      tl.from("#s1-eye", { opacity: 0, y: 20, duration: 0.55, ease: "power3.out" }, 0.3);
+      tl.from("#s1-the", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 0.55);
+      tl.from("#s1-vault", { opacity: 0, y: 60, duration: 0.85, ease: "expo.out" }, 0.65);
+      tl.from("#s1-line", { scaleX: 0, duration: 0.6, ease: "power3.out" }, 1.3);
+      tl.from("#s1-tag", { opacity: 0, y: 24, duration: 0.6, ease: "power2.out" }, 1.5);
+
+      // ─── SCENE 2 pitch (4.7 - 10.4) ──────────────────────
+      tl.from("#s2", { opacity: 0, duration: 0.5, ease: "power2.out" }, 4.7);
+      tl.from("#s2-label", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 5.0);
+      tl.from("#s2-h", { opacity: 0, y: 40, duration: 0.75, ease: "expo.out" }, 5.2);
+      tl.from("#s2-sub", { opacity: 0, y: 30, duration: 0.6, ease: "power3.out" }, 5.55);
+      tl.from("#s2-stat1", { opacity: 0, x: 60, duration: 0.55, ease: "power3.out" }, 5.8);
+      tl.from("#s2-stat2", { opacity: 0, x: 60, duration: 0.55, ease: "power3.out" }, 6.0);
+      tl.from("#s2-stat3", { opacity: 0, x: 60, duration: 0.55, ease: "power3.out" }, 6.2);
+
+      // ─── SCENE 3 imsg save w/ zoom + loading (10.1 - 22.0) ───
+      tl.from("#s3", { opacity: 0, duration: 0.5, ease: "power2.out" }, 10.1);
+      tl.from("#s3-step", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 10.4);
+      tl.from("#s3-h", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 10.6);
+      tl.from("#s3-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 10.9);
+      tl.from("#s3-phone-wrap", { opacity: 0, x: 80, scale: 0.92, duration: 0.8, ease: "expo.out" }, 10.6);
+
+      // hide bubbles initially so they "stream in"
+      tl.set(["#s3-b1","#s3-b2","#s3-r1","#s3-typing1","#s3-b3"], { opacity: 0 }, 11.4);
+
+      // bubble 1: video link
+      tl.fromTo("#s3-b1", { opacity: 0, y: 24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 11.7);
+      // zoom to focus on phone bubble area
+      tl.to("#s3-phone-wrap", { scale: 1.08, duration: 0.6, ease: "power2.out" }, 11.5);
+
+      // bubble 2: "got it, processing" + loading bar fills
+      tl.fromTo("#s3-b2", { opacity: 0, y: 22, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" }, 12.6);
+      // animate loading bar
+      tl.to({}, {
+        duration: 2.5, ease: "none",
+        onUpdate: function () {
+          const p = this.progress();
+          const bar = document.querySelector("#s3-bar");
+          if (bar) bar.style.cssText = `width:${p*100}%; height:100%; background:#1e4d54; border-radius:2px;`;
+          const meta = document.querySelector("#s3-bar-meta");
+          if (meta) {
+            const labels = ["downloading", "transcribing", "summarizing", "categorizing", "embedding"];
+            const i = Math.min(labels.length - 1, Math.floor(p * labels.length));
+            meta.textContent = `${labels[i]} · ${Math.floor(p*100)}%`;
+          }
+        },
+      }, 12.9);
+      tl.to("#s3-r1", { opacity: 1, duration: 0.3, ease: "power2.out" }, 13.2);
+
+      // typing indicator before final save card
+      tl.to("#s3-typing1", { opacity: 1, duration: 0.3, ease: "power2.out" }, 15.4);
+      tl.from("#s3-typing1", { y: 18, duration: 0.4, ease: "power3.out" }, 15.4);
+      // animate the three dots
+      tl.to("#s3-d1", { scale: 1.5, opacity: 1, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: 3 }, 15.6);
+      tl.to("#s3-d2", { scale: 1.5, opacity: 1, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: 3 }, 15.75);
+      tl.to("#s3-d3", { scale: 1.5, opacity: 1, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: 3 }, 15.9);
+
+      // hide typing, reveal save card
+      tl.to("#s3-typing1", { opacity: 0, duration: 0.3, ease: "power2.in" }, 17.6);
+      tl.fromTo("#s3-b3", { opacity: 0, y: 28, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }, 17.7);
+      tl.fromTo("#s3-b3", { boxShadow: "0 0 0 6px rgba(30,77,84,0.3)" }, { boxShadow: "0 0 0 0 rgba(30,77,84,0)", duration: 1.2, ease: "power2.out", overwrite: false }, 18.5);
+
+      // gentle release of zoom
+      tl.to("#s3-phone-wrap", { scale: 1.0, duration: 0.8, ease: "power2.inOut" }, 19.0);
+
+      // ─── SCENE 4 dashboard "all" (21.7 - 29.7) ──────────
+      tl.from("#s4", { opacity: 0, duration: 0.5, ease: "power2.out" }, 21.7);
+      tl.from("#s4-eye", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 22.0);
+      tl.from("#s4-dash", { opacity: 0, y: 30, duration: 0.7, ease: "expo.out" }, 22.1);
+      tl.from(
+        ["#s4-n1","#s4-n2","#s4-n3","#s4-n4","#s4-n5","#s4-n6","#s4-n7","#s4-n8","#s4-n9"],
+        { opacity: 0, x: -20, duration: 0.4, ease: "power3.out", stagger: 0.06 },
+        22.6
+      );
+      tl.from(
+        ["#s4-c1","#s4-c2","#s4-c3","#s4-c4","#s4-c5","#s4-c6","#s4-c7","#s4-c8"],
+        { opacity: 0, y: 32, duration: 0.5, ease: "power3.out", stagger: 0.08 },
+        22.9
+      );
+      // simulate cursor moving to recipes nav at end of scene
+      tl.fromTo("#s4-cursor",
+        { opacity: 0, left: 1500, top: 800 },
+        { opacity: 0.85, left: 230, top: 460, duration: 1.6, ease: "power2.inOut" },
+        27.2
+      );
+      // click pulse
+      tl.to("#s4-cursor", { scale: 0.6, duration: 0.15, ease: "power2.in", yoyo: true, repeat: 1, overwrite: "auto" }, 28.85);
+      // brief highlight on the recipes nav row
+      tl.fromTo("#s4-n2", { borderColor: "transparent" }, { borderColor: "rgba(30,77,84,0.4)", duration: 0.3, ease: "power2.out" }, 28.7);
+
+      // ─── SCENE 5 dashboard "recipes" filter (29.4 - 36.4) ───
+      tl.from("#s5", { opacity: 0, duration: 0.5, ease: "power2.out" }, 29.4);
+      tl.from("#s5-eye", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 29.7);
+      tl.from("#s5-active", { backgroundColor: "transparent", duration: 0.4, ease: "power2.out" }, 29.9);
+      tl.from(
+        ["#s5-c1","#s5-c2","#s5-c3","#s5-c4","#s5-c5","#s5-c6","#s5-c7","#s5-c8"],
+        { opacity: 0, scale: 0.94, y: 24, duration: 0.5, ease: "power3.out", stagger: 0.08 },
+        30.0
+      );
+
+      // ─── SCENE 6 semantic search (36.1 - 43.4) ──────────
+      tl.from("#s6", { opacity: 0, duration: 0.5, ease: "power2.out" }, 36.1);
+      tl.from("#s6-eye", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 36.4);
+      const queryText = '"that ramen spot solo booths in nyc"';
+      typewriter("#s6-q", queryText, 36.8, 2.4);
+      // after typing, dim non-matches and emphasize matches
+      tl.from(
+        ["#s6-c1","#s6-c2","#s6-c4","#s6-c5","#s6-c6","#s6-c8"],
+        { opacity: 1, duration: 0.4, ease: "power2.out" },
+        39.5
+      );
+      tl.fromTo(
+        "#s6-c3",
+        { boxShadow: "0 0 0 0 rgba(30,77,84,0)" },
+        { boxShadow: "0 0 0 4px rgba(30,77,84,0.25)", duration: 0.5, ease: "power2.out" },
+        39.6
+      );
+      tl.fromTo(
+        "#s6-c7",
+        { boxShadow: "0 0 0 0 rgba(30,77,84,0)" },
+        { boxShadow: "0 0 0 4px rgba(30,77,84,0.25)", duration: 0.5, ease: "power2.out" },
+        39.85
+      );
+
+      // ─── SCENE 7 imsg recall (43.1 - 53.0) ──────────────
+      tl.from("#s7", { opacity: 0, duration: 0.5, ease: "power2.out" }, 43.1);
+      tl.from("#s7-step", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 43.4);
+      tl.from("#s7-h", { opacity: 0, y: 50, duration: 0.75, ease: "expo.out" }, 43.6);
+      tl.from("#s7-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 43.9);
+      tl.from("#s7-phone-wrap", { opacity: 0, x: 80, scale: 0.92, duration: 0.8, ease: "expo.out" }, 43.6);
+
+      // hide bubbles initially
+      tl.set(["#s7-b1","#s7-r1","#s7-typing1","#s7-b3","#s7-b4","#s7-b5","#s7-typing2","#s7-b6"], { opacity: 0 }, 44.4);
+
+      // user's question
+      tl.fromTo("#s7-b1", { opacity: 0, y: 24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 44.7);
+      tl.to("#s7-r1", { opacity: 1, duration: 0.3, ease: "power2.out" }, 45.4);
+
+      // typing indicator → reply
+      tl.to("#s7-phone-wrap", { scale: 1.06, duration: 0.6, ease: "power2.out" }, 45.6);
+      tl.to("#s7-typing1", { opacity: 1, duration: 0.3, ease: "power2.out" }, 45.8);
+      tl.to("#s7-d1", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 2, ease: "sine.inOut" }, 46.0);
+      tl.to("#s7-d2", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 2, ease: "sine.inOut" }, 46.15);
+      tl.to("#s7-d3", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 2, ease: "sine.inOut" }, 46.3);
+      tl.to("#s7-typing1", { opacity: 0, duration: 0.25, ease: "power2.in" }, 47.4);
+      tl.fromTo("#s7-b3", { opacity: 0, y: 28, scale: 0.93 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }, 47.5);
+      tl.fromTo("#s7-b4", { opacity: 0, y: 22, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" }, 48.6);
+
+      // user follow-up
+      tl.fromTo("#s7-b5", { opacity: 0, y: 24, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 49.5);
+
+      // second typing → second reply
+      tl.to("#s7-typing2", { opacity: 1, duration: 0.3, ease: "power2.out" }, 50.3);
+      tl.to("#s7-d4", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 50.4);
+      tl.to("#s7-d5", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 50.55);
+      tl.to("#s7-d6", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 50.7);
+      tl.to("#s7-typing2", { opacity: 0, duration: 0.25, ease: "power2.in" }, 51.4);
+      tl.fromTo("#s7-b6", { opacity: 0, y: 24, scale: 0.93 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 51.5);
+
+      tl.to("#s7-phone-wrap", { scale: 1.0, duration: 0.8, ease: "power2.inOut" }, 52.0);
+
+      // ─── SCENE 8 save detail (52.7 - 58.7) ──────────────
+      tl.from("#s8", { opacity: 0, duration: 0.5, ease: "power2.out" }, 52.7);
+      tl.from("#s8-eye", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 53.0);
+      tl.from("#s8-detail", { opacity: 0, y: 30, duration: 0.7, ease: "expo.out" }, 53.1);
+      tl.from("#s8-cr", { opacity: 0, y: 16, duration: 0.4, ease: "power3.out" }, 53.6);
+      tl.from("#s8-title", { opacity: 0, y: 30, duration: 0.7, ease: "expo.out" }, 53.75);
+      tl.from("#s8-summary", { opacity: 0, y: 22, duration: 0.6, ease: "power3.out" }, 54.0);
+      tl.from("#s8-actions-h", { opacity: 0, x: -16, duration: 0.4, ease: "quint.out" }, 54.4);
+      tl.from(["#s8-a1","#s8-a2","#s8-a3"], { opacity: 0, x: -22, duration: 0.4, ease: "power3.out", stagger: 0.08 }, 54.6);
+      tl.from("#s8-rem", { opacity: 0, scale: 0.97, duration: 0.5, ease: "power3.out" }, 55.5);
+      tl.fromTo("#s8-rem", { boxShadow: "0 0 0 0 rgba(30,77,84,0)" }, { boxShadow: "0 0 0 5px rgba(30,77,84,0.18)", duration: 0.5, yoyo: true, repeat: 1, ease: "power2.inOut" }, 55.9);
+      tl.from("#s8-tags-h", { opacity: 0, x: -16, duration: 0.4, ease: "quint.out" }, 56.7);
+      tl.from(".detail .right .tag", { opacity: 0, y: 12, duration: 0.35, ease: "power3.out", stagger: 0.05 }, 56.85);
+
+      // ─── SCENE 9 outro (58.4 - 62.0) ────────────────────
+      tl.from("#s9", { opacity: 0, duration: 0.5, ease: "power2.out" }, 58.4);
+      tl.from("#s9-eye", { opacity: 0, y: 20, duration: 0.5, ease: "power3.out" }, 58.7);
+      tl.from("#s9 .outro-h", { opacity: 0, y: 60, duration: 0.85, ease: "expo.out" }, 58.9);
+      tl.from("#s9-line", { scaleX: 0, duration: 0.5, ease: "power3.out" }, 59.5);
+      tl.from("#s9-tag", { opacity: 0, y: 24, duration: 0.6, ease: "power2.out" }, 59.7);
+      tl.from("#s9-url", { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" }, 60.1);
+      // gentle final fade
+      tl.to(["#s9-eye","#s9 .outro-h","#s9-line","#s9-tag","#s9-url"], { opacity: 0.85, duration: 0.6, ease: "power2.in" }, 61.4);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

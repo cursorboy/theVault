@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { initAuthFromUrl, getToken } from "@/lib/auth";
+import { initAuthFromUrl } from "@/lib/auth";
 
 interface Props {
   children: React.ReactNode;
@@ -17,8 +17,8 @@ export function AuthGate({ children }: Props) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-vault-border border-t-vault-gold" />
-          <span className="text-xs tracking-widest text-vault-muted uppercase">Loading vault…</span>
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-edge border-t-accent" />
+          <span className="font-mono text-[10px] tracking-[0.22em] text-text3 uppercase">loading vault</span>
         </div>
       </div>
     );
@@ -27,18 +27,21 @@ export function AuthGate({ children }: Props) {
   if (status === "unauthed") {
     return (
       <div className="flex min-h-screen items-center justify-center px-6">
-        <div className="max-w-sm text-center">
-          <div
-            className="mb-4 text-4xl font-bold text-vault-gold"
-            style={{ fontFamily: "var(--font-fraunces)" }}
-          >
-            ReelVault
+        <div className="max-w-md text-center">
+          <div className="mb-6 flex justify-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-md bg-accent text-accent-ink font-display italic text-2xl">
+              V
+            </div>
           </div>
-          <p className="mb-6 text-sm leading-relaxed text-vault-muted">
-            Send a TikTok or Instagram URL to your ReelVault number via iMessage to get started.
+          <h1 className="font-display text-5xl tracking-tight text-text mb-4">
+            <span className="italic text-text2">the</span>Vault
+          </h1>
+          <p className="text-[15px] leading-relaxed text-text2 mb-6 max-w-[320px] mx-auto">
+            an imessage assistant for everything u save. forward a tiktok or ig reel
+            to get started, then u'll get a link back to ur vault.
           </p>
-          <p className="text-xs text-vault-border">
-            You&apos;ll receive a link to access your vault after your first save.
+          <p className="font-mono text-[11px] tracking-[0.16em] text-text3 uppercase">
+            invite-only · v0.4
           </p>
         </div>
       </div>

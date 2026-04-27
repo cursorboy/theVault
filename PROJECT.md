@@ -1,4 +1,4 @@
-# ReelVault — Full Project Document
+# theVault — Full Project Document
 
 > An iMessage / Instagram / TikTok AI assistant that ingests short-form video URLs, processes them into a searchable, categorized, semantically indexed library, builds a long-term memory of the user, and responds in natural gen-z text. A dashboard surfaces the library visually.
 
@@ -6,7 +6,7 @@
 
 ## 1. The One-Liner
 
-You forward a TikTok or Instagram reel to ReelVault. ReelVault watches it, transcribes it, summarizes it, categorizes it, embeds it for semantic search, remembers it, and chats with you about it like a friend who's actually seen everything you save. Forever searchable, recallable on demand, and tied into a memory layer that grows over time.
+You forward a TikTok or Instagram reel to theVault. theVault watches it, transcribes it, summarizes it, categorizes it, embeds it for semantic search, remembers it, and chats with you about it like a friend who's actually seen everything you save. Forever searchable, recallable on demand, and tied into a memory layer that grows over time.
 
 ---
 
@@ -14,7 +14,7 @@ You forward a TikTok or Instagram reel to ReelVault. ReelVault watches it, trans
 
 Short-form content is consumed at firehose speed but acted on at near-zero rate. People save reels they "want to remember" — recipes, workouts, restaurants, life advice, places, products, ideas — and never see them again. The save folder becomes a graveyard.
 
-ReelVault treats every saved reel as a structured artifact:
+theVault treats every saved reel as a structured artifact:
 - A **transcript** (what was said)
 - A **summary** (what it was about)
 - A **category** (recipes, fitness, places to eat, professional, etc.)
@@ -637,7 +637,7 @@ Drops sharply when Meta Business API replaces IG polling.
 
 ## 16. Why It's Different
 
-Most "save reels for later" apps stop at "we put your saves in a folder." ReelVault treats saves as the input to a memory system, not the output of a workflow. The dashboard is a search surface for what you've actually thought about. The chat assistant is a friend who's seen your taste evolve. The bots make it work where the user already lives — imsg, IG, TT — without forcing app installs or behavioral change.
+Most "save reels for later" apps stop at "we put your saves in a folder." theVault treats saves as the input to a memory system, not the output of a workflow. The dashboard is a search surface for what you've actually thought about. The chat assistant is a friend who's seen your taste evolve. The bots make it work where the user already lives — imsg, IG, TT — without forcing app installs or behavioral change.
 
 The three pillars:
 1. **Native channels** — meet the user where they already share content

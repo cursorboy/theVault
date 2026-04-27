@@ -27,7 +27,7 @@ System/
 .worktrees/reelvault/          # Active code project (FastAPI + Next.js app)
 ```
 
-## Code Project: reelvault
+## Code Project: thevault
 
 Monorepo at `.worktrees/reelvault/`. API uses FastAPI/Python, web uses Next.js. Deployed on Railway.
 

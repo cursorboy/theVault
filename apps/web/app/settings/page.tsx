@@ -6,7 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { AuthGate } from "@/components/AuthGate";
 import { api } from "@/lib/api";
 
-const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 const TIMEZONES = [
   "America/New_York",
   "America/Chicago",
@@ -53,137 +53,155 @@ function SettingsPage() {
 
   if (isLoading || !form) {
     return (
-      <div className="mx-auto max-w-2xl px-6 py-10 space-y-4">
+      <div className="mx-auto max-w-[820px] px-8 py-12 space-y-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="skeleton h-12 rounded-lg" />
+          <div key={i} className="skeleton h-12 rounded-md" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-10">
+    <div className="mx-auto max-w-[820px] px-8 py-12 relative z-10">
       <div className="mb-10">
-        <p className="mb-1 text-[10px] uppercase tracking-[0.2em] text-vault-muted">Preferences</p>
-        <h1
-          className="text-3xl font-bold text-vault-text"
-          style={{ fontFamily: "var(--font-fraunces)" }}
-        >
-          Settings
+        <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-text3 mb-2">
+          preferences
+        </div>
+        <h1 className="font-display text-[48px] leading-[1.04] tracking-[-0.02em] text-text">
+          <span className="italic text-text2">your</span> settings.
         </h1>
       </div>
 
-      {/* Digest settings */}
-      <section className="mb-8 rounded-lg border border-vault-border/60 bg-vault-surface p-6">
+      {/* Digest */}
+      <section className="mb-6 rounded-md border border-edge bg-vault p-7">
         <div className="mb-5 flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-vault-text" style={{ fontFamily: "var(--font-fraunces)" }}>
-              Weekly Digest
-            </h2>
-            <p className="text-xs text-vault-muted mt-0.5">Get a weekly iMessage recap of your saves</p>
+            <h2 className="font-display text-[22px] text-text">weekly digest</h2>
+            <p className="text-[13px] text-text3 mt-0.5">
+              get an imessage recap of your saves once a week
+            </p>
           </div>
           <button
-            onClick={() => setForm((f) => f ? { ...f, digest_enabled: !f.digest_enabled } : f)}
-            className={`relative h-5 w-9 rounded-full transition-colors ${
-              form.digest_enabled ? "bg-vault-gold" : "bg-vault-border"
+            onClick={() =>
+              setForm((f) => (f ? { ...f, digest_enabled: !f.digest_enabled } : f))
+            }
+            className={`relative h-6 w-11 rounded-full transition-colors ${
+              form.digest_enabled ? "bg-accent" : "bg-edge2"
             }`}
           >
             <div
-              className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
-                form.digest_enabled ? "translate-x-4" : "translate-x-0.5"
+              className={`absolute top-0.5 h-5 w-5 rounded-full bg-panel shadow transition-transform ${
+                form.digest_enabled ? "translate-x-5" : "translate-x-0.5"
               }`}
             />
           </button>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="mb-1.5 block text-[9px] uppercase tracking-[0.2em] text-vault-muted">Day</label>
+          <Field label="day">
             <select
               value={form.digest_day}
-              onChange={(e) => setForm((f) => f ? { ...f, digest_day: Number(e.target.value) } : f)}
-              className="w-full rounded border border-vault-border bg-vault-bg px-3 py-2 text-xs text-vault-text focus:border-vault-gold/50 focus:outline-none"
+              onChange={(e) =>
+                setForm((f) => (f ? { ...f, digest_day: Number(e.target.value) } : f))
+              }
+              className="w-full rounded border border-edge2 bg-panel px-3 py-2 text-[13px] text-text focus:border-accent focus:outline-none"
             >
               {DAYS.map((d, i) => (
-                <option key={d} value={i}>{d}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="mb-1.5 block text-[9px] uppercase tracking-[0.2em] text-vault-muted">Hour</label>
-            <select
-              value={form.digest_hour}
-              onChange={(e) => setForm((f) => f ? { ...f, digest_hour: Number(e.target.value) } : f)}
-              className="w-full rounded border border-vault-border bg-vault-bg px-3 py-2 text-xs text-vault-text focus:border-vault-gold/50 focus:outline-none"
-            >
-              {Array.from({ length: 24 }, (_, i) => (
-                <option key={i} value={i}>
-                  {i === 0 ? "12 AM" : i < 12 ? `${i} AM` : i === 12 ? "12 PM" : `${i - 12} PM`}
+                <option key={d} value={i}>
+                  {d}
                 </option>
               ))}
             </select>
-          </div>
+          </Field>
+          <Field label="hour">
+            <select
+              value={form.digest_hour}
+              onChange={(e) =>
+                setForm((f) => (f ? { ...f, digest_hour: Number(e.target.value) } : f))
+              }
+              className="w-full rounded border border-edge2 bg-panel px-3 py-2 text-[13px] text-text focus:border-accent focus:outline-none"
+            >
+              {Array.from({ length: 24 }, (_, i) => (
+                <option key={i} value={i}>
+                  {i === 0
+                    ? "12 am"
+                    : i < 12
+                    ? `${i} am`
+                    : i === 12
+                    ? "12 pm"
+                    : `${i - 12} pm`}
+                </option>
+              ))}
+            </select>
+          </Field>
         </div>
 
         <div className="mt-4">
-          <label className="mb-1.5 block text-[9px] uppercase tracking-[0.2em] text-vault-muted">Timezone</label>
-          <select
-            value={form.timezone}
-            onChange={(e) => setForm((f) => f ? { ...f, timezone: e.target.value } : f)}
-            className="w-full rounded border border-vault-border bg-vault-bg px-3 py-2 text-xs text-vault-text focus:border-vault-gold/50 focus:outline-none"
-          >
-            {TIMEZONES.map((tz) => (
-              <option key={tz} value={tz}>{tz}</option>
-            ))}
-          </select>
+          <Field label="timezone">
+            <select
+              value={form.timezone}
+              onChange={(e) =>
+                setForm((f) => (f ? { ...f, timezone: e.target.value } : f))
+              }
+              className="w-full rounded border border-edge2 bg-panel px-3 py-2 text-[13px] text-text focus:border-accent focus:outline-none"
+            >
+              {TIMEZONES.map((tz) => (
+                <option key={tz} value={tz}>
+                  {tz}
+                </option>
+              ))}
+            </select>
+          </Field>
         </div>
 
-        <div className="mt-5 flex justify-end">
+        <div className="mt-6 flex justify-end">
           <button
             onClick={() => update.mutate(form)}
             disabled={update.isPending}
-            className={`rounded border px-4 py-2 text-xs transition-all ${
+            className={`rounded px-4 py-2 text-[12px] font-mono uppercase tracking-[0.14em] transition-colors ${
               saved
-                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
-                : "border-vault-gold/40 bg-vault-gold/10 text-vault-gold hover:bg-vault-gold/20"
+                ? "bg-ok text-accent-ink"
+                : "bg-accent text-accent-ink hover:bg-accent-soft"
             } disabled:opacity-40`}
           >
-            {saved ? "Saved ✓" : update.isPending ? "Saving…" : "Save changes"}
+            {saved ? "saved" : update.isPending ? "saving" : "save"}
           </button>
         </div>
       </section>
 
-      {/* Pending reminders */}
-      <section className="rounded-lg border border-vault-border/60 bg-vault-surface p-6">
-        <h2
-          className="mb-4 text-sm font-semibold text-vault-text"
-          style={{ fontFamily: "var(--font-fraunces)" }}
-        >
-          Pending Reminders
-        </h2>
+      {/* Reminders */}
+      <section className="rounded-md border border-edge bg-vault p-7">
+        <div className="mb-5">
+          <h2 className="font-display text-[22px] text-text">pending reminders</h2>
+          <p className="text-[13px] text-text3 mt-0.5">
+            stuff you said you'd actually do.
+          </p>
+        </div>
 
         {!reminders || reminders.length === 0 ? (
-          <p className="text-xs text-vault-muted">No pending reminders.</p>
+          <p className="text-[13px] text-text3">no pending reminders.</p>
         ) : (
           <ul className="space-y-2">
             {reminders.map((r) => (
               <li
                 key={r.id}
-                className="flex items-center justify-between rounded border border-vault-border/40 px-3 py-2"
+                className="flex items-center justify-between rounded-md border border-edge bg-panel p-3 px-4"
               >
                 <div>
-                  <p className="text-xs text-vault-text">
-                    {format(new Date(r.fire_at), "EEE MMM d, yyyy 'at' h:mm a")}
+                  <p className="text-[13px] text-text">
+                    {format(new Date(r.fire_at), "EEE MMM d 'at' h:mm a")}
                   </p>
                   {r.recur && (
-                    <p className="text-[10px] text-vault-muted capitalize">{r.recur}</p>
+                    <p className="font-mono text-[10px] text-text3 mt-0.5 capitalize">
+                      {r.recur}
+                    </p>
                   )}
                 </div>
                 <button
                   onClick={() => cancelReminder.mutate(r.id)}
-                  className="text-[10px] text-vault-border hover:text-red-400 transition-colors"
+                  className="font-mono text-[11px] px-3 py-1.5 rounded-full border border-edge2 text-text2 hover:text-err hover:border-err transition-colors"
                 >
-                  Cancel
+                  cancel
                 </button>
               </li>
             ))}
@@ -191,6 +209,23 @@ function SettingsPage() {
         )}
       </section>
     </div>
+  );
+}
+
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-text3 mb-1.5">
+        {label}
+      </div>
+      {children}
+    </label>
   );
 }
 

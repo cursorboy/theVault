@@ -7,9 +7,15 @@ import { SaveCard, SaveCardSkeleton } from "@/components/SaveCard";
 import { AuthGate } from "@/components/AuthGate";
 import { api } from "@/lib/api";
 
+const CHANNELS = [
+  { label: "iMessage", sub: "+1 786 213 9361", ok: true },
+  { label: "Instagram", sub: "@you", ok: true },
+  { label: "TikTok", sub: "reconnect", ok: false },
+];
+
 function FeedPage() {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [view, setView] = useState<"grid" | "list">("grid");
+  const [view, setView] = useState<"grid" | "cozy" | "list">("grid");
 
   const { data: categories } = useQuery({
     queryKey: ["categories"],
@@ -21,156 +27,186 @@ function FeedPage() {
     queryFn: () => api.listSaves({ category_id: selectedCategory ?? undefined, limit: 200 }),
   });
 
-  const clustered = saves?.reduce<Record<string, typeof saves>>(
-    (acc, save) => {
-      const key = save.cluster_id ?? "__none__";
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(save);
-      return acc;
-    },
-    {}
-  );
+  const activeCat = selectedCategory
+    ? categories?.find((c) => c.id === selectedCategory)
+    : null;
+
+  const cols = view === "list" ? 1 : view === "cozy" ? 5 : 4;
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
-      <div className="flex gap-8">
-        {/* Sidebar */}
-        <aside className="w-48 flex-shrink-0">
-          <div className="sticky top-24">
-            <p className="mb-3 text-[9px] uppercase tracking-[0.2em] text-vault-border">Categories</p>
-            <div className="space-y-0.5">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={`flex w-full items-center justify-between rounded px-3 py-2 text-left text-xs transition-all ${
-                  selectedCategory === null
-                    ? "bg-vault-gold/15 text-vault-gold-bright"
-                    : "text-vault-muted hover:text-vault-text hover:bg-vault-surface"
-                }`}
-              >
-                <span>All saves</span>
-                {saves && <span className="text-[9px] opacity-60">{saves.length}</span>}
-              </button>
-              {categories?.map((cat) => {
-                const count = saves?.filter((s) => s.category_id === cat.id).length ?? 0;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
-                    className={`flex w-full items-center justify-between rounded px-3 py-2 text-left text-xs transition-all ${
-                      selectedCategory === cat.id
-                        ? "bg-vault-gold/15 text-vault-gold-bright"
-                        : "text-vault-muted hover:text-vault-text hover:bg-vault-surface"
-                    }`}
-                  >
-                    <span>{cat.label}</span>
-                    {count > 0 && <span className="text-[9px] opacity-50">{count}</span>}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="mt-8 border-t border-vault-border pt-6 space-y-0.5">
-              <Link href="/search" className="flex items-center gap-2 rounded px-3 py-2 text-xs text-vault-muted hover:text-vault-text hover:bg-vault-surface transition-all">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="5" r="3.5" stroke="currentColor" strokeWidth="1.2"/><path d="M8 8l2 2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
-                Search
-              </Link>
-              <Link href="/settings" className="flex items-center gap-2 rounded px-3 py-2 text-xs text-vault-muted hover:text-vault-text hover:bg-vault-surface transition-all">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="1.5" stroke="currentColor" strokeWidth="1.2"/><path d="M6 1v1M6 10v1M1 6h1M10 6h1M2.5 2.5l.7.7M8.8 8.8l.7.7M2.5 9.5l.7-.7M8.8 3.2l.7-.7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
-                Settings
-              </Link>
-            </div>
-          </div>
-        </aside>
-
-        {/* Main */}
-        <main className="flex-1 min-w-0">
-          {/* Header */}
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <p className="mb-0.5 text-[10px] uppercase tracking-[0.2em] text-vault-muted">Your collection</p>
-              <h1 className="text-2xl font-bold text-vault-text" style={{ fontFamily: "var(--font-fraunces)" }}>
-                {selectedCategory
-                  ? categories?.find((c) => c.id === selectedCategory)?.label ?? "Feed"
-                  : "All Saves"}
-              </h1>
-            </div>
-
-            {/* View toggle */}
-            <div className="flex items-center gap-1 rounded-lg border border-vault-border p-1">
-              <button
-                onClick={() => setView("grid")}
-                className={`rounded p-1.5 transition-all ${view === "grid" ? "bg-vault-gold/20 text-vault-gold" : "text-vault-muted hover:text-vault-text"}`}
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                  <rect x="1" y="1" width="5" height="5" rx="1"/>
-                  <rect x="8" y="1" width="5" height="5" rx="1"/>
-                  <rect x="1" y="8" width="5" height="5" rx="1"/>
-                  <rect x="8" y="8" width="5" height="5" rx="1"/>
-                </svg>
-              </button>
-              <button
-                onClick={() => setView("list")}
-                className={`rounded p-1.5 transition-all ${view === "list" ? "bg-vault-gold/20 text-vault-gold" : "text-vault-muted hover:text-vault-text"}`}
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                  <rect x="1" y="2" width="12" height="2" rx="1"/>
-                  <rect x="1" y="6" width="12" height="2" rx="1"/>
-                  <rect x="1" y="10" width="12" height="2" rx="1"/>
-                </svg>
-              </button>
-            </div>
+    <div className="mx-auto flex max-w-[1320px] gap-0 relative z-10">
+      {/* Sidebar */}
+      <aside className="w-[260px] flex-shrink-0 border-r border-edge bg-vault min-h-[calc(100vh-57px)] sticky top-[57px]">
+        <div className="p-5 flex flex-col gap-1 h-[calc(100vh-57px)] overflow-auto">
+          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-text3 px-2 mb-2 mt-1">
+            categories
           </div>
 
-          {/* Content */}
-          {isLoading ? (
-            view === "grid" ? (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <SaveCardSkeleton key={i} view="grid" />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <SaveCardSkeleton key={i} view="list" />
-                ))}
-              </div>
-            )
-          ) : saves?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-32 text-center">
-              <p className="text-5xl text-vault-border mb-3" style={{ fontFamily: "var(--font-fraunces)" }}>Empty.</p>
-              <p className="text-sm text-vault-muted">Send a TikTok or Instagram URL via iMessage to save your first video.</p>
+          <SidebarItem
+            label="all"
+            count={saves?.length}
+            active={selectedCategory === null}
+            onClick={() => setSelectedCategory(null)}
+          />
+          {categories?.map((cat) => {
+            const count = saves?.filter((s) => s.category_id === cat.id).length ?? 0;
+            return (
+              <SidebarItem
+                key={cat.id}
+                label={cat.label.toLowerCase()}
+                count={count}
+                active={selectedCategory === cat.id}
+                onClick={() =>
+                  setSelectedCategory(cat.id === selectedCategory ? null : cat.id)
+                }
+              />
+            );
+          })}
+
+          <div className="h-5" />
+          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-text3 px-2 mb-2">
+            your stuff
+          </div>
+          <SidebarLink href="/search" label="search" />
+          <SidebarLink href="/settings" label="settings" />
+
+          {/* channel status */}
+          <div className="mt-auto rounded-md bg-panel border border-edge p-3 flex flex-col gap-1.5">
+            <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-text3 mb-1">
+              connected to
             </div>
-          ) : clustered ? (
-            <div className="space-y-10 stagger-fade">
-              {Object.entries(clustered).map(([clusterId, clusterSaves]) => (
-                <div key={clusterId}>
-                  {clusterId !== "__none__" && clusterSaves.length > 1 && (
-                    <div className="mb-4 flex items-center gap-3">
-                      <div className="h-px flex-1 bg-vault-border" />
-                      <span className="text-[10px] uppercase tracking-widest text-vault-gold/60">Related</span>
-                      <div className="h-px flex-1 bg-vault-border" />
-                    </div>
-                  )}
-                  {view === "grid" ? (
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                      {clusterSaves.map((save) => (
-                        <SaveCard key={save.id} save={save} view="grid" />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      {clusterSaves.map((save) => (
-                        <SaveCard key={save.id} save={save} view="list" />
-                      ))}
-                    </div>
-                  )}
-                </div>
+            {CHANNELS.map((ch) => (
+              <div key={ch.label} className="flex items-center gap-2 text-[11px]">
+                <span
+                  className="h-1.5 w-1.5 rounded-full flex-shrink-0"
+                  style={{ background: ch.ok ? "var(--ok)" : "var(--warn)" }}
+                />
+                <span className="text-text2 flex-1">{ch.label}</span>
+                <span className="font-mono text-[9px] text-text4">{ch.sub}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </aside>
+
+      {/* Main */}
+      <main className="flex-1 min-w-0 px-10 py-9">
+        <div className="mb-8 flex items-end justify-between gap-6">
+          <div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-text3 mb-1">
+              your library {activeCat ? `→ ${activeCat.label.toLowerCase()}` : ""}
+            </div>
+            <h1 className="font-display text-[44px] leading-[1.04] tracking-[-0.02em] text-text">
+              everything <span className="italic text-accent">worth</span> remembering.
+            </h1>
+            {saves && (
+              <p className="mt-2 text-[14px] text-text2">
+                {saves.length} {saves.length === 1 ? "save" : "saves"}
+                {saves.length > 0 ? " · ur last one was just now" : ""}
+              </p>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex items-center bg-panel border border-edge2 rounded p-1">
+              {(["grid", "cozy", "list"] as const).map((d) => (
+                <button
+                  key={d}
+                  onClick={() => setView(d)}
+                  className={`px-3 py-1 rounded font-mono text-[11px] transition-colors ${
+                    view === d
+                      ? "bg-accent text-accent-ink"
+                      : "text-text3 hover:text-text2"
+                  }`}
+                >
+                  {d}
+                </button>
               ))}
             </div>
-          ) : null}
-        </main>
-      </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        {isLoading ? (
+          <div
+            className="grid gap-4"
+            style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+          >
+            {Array.from({ length: 8 }).map((_, i) => (
+              <SaveCardSkeleton key={i} view={view === "list" ? "list" : "grid"} />
+            ))}
+          </div>
+        ) : !saves || saves.length === 0 ? (
+          <EmptyState />
+        ) : view === "list" ? (
+          <div className="space-y-2 stagger-fade">
+            {saves.map((save) => (
+              <SaveCard key={save.id} save={save} view="list" />
+            ))}
+          </div>
+        ) : (
+          <div
+            className="grid gap-4 stagger-fade"
+            style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+          >
+            {saves.map((save) => (
+              <SaveCard key={save.id} save={save} view="grid" />
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+
+function SidebarItem({
+  label,
+  count,
+  active,
+  onClick,
+}: {
+  label: string;
+  count?: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex w-full items-center justify-between gap-2 rounded px-2.5 py-1.5 text-left text-[13px] transition-all border ${
+        active
+          ? "bg-[rgba(30,77,84,0.08)] text-accent border-[rgba(30,77,84,0.18)]"
+          : "text-text2 hover:text-text hover:bg-panel border-transparent"
+      }`}
+    >
+      <span className="flex-1">{label}</span>
+      {typeof count === "number" && (
+        <span className="font-mono text-[10px] text-text3">{count}</span>
+      )}
+    </button>
+  );
+}
+
+function SidebarLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center gap-2 rounded px-2.5 py-1.5 text-[13px] text-text2 hover:text-text hover:bg-panel transition-colors"
+    >
+      {label}
+    </Link>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-32 text-center">
+      <p className="font-display text-[64px] leading-none text-edge2 mb-4">
+        empty.
+      </p>
+      <p className="text-[14px] text-text2 max-w-[360px]">
+        send a tiktok or instagram url via imessage to save your first reel.
+      </p>
     </div>
   );
 }

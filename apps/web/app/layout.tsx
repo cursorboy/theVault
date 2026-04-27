@@ -3,7 +3,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "ReelVault",
+  title: "theVault",
   description: "Your curated video library",
 };
 

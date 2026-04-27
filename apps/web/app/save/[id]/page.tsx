@@ -2,22 +2,32 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { formatDistanceToNow, format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { Navbar } from "@/components/Navbar";
 import { AuthGate } from "@/components/AuthGate";
 import { api } from "@/lib/api";
+
+const PLATFORM_LABEL: Record<string, string> = {
+  tiktok: "tiktok",
+  instagram: "instagram",
+};
 
 function SaveDetail() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
-  const [transcriptOpen, setTranscriptOpen] = useState(false);
+  const [transcriptOpen, setTranscriptOpen] = useState(true);
   const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
   const [reminderDate, setReminderDate] = useState("");
 
   const { data: save, isLoading } = useQuery({
     queryKey: ["save", params.id],
     queryFn: () => api.getSave(params.id),
+  });
+
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: api.listCategories,
   });
 
   const { data: reminders } = useQuery({
@@ -43,212 +53,272 @@ function SaveDetail() {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-3xl px-6 py-10 space-y-4">
-        <div className="skeleton h-6 w-1/3 rounded" />
-        <div className="skeleton h-48 w-full rounded-lg" />
-        <div className="skeleton h-4 w-full rounded" />
-        <div className="skeleton h-4 w-2/3 rounded" />
+      <div className="mx-auto max-w-[1280px] px-8 py-10 space-y-5">
+        <div className="skeleton h-5 w-1/4" />
+        <div className="skeleton h-12 w-2/3" />
+        <div className="skeleton h-72 w-full rounded-md" />
       </div>
     );
   }
 
   if (!save) {
     return (
-      <div className="mx-auto max-w-3xl px-6 py-10 text-center text-vault-muted">
-        Save not found.
+      <div className="mx-auto max-w-[1280px] px-8 py-16 text-center text-text3">
+        save not found.
       </div>
     );
   }
 
-  const saveReminders = reminders?.filter((r) => r.save_id === params.id && r.status === "pending") ?? [];
+  const category = categories?.find((c) => c.id === save.category_id);
+  const saveReminders =
+    reminders?.filter((r) => r.save_id === params.id && r.status === "pending") ?? [];
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-10">
-      {/* Back */}
-      <button
-        onClick={() => router.back()}
-        className="mb-6 flex items-center gap-2 text-xs text-vault-muted hover:text-vault-text transition-colors"
-      >
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-          <path d="M7.5 2L3.5 6l4 4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-        </svg>
-        Back
-      </button>
-
-      {/* Header */}
-      <div className="mb-6">
-        <div className="mb-2 flex items-center gap-2">
-          <span className={`rounded border px-2 py-0.5 text-[9px] uppercase tracking-widest platform-${save.platform}`}>
-            {save.platform}
-          </span>
-          {save.created_at && (
-            <span className="text-[10px] text-vault-border">
-              {format(new Date(save.created_at), "MMM d, yyyy")}
-            </span>
-          )}
-          <span className={`ml-auto text-[10px] uppercase tracking-widest ${
-            save.status === "done" ? "text-emerald-500" :
-            save.status === "failed" ? "text-red-500" : "text-vault-gold"
-          }`}>
-            {save.status}
-          </span>
-        </div>
-        <h1
-          className="text-2xl font-bold leading-snug text-vault-text"
-          style={{ fontFamily: "var(--font-fraunces)" }}
+    <div className="mx-auto max-w-[1320px] px-8 py-8 relative z-10">
+      {/* breadcrumb */}
+      <div className="flex items-center gap-3 text-[12px] text-text3 mb-6">
+        <button
+          onClick={() => router.back()}
+          className="hover:text-text2 transition-colors"
         >
-          {save.title || "Untitled"}
-        </h1>
+          your library
+        </button>
+        <span className="text-text4">→</span>
+        {category && (
+          <>
+            <span>{category.label.toLowerCase()}</span>
+            <span className="text-text4">→</span>
+          </>
+        )}
+        <span className="text-text font-medium truncate">
+          {save.title || "untitled"}
+        </span>
+        <div className="flex-1" />
+        <span
+          className={`font-mono text-[10px] uppercase tracking-[0.14em] px-2 py-1 rounded border platform-${save.platform}`}
+        >
+          {PLATFORM_LABEL[save.platform] ?? save.platform}
+        </span>
       </div>
 
-      {/* Thumbnail */}
-      {save.thumbnail_url && (
-        <div className="mb-6 overflow-hidden rounded-lg border border-vault-border">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={save.thumbnail_url} alt="" className="w-full object-cover max-h-64" />
-        </div>
-      )}
+      {/* main grid */}
+      <div className="grid grid-cols-[420px_1fr] gap-0 border border-edge rounded-md bg-vault overflow-hidden">
+        {/* left: thumb + meta */}
+        <div className="p-7 border-r border-edge flex flex-col gap-5">
+          <div className="relative overflow-hidden rounded-md aspect-[9/14] bg-edge">
+            {save.thumbnail_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={save.thumbnail_url} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-text4">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M10 8l6 4-6 4V8z" fill="currentColor" opacity="0.5" />
+                </svg>
+              </div>
+            )}
+            {/* play overlay */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-14 h-14 rounded-full bg-black/55 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 16 16" fill="white">
+                  <path d="M5 3l8 5-8 5z" />
+                </svg>
+              </div>
+            </div>
+          </div>
 
-      {/* Summary */}
-      {save.summary && (
-        <div className="mb-6 rounded-lg border border-vault-border/60 bg-vault-surface p-5">
-          <p className="text-[9px] uppercase tracking-[0.2em] text-vault-muted mb-2">Summary</p>
-          <p className="text-sm leading-relaxed text-vault-text">{save.summary}</p>
-        </div>
-      )}
-
-      {/* Tags */}
-      {save.tags && save.tags.length > 0 && (
-        <div className="mb-6 flex flex-wrap gap-1.5">
-          {save.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded border border-vault-border px-2 py-0.5 text-[10px] uppercase tracking-wide text-vault-muted"
+          <div className="flex gap-2">
+            <a
+              href={save.source_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded border border-edge2 bg-panel text-text text-[12px] hover:border-accent hover:text-accent transition-colors"
             >
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
+              open original →
+            </a>
+            <button
+              onClick={() => deleteSave.mutate()}
+              className="px-3 py-2.5 rounded border border-edge2 bg-panel text-text2 hover:text-err hover:border-err transition-colors"
+              title="delete save"
+            >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M3 4h10M5 4V2.5a1 1 0 011-1h4a1 1 0 011 1V4M6 7v5M10 7v5M3 4l1 9.5a1 1 0 001 1h6a1 1 0 001-1L13 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
 
-      {/* Action items */}
-      {save.action_items && save.action_items.length > 0 && (
-        <div className="mb-6 rounded-lg border border-vault-border/60 bg-vault-surface p-5">
-          <p className="text-[9px] uppercase tracking-[0.2em] text-vault-muted mb-3">Action items</p>
-          <ul className="space-y-2">
-            {save.action_items.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-3">
-                <button
-                  onClick={() => setCheckedItems((p) => ({ ...p, [idx]: !p[idx] }))}
-                  className={`mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded border transition-all ${
-                    checkedItems[idx]
-                      ? "border-vault-gold bg-vault-gold/20 text-vault-gold"
-                      : "border-vault-border hover:border-vault-muted"
-                  }`}
-                >
-                  {checkedItems[idx] && (
-                    <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor">
-                      <path d="M1 4l2 2 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                    </svg>
-                  )}
-                </button>
-                <span
-                  className={`text-sm leading-relaxed transition-all ${
-                    checkedItems[idx] ? "line-through text-vault-border" : "text-vault-text"
-                  }`}
-                >
-                  {item}
-                </span>
-              </li>
+          {/* meta block */}
+          <div className="flex flex-col gap-2.5">
+            {[
+              ["saved", save.created_at ? formatDistanceToNow(new Date(save.created_at), { addSuffix: true }) : "—"],
+              ["type", `${save.platform} · ${save.duration_secs ? `${Math.floor(save.duration_secs / 60)}:${String(save.duration_secs % 60).padStart(2, "0")}` : "—"}`],
+              ["category", category?.label.toLowerCase() ?? "—"],
+              ["status", save.status],
+            ].map(([k, v]) => (
+              <div key={k} className="flex justify-between gap-3 text-[13px]">
+                <span className="text-text3">{k}</span>
+                <span className="text-text font-medium text-right">{v}</span>
+              </div>
             ))}
-          </ul>
-        </div>
-      )}
+          </div>
 
-      {/* Transcript accordion */}
-      {save.transcript && (
-        <div className="mb-6 rounded-lg border border-vault-border/60 bg-vault-surface overflow-hidden">
-          <button
-            onClick={() => setTranscriptOpen((p) => !p)}
-            className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-vault-border/20 transition-colors"
-          >
-            <span className="text-[9px] uppercase tracking-[0.2em] text-vault-muted">Transcript</span>
-            <svg
-              width="12" height="12" viewBox="0 0 12 12" fill="none"
-              className={`text-vault-muted transition-transform ${transcriptOpen ? "rotate-180" : ""}`}
-            >
-              <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-          </button>
-          {transcriptOpen && (
-            <div className="border-t border-vault-border px-5 pb-5 pt-4">
-              <p className="text-xs leading-relaxed text-vault-muted whitespace-pre-wrap">{save.transcript}</p>
+          {/* tags */}
+          {save.tags && save.tags.length > 0 && (
+            <div>
+              <div className="text-[12px] text-text3 mb-2 font-medium">tags</div>
+              <div className="flex flex-wrap gap-1.5">
+                {save.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="text-[11px] px-2.5 py-1 rounded-full bg-panel border border-edge text-text2"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
-      )}
 
-      {/* Reminders */}
-      <div className="mb-6 rounded-lg border border-vault-border/60 bg-vault-surface p-5">
-        <p className="text-[9px] uppercase tracking-[0.2em] text-vault-muted mb-4">Reminders</p>
+        {/* right: content */}
+        <div className="p-8 overflow-auto">
+          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-text3 mb-2">
+            the gist
+          </div>
+          <h1 className="font-display text-[44px] leading-[1.06] tracking-[-0.02em] text-text">
+            {save.title || "untitled"}
+          </h1>
 
-        {saveReminders.length > 0 && (
-          <ul className="mb-4 space-y-2">
-            {saveReminders.map((r) => (
-              <li key={r.id} className="flex items-center justify-between text-xs">
-                <span className="text-vault-text">
-                  {format(new Date(r.fire_at), "MMM d, yyyy 'at' h:mm a")}
-                  {r.recur && <span className="ml-2 text-vault-muted">({r.recur})</span>}
+          {save.summary && (
+            <p className="mt-5 text-[15px] leading-[1.65] text-text2 max-w-[680px]">
+              {save.summary}
+            </p>
+          )}
+
+          {/* action items */}
+          {save.action_items && save.action_items.length > 0 && (
+            <div className="mt-7">
+              <div className="text-[13px] text-text3 mb-3 font-medium">
+                things to do, if you want
+              </div>
+              <div className="flex flex-col gap-2">
+                {save.action_items.map((item, idx) => {
+                  const done = checkedItems[idx];
+                  return (
+                    <div
+                      key={idx}
+                      className="flex items-center gap-3 p-3 px-4 rounded-md bg-vault border border-edge"
+                    >
+                      <button
+                        onClick={() =>
+                          setCheckedItems((p) => ({ ...p, [idx]: !p[idx] }))
+                        }
+                        className={`flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-sm transition-all border ${
+                          done
+                            ? "bg-accent border-accent"
+                            : "bg-transparent border-edge2 hover:border-text3"
+                        }`}
+                      >
+                        {done && (
+                          <svg width="9" height="9" viewBox="0 0 8 8" fill="none">
+                            <path d="M1 4l2 2 4-4" stroke="var(--accent-ink)" strokeWidth="1.5" strokeLinecap="round" />
+                          </svg>
+                        )}
+                      </button>
+                      <span
+                        className={`flex-1 text-[13px] ${
+                          done ? "line-through text-text3" : "text-text"
+                        }`}
+                      >
+                        {item}
+                      </span>
+                      <button className="font-mono text-[11px] px-2.5 py-1 rounded-full bg-transparent border border-edge2 text-text2 hover:border-accent hover:text-accent transition-colors">
+                        remind me
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* reminders */}
+          <div className="mt-7">
+            <div className="text-[13px] text-text3 mb-3 font-medium">reminders</div>
+            {saveReminders.length > 0 && (
+              <ul className="mb-3 flex flex-col gap-2">
+                {saveReminders.map((r) => (
+                  <li
+                    key={r.id}
+                    className="flex items-center justify-between p-3 px-4 rounded-md bg-[rgba(30,77,84,0.06)] border border-[rgba(30,77,84,0.2)]"
+                  >
+                    <div>
+                      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent mb-0.5">
+                        scheduled
+                      </div>
+                      <div className="text-[14px] text-text">
+                        {format(new Date(r.fire_at), "EEE MMM d 'at' h:mm a")}
+                        {r.recur && (
+                          <span className="text-text3 ml-2">· {r.recur}</span>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => cancelReminder.mutate(r.id)}
+                      className="font-mono text-[11px] px-3 py-1.5 rounded-full border border-edge2 text-text2 hover:text-err hover:border-err transition-colors"
+                    >
+                      cancel
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <div className="flex gap-2">
+              <input
+                type="datetime-local"
+                value={reminderDate}
+                onChange={(e) => setReminderDate(e.target.value)}
+                className="flex-1 rounded border border-edge2 bg-panel px-3 py-2 text-[13px] text-text focus:border-accent focus:outline-none"
+              />
+              <button
+                disabled={!reminderDate || createReminder.isPending}
+                onClick={() => {
+                  if (reminderDate) {
+                    createReminder.mutate(new Date(reminderDate).toISOString());
+                    setReminderDate("");
+                  }
+                }}
+                className="rounded bg-accent text-accent-ink px-4 py-2 text-[12px] font-mono uppercase tracking-[0.14em] hover:bg-accent-soft transition-colors disabled:opacity-40"
+              >
+                set
+              </button>
+            </div>
+          </div>
+
+          {/* transcript */}
+          {save.transcript && (
+            <div className="mt-7">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-[13px] text-text3 font-medium">
+                  what they actually say
                 </span>
+                <div className="flex-1 h-px bg-edge" />
                 <button
-                  onClick={() => cancelReminder.mutate(r.id)}
-                  className="text-vault-border hover:text-red-400 transition-colors text-[10px]"
+                  onClick={() => setTranscriptOpen((p) => !p)}
+                  className="font-mono text-[10px] text-text3 hover:text-accent transition-colors"
                 >
-                  Cancel
+                  {transcriptOpen ? "hide" : "show"}
                 </button>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <div className="flex gap-2">
-          <input
-            type="datetime-local"
-            value={reminderDate}
-            onChange={(e) => setReminderDate(e.target.value)}
-            className="flex-1 rounded border border-vault-border bg-vault-bg px-3 py-1.5 text-xs text-vault-text focus:border-vault-gold/50 focus:outline-none"
-          />
-          <button
-            disabled={!reminderDate || createReminder.isPending}
-            onClick={() => {
-              if (reminderDate) {
-                createReminder.mutate(new Date(reminderDate).toISOString());
-                setReminderDate("");
-              }
-            }}
-            className="rounded border border-vault-gold/40 bg-vault-gold/10 px-3 py-1.5 text-xs text-vault-gold transition-all hover:bg-vault-gold/20 disabled:opacity-40"
-          >
-            Set
-          </button>
+              </div>
+              {transcriptOpen && (
+                <div className="font-display italic text-[15px] leading-[1.75] text-text2 p-5 px-6 bg-panel border border-edge rounded-md max-h-[280px] overflow-auto whitespace-pre-wrap">
+                  {save.transcript}
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      </div>
-
-      {/* Source + delete */}
-      <div className="flex items-center justify-between">
-        <a
-          href={save.source_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-vault-muted hover:text-vault-gold transition-colors underline underline-offset-2"
-        >
-          View original
-        </a>
-        <button
-          onClick={() => deleteSave.mutate()}
-          className="text-xs text-vault-border hover:text-red-400 transition-colors"
-        >
-          Delete save
-        </button>
       </div>
     </div>
   );

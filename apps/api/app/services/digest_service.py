@@ -38,7 +38,7 @@ def _build_digest_message(saves: list[Save], categories: dict[int, str]) -> str:
     )
     intro = msg.content[0].text.strip()
 
-    lines = [f"Your weekly ReelVault digest ({len(saves)} saves):", "", intro, ""]
+    lines = [f"Your weekly theVault digest ({len(saves)} saves):", "", intro, ""]
     lines.extend(summaries[:10])
     return "\n".join(lines)
 

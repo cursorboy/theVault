@@ -3,30 +3,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV = [
-  { href: "/", label: "Feed" },
-  { href: "/search", label: "Search" },
-  { href: "/settings", label: "Settings" },
+  { href: "/", label: "feed" },
+  { href: "/search", label: "search" },
+  { href: "/settings", label: "settings" },
 ];
 
 export function Navbar() {
   const path = usePathname();
   return (
-    <nav className="sticky top-0 z-50 border-b border-vault-border bg-vault-bg/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <nav className="sticky top-0 z-50 border-b border-edge bg-vault/80 backdrop-blur-md">
+      <div className="mx-auto flex max-w-[1320px] items-center justify-between px-6 py-3">
         <Link href="/" className="group flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded border border-vault-gold/40 bg-vault-gold/10 text-vault-gold transition-all group-hover:bg-vault-gold/20 group-hover:border-vault-gold/60">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <rect x="1" y="1" width="5" height="5" fill="currentColor" opacity="0.6"/>
-              <rect x="8" y="1" width="5" height="5" fill="currentColor"/>
-              <rect x="1" y="8" width="5" height="5" fill="currentColor"/>
-              <rect x="8" y="8" width="5" height="5" fill="currentColor" opacity="0.6"/>
-            </svg>
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-accent-ink font-display italic text-base">
+            V
           </div>
-          <span
-            className="font-display text-lg font-semibold tracking-wide text-vault-text"
-            style={{ fontFamily: "var(--font-fraunces)" }}
-          >
-            ReelVault
+          <span className="font-display text-[20px] tracking-tight text-text leading-none">
+            <span className="italic text-text2 mr-1">the</span>Vault
           </span>
         </Link>
 
@@ -37,10 +29,10 @@ export function Navbar() {
               <Link
                 key={href}
                 href={href}
-                className={`rounded px-3 py-1.5 text-xs tracking-widest uppercase transition-all ${
+                className={`rounded px-3 py-1.5 text-[11px] tracking-[0.18em] uppercase font-mono transition-colors ${
                   active
-                    ? "bg-vault-gold/15 text-vault-gold-bright"
-                    : "text-vault-muted hover:text-vault-text hover:bg-vault-surface"
+                    ? "text-accent bg-[rgba(30,77,84,0.08)] border border-[rgba(30,77,84,0.18)]"
+                    : "text-text3 hover:text-text2 hover:bg-panel border border-transparent"
                 }`}
               >
                 {label}
