@@ -1,6 +1,5 @@
-from __future__ import annotations
-
 import re
+from typing import Optional
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from pydantic import BaseModel, Field
@@ -14,7 +13,7 @@ from app.models import Waitlist
 router = APIRouter(prefix="/api/waitlist", tags=["waitlist"])
 
 
-def _normalize_phone(raw: str) -> str | None:
+def _normalize_phone(raw: str) -> Optional[str]:
     digits = re.sub(r"\D", "", raw or "")
     if len(digits) == 10:
         return f"+1{digits}"
@@ -27,8 +26,8 @@ def _normalize_phone(raw: str) -> str | None:
 
 class JoinBody(BaseModel):
     phone: str = Field(min_length=4, max_length=32)
-    name: str | None = Field(default=None, max_length=120)
-    source: str | None = Field(default="web", max_length=32)
+    name: Optional[str] = Field(default=None, max_length=120)
+    source: Optional[str] = Field(default="web", max_length=32)
 
 
 class JoinResponse(BaseModel):

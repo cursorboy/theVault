@@ -97,11 +97,6 @@ function Onboarding() {
           </header>
 
           <div className="mt-12 lg:mt-0">
-            <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded border border-[rgba(30,77,84,0.28)] bg-[rgba(30,77,84,0.06)] text-accent mb-7">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-              now live on imessage, ig, tiktok
-            </span>
-
             <h1 className="font-display text-[88px] leading-[0.94] tracking-[-0.03em] text-text mb-7 max-w-[640px]">
               ur <WordRotator words={["reels", "tiktoks", "shorts"]} interval={2400} /><br />
               <span className="italic text-text2">actually</span><br />
