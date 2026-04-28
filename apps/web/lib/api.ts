@@ -115,7 +115,12 @@ export const api = {
     apiFetch<DigestSettings>("/api/digest", { method: "PATCH", body: JSON.stringify(body) }),
 
   joinWaitlist: (input: { phone: string; name?: string; source?: string }) =>
-    apiFetch<{ ok: boolean; position: number }>("/api/waitlist", {
+    apiFetch<{
+      ok: boolean;
+      position: number;
+      already_on_list: boolean;
+      joined_at: string | null;
+    }>("/api/waitlist", {
       method: "POST",
       body: JSON.stringify({
         phone: input.phone,

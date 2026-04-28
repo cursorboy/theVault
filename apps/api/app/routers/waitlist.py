@@ -33,6 +33,23 @@ class JoinBody(BaseModel):
 class JoinResponse(BaseModel):
     ok: bool
     position: int
+    already_on_list: bool
+    joined_at: Optional[str] = None
+
+
+def _looks_garbage(phone_e164: str) -> bool:
+    """Reject obvious fakes: all-same digit (e.g. +11111111111), sequential, too short post-normalize."""
+    digits = re.sub(r"\D", "", phone_e164)
+    if len(digits) < 10:
+        return True
+    # the local part (last 10 digits) shouldn't be all the same digit
+    local = digits[-10:]
+    if len(set(local)) == 1:
+        return True
+    # NXX (area code) can't start with 0 or 1 in NANP
+    if digits.startswith("1") and local[0] in "01":
+        return True
+    return False
 
 
 @router.post("", response_model=JoinResponse)
@@ -45,11 +62,14 @@ async def join(
     phone = _normalize_phone(body.phone)
     if not phone:
         raise HTTPException(status_code=400, detail="invalid phone number")
+    if _looks_garbage(phone):
+        raise HTTPException(status_code=400, detail="that doesn't look like a real number")
 
     existing = await db.execute(select(Waitlist).where(Waitlist.phone == phone))
     row = existing.scalar_one_or_none()
 
     name = (body.name or "").strip() or None
+    already_on_list = row is not None
 
     if row is None:
         entry = Waitlist(
@@ -62,10 +82,16 @@ async def join(
         db.add(entry)
         try:
             await db.commit()
+            await db.refresh(entry)
+            row = entry
         except IntegrityError:
+            # raced with another request — fetch the winning row instead
             await db.rollback()
+            existing = await db.execute(select(Waitlist).where(Waitlist.phone == phone))
+            row = existing.scalar_one_or_none()
+            already_on_list = True
     else:
-        # backfill name if user didn't have one before
+        # backfill name once if we didn't have it before, but don't overwrite an existing name
         if name and not row.name:
             row.name = name
             try:
@@ -84,7 +110,13 @@ async def join(
     if position == 0:
         position = 1
 
-    return JoinResponse(ok=True, position=position)
+    joined_iso = row.created_at.isoformat() if row and row.created_at else None
+    return JoinResponse(
+        ok=True,
+        position=position,
+        already_on_list=already_on_list,
+        joined_at=joined_iso,
+    )
 
 
 class CountResponse(BaseModel):

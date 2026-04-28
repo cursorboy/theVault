@@ -245,6 +245,8 @@ function WaitlistModal({ onClose }: { onClose: () => void }) {
   const [phone, setPhone] = useState("");
   const [state, setState] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [position, setPosition] = useState<number | null>(null);
+  const [alreadyOnList, setAlreadyOnList] = useState(false);
+  const [joinedAt, setJoinedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const firstFieldRef = useRef<HTMLInputElement | null>(null);
 
@@ -271,11 +273,32 @@ function WaitlistModal({ onClose }: { onClose: () => void }) {
     try {
       const res = await api.joinWaitlist({ phone, name, source: "web" });
       setPosition(res.position);
+      setAlreadyOnList(res.already_on_list);
+      setJoinedAt(res.joined_at);
       setState("success");
-    } catch {
-      setError("couldn't reach the waitlist. try again in a sec");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.includes("400")) {
+        setError("that doesn't look like a real number. double-check?");
+      } else {
+        setError("couldn't reach the waitlist. try again in a sec");
+      }
       setState("error");
     }
+  }
+
+  function joinedAgoText(iso: string | null): string {
+    if (!iso) return "";
+    const then = new Date(iso).getTime();
+    const now = Date.now();
+    const ms = Math.max(0, now - then);
+    const min = Math.floor(ms / 60000);
+    const hr = Math.floor(min / 60);
+    const day = Math.floor(hr / 24);
+    if (day >= 1) return `${day} day${day === 1 ? "" : "s"} ago`;
+    if (hr >= 1) return `${hr} hour${hr === 1 ? "" : "s"} ago`;
+    if (min >= 1) return `${min} min${min === 1 ? "" : "s"} ago`;
+    return "just now";
   }
 
   return (
@@ -300,28 +323,53 @@ function WaitlistModal({ onClose }: { onClose: () => void }) {
         </button>
 
         {state === "success" ? (
-          <div className="flex flex-col gap-4">
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
-              ur in
+          alreadyOnList ? (
+            <div className="flex flex-col gap-4">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent2">
+                already in
+              </div>
+              <h2
+                id="waitlist-title"
+                className="font-display text-[40px] leading-[1.04] tracking-[-0.02em] text-text"
+              >
+                u're already on the list.
+              </h2>
+              <p className="text-[14px] leading-relaxed text-text2">
+                this number signed up <span className="font-mono">{joinedAgoText(joinedAt)}</span>
+                {position ? <> · ur position is <span className="italic text-accent">#{position}</span></> : null}.
+                no need to do anything else, we'll text u when ur invite drops.
+              </p>
+              <button
+                onClick={onClose}
+                className="self-start mt-2 px-5 py-3 rounded-md bg-accent text-accent-ink font-mono text-[12px] uppercase tracking-[0.14em] font-semibold hover:bg-accent-soft transition-colors"
+              >
+                got it
+              </button>
             </div>
-            <h2
-              id="waitlist-title"
-              className="font-display text-[44px] leading-[1.04] tracking-[-0.02em] text-text"
-            >
-              position <span className="italic text-accent">#{position}</span>
-            </h2>
-            <p className="text-[14px] leading-relaxed text-text2">
-              {name.trim() ? `thanks ${name.trim().split(" ")[0]}, ` : ""}
-              we'll text u at <span className="font-mono">+1 {phone}</span> when ur invite drops.
-              no app install, just a link.
-            </p>
-            <button
-              onClick={onClose}
-              className="self-start mt-2 px-5 py-3 rounded-md bg-accent text-accent-ink font-mono text-[12px] uppercase tracking-[0.14em] font-semibold hover:bg-accent-soft transition-colors"
-            >
-              done
-            </button>
-          </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
+                ur in
+              </div>
+              <h2
+                id="waitlist-title"
+                className="font-display text-[44px] leading-[1.04] tracking-[-0.02em] text-text"
+              >
+                position <span className="italic text-accent">#{position}</span>
+              </h2>
+              <p className="text-[14px] leading-relaxed text-text2">
+                {name.trim() ? `thanks ${name.trim().split(" ")[0]}, ` : ""}
+                we'll text u at <span className="font-mono">+1 {phone}</span> when ur invite drops.
+                no app install, just a link.
+              </p>
+              <button
+                onClick={onClose}
+                className="self-start mt-2 px-5 py-3 rounded-md bg-accent text-accent-ink font-mono text-[12px] uppercase tracking-[0.14em] font-semibold hover:bg-accent-soft transition-colors"
+              >
+                done
+              </button>
+            </div>
+          )
         ) : (
           <form onSubmit={submit} className="flex flex-col gap-5">
             <div>

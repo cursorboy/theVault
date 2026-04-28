@@ -284,6 +284,20 @@
       /* shared scene tag */
       .scene-tag { position: absolute; bottom: 70px; left: 160px; font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: 0.18em; color: var(--text3); text-transform: uppercase; }
       .scene-tag .num { color: var(--accent); margin-right: 12px; }
+
+      /* outro waitlist CTA */
+      #s9-cta {
+        margin-top: 26px;
+        padding: 22px 52px;
+        background: var(--accent);
+        color: var(--accentInk);
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 26px;
+        font-weight: 600;
+        border-radius: 999px;
+        letter-spacing: 0.01em;
+        box-shadow: 0 18px 44px rgba(30,77,84,0.32);
+      }
     </style>
   </head>
   <body>
@@ -291,7 +305,7 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="62"
+      data-duration="45"
       data-width="1920"
       data-height="1080"
     >
@@ -300,14 +314,14 @@
         id="bed"
         class="clip"
         data-start="0"
-        data-duration="62"
+        data-duration="45"
         data-track-index="0"
         data-volume="0.85"
         src="audio/bed.mp3"
       ></audio>
 
       <!-- SCENE 1: brand reveal (0 - 5.0) -->
-      <div id="s1" class="clip scene" data-start="0" data-duration="5.0" data-track-index="1">
+      <div id="s1" class="clip scene" data-start="0" data-duration="3.5" data-track-index="1">
         <div class="center">
           <div id="s1-eye" class="mono eyebrow">an imessage assistant</div>
           <div class="wordmark">
@@ -320,7 +334,7 @@
       </div>
 
       <!-- SCENE 2: pitch + stats (4.7 - 10.4) -->
-      <div id="s2" class="clip scene" data-start="4.7" data-duration="5.7" data-track-index="2">
+      <div id="s2" class="clip scene" data-start="3.2" data-duration="4.4" data-track-index="2">
         <div class="scene-content">
           <div class="pitch-grid">
             <div class="pitch-left">
@@ -333,17 +347,17 @@
             </div>
             <div class="stats">
               <div id="s2-stat1" class="stat">
-                <div class="num">2,400+</div>
+                <div class="num">0+</div>
                 <div class="lbl">reels saved by an avg user / year</div>
                 <div class="meta mono">SOURCE · TIKTOK INTERNAL</div>
               </div>
               <div id="s2-stat2" class="stat">
-                <div class="num accent">3%</div>
+                <div class="num accent">0%</div>
                 <div class="lbl">that get revisited</div>
                 <div class="meta mono">SOURCE · CHARTBEAT 2025</div>
               </div>
               <div id="s2-stat3" class="stat">
-                <div class="num">100%</div>
+                <div class="num">0%</div>
                 <div class="lbl">retrievable with theVault</div>
                 <div class="meta mono">SOURCE · THIS DEMO</div>
               </div>
@@ -353,7 +367,7 @@
       </div>
 
       <!-- SCENE 3: imsg save w/ zoom + loading (10.1 - 22.0) -->
-      <div id="s3" class="clip scene" data-start="10.1" data-duration="11.9" data-track-index="1">
+      <div id="s3" class="clip scene" data-start="7.3" data-duration="8.7" data-track-index="1">
         <div class="scene-content">
           <div class="imsg-stage">
             <div class="imsg-copy">
@@ -401,7 +415,7 @@
                       <div class="badge">V</div>
                       <div class="meta">
                         <div class="title">miso butter salmon</div>
-                        <div class="host mono">thevault.app/save/3a89f</div>
+                        <div class="host mono">tiktok · recipes</div>
                       </div>
                     </div>
                   </div>
@@ -419,7 +433,7 @@
       </div>
 
       <!-- SCENE 4: dashboard library "all" (21.7 - 29.7) -->
-      <div id="s4" class="clip scene" data-start="21.7" data-duration="8.0" data-track-index="2">
+      <div id="s4" class="clip scene" data-start="15.7" data-duration="4.9" data-track-index="2">
         <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
           <div id="s4-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 02 · the library</div>
           <div id="s4-dash" class="dash" style="height: 880px">
@@ -465,7 +479,7 @@
       </div>
 
       <!-- SCENE 5: dashboard "recipes" filter (29.4 - 36.4) -->
-      <div id="s5" class="clip scene" data-start="29.4" data-duration="7.0" data-track-index="1">
+      <div id="s5" class="clip scene" data-start="20.3" data-duration="4.4" data-track-index="1">
         <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
           <div id="s5-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 03 · filter by category</div>
           <div class="dash" style="height: 880px">
@@ -510,7 +524,7 @@
       </div>
 
       <!-- SCENE 6: semantic search (36.1 - 43.4) -->
-      <div id="s6" class="clip scene" data-start="36.1" data-duration="7.3" data-track-index="2">
+      <div id="s6" class="clip scene" data-start="24.4" data-duration="5.0" data-track-index="2">
         <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
           <div id="s6-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 04 · semantic search</div>
           <div class="dash" style="height: 880px">
@@ -554,7 +568,7 @@
       </div>
 
       <!-- SCENE 7: imsg recall (43.1 - 53.0) -->
-      <div id="s7" class="clip scene" data-start="43.1" data-duration="9.9" data-track-index="1">
+      <div id="s7" class="clip scene" data-start="29.1" data-duration="8.5" data-track-index="1">
         <div class="scene-content">
           <div class="imsg-stage">
             <div class="imsg-copy">
@@ -592,7 +606,7 @@
                       <div class="badge">V</div>
                       <div class="meta">
                         <div class="title">ichiran ramen midtown nyc</div>
-                        <div class="host mono">thevault.app/save/1a89f2</div>
+                        <div class="host mono">tiktok · places</div>
                       </div>
                     </div>
                   </div>
@@ -616,7 +630,7 @@
       </div>
 
       <!-- SCENE 8: save detail (52.7 - 58.7) -->
-      <div id="s8" class="clip scene" data-start="52.7" data-duration="6.0" data-track-index="2">
+      <div id="s8" class="clip scene" data-start="37.3" data-duration="4.7" data-track-index="2">
         <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
           <div id="s8-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 06 · save detail</div>
           <div id="s8-detail" class="detail" style="height: 880px">
@@ -670,13 +684,13 @@
       </div>
 
       <!-- SCENE 9: outro (58.4 - 62.0) -->
-      <div id="s9" class="clip scene" data-start="58.4" data-duration="3.6" data-track-index="1">
+      <div id="s9" class="clip scene" data-start="41.7" data-duration="3.3" data-track-index="1">
         <div class="center">
           <div id="s9-eye" class="mono" style="font-size: 18px; letter-spacing: 0.22em; color: var(--text3); text-transform: uppercase">save once. recall forever.</div>
           <div class="outro-h"><span class="it">the</span> Vault</div>
           <div id="s9-line" class="outro-line"></div>
           <div id="s9-tag" class="outro-tagline">an imessage assistant for everything you save.</div>
-          <div id="s9-url" class="url">THEVAULT.APP</div>
+          <div id="s9-cta">join the waitlist now</div>
         </div>
       </div>
     </div>
@@ -685,61 +699,86 @@
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
 
-      // helper for typewriter via onUpdate
+      // typewriter helper
       function typewriter(selector, text, startTime, duration, ease = "none") {
-        tl.to(
-          {},
-          {
-            duration,
-            ease,
-            onUpdate: function () {
-              const p = this.progress();
-              const n = Math.floor(p * text.length);
-              const el = document.querySelector(selector);
-              if (el) el.textContent = text.slice(0, n);
-            },
+        tl.to({}, {
+          duration, ease,
+          onUpdate: function () {
+            const p = this.progress();
+            const n = Math.floor(p * text.length);
+            const el = document.querySelector(selector);
+            if (el) el.textContent = text.slice(0, n);
           },
-          startTime
-        );
+        }, startTime);
       }
 
-      // ─── SCENE 1 brand reveal (0 - 5.0) ──────────────────
-      tl.from("#s1", { opacity: 0, duration: 0.5, ease: "power2.out" }, 0);
-      tl.from("#s1-eye", { opacity: 0, y: 20, duration: 0.55, ease: "power3.out" }, 0.3);
-      tl.from("#s1-the", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 0.55);
-      tl.from("#s1-vault", { opacity: 0, y: 60, duration: 0.85, ease: "expo.out" }, 0.65);
-      tl.from("#s1-line", { scaleX: 0, duration: 0.6, ease: "power3.out" }, 1.3);
-      tl.from("#s1-tag", { opacity: 0, y: 24, duration: 0.6, ease: "power2.out" }, 1.5);
+      // numeric counter helper
+      function counter(selector, target, suffix, startTime, duration) {
+        tl.to({}, {
+          duration, ease: "power2.out",
+          onUpdate: function () {
+            const p = this.progress();
+            const n = Math.floor(p * target);
+            const el = document.querySelector(selector);
+            if (el) el.textContent = `${n.toLocaleString()}${suffix}`;
+          },
+        }, startTime);
+      }
 
-      // ─── SCENE 2 pitch (4.7 - 10.4) ──────────────────────
-      tl.from("#s2", { opacity: 0, duration: 0.5, ease: "power2.out" }, 4.7);
-      tl.from("#s2-label", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 5.0);
-      tl.from("#s2-h", { opacity: 0, y: 40, duration: 0.75, ease: "expo.out" }, 5.2);
-      tl.from("#s2-sub", { opacity: 0, y: 30, duration: 0.6, ease: "power3.out" }, 5.55);
-      tl.from("#s2-stat1", { opacity: 0, x: 60, duration: 0.55, ease: "power3.out" }, 5.8);
-      tl.from("#s2-stat2", { opacity: 0, x: 60, duration: 0.55, ease: "power3.out" }, 6.0);
-      tl.from("#s2-stat3", { opacity: 0, x: 60, duration: 0.55, ease: "power3.out" }, 6.2);
+      // ─── SCENE 1 brand reveal (0 - 3.5) ──────────────────
+      tl.fromTo("#s1 .center",
+        { scale: 0.985, y: 14 },
+        { scale: 1.025, y: -10, duration: 3.5, ease: "none" }, 0);
+      tl.from("#s1", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
+      tl.from("#s1-eye", { opacity: 0, y: 20, letterSpacing: "0.4em", duration: 0.55, ease: "power3.out" }, 0.15);
+      tl.from("#s1-the", { opacity: 0, y: 60, scale: 0.85, duration: 0.7, ease: "expo.out" }, 0.35);
+      tl.from("#s1-vault", { opacity: 0, y: 100, scale: 0.8, duration: 0.85, ease: "expo.out" }, 0.5);
+      tl.from("#s1-line", { scaleX: 0, duration: 0.5, ease: "power3.out" }, 1.05);
+      tl.from("#s1-tag", { opacity: 0, y: 24, duration: 0.5, ease: "power2.out" }, 1.25);
+      // exit drift
+      tl.to("#s1", { opacity: 0, scale: 1.06, duration: 0.45, ease: "power2.in" }, 3.05);
 
-      // ─── SCENE 3 imsg save w/ zoom + loading (10.1 - 22.0) ───
-      tl.from("#s3", { opacity: 0, duration: 0.5, ease: "power2.out" }, 10.1);
-      tl.from("#s3-step", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 10.4);
-      tl.from("#s3-h", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 10.6);
-      tl.from("#s3-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 10.9);
-      tl.from("#s3-phone-wrap", { opacity: 0, x: 80, scale: 0.92, duration: 0.8, ease: "expo.out" }, 10.6);
+      // ─── SCENE 2 pitch (3.2 - 7.6) ───────────────────────
+      tl.fromTo("#s2 .scene-content",
+        { scale: 0.99, x: 14 },
+        { scale: 1.025, x: -10, duration: 4.4, ease: "none" }, 3.2);
+      tl.from("#s2", { opacity: 0, duration: 0.4, ease: "power2.out" }, 3.2);
+      tl.from("#s2-label", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 3.4);
+      tl.from("#s2-h", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 3.55);
+      tl.from("#s2-h .it", { color: "#1f1b14", duration: 0.6, ease: "power2.out" }, 4.0);
+      tl.from("#s2-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 3.85);
+      tl.from("#s2-stat1", { opacity: 0, x: 80, duration: 0.5, ease: "power3.out" }, 4.0);
+      tl.from("#s2-stat2", { opacity: 0, x: 80, duration: 0.5, ease: "power3.out" }, 4.18);
+      tl.from("#s2-stat3", { opacity: 0, x: 80, duration: 0.5, ease: "power3.out" }, 4.36);
+      // counters
+      counter("#s2-stat1 .num", 2400, "+", 4.4, 1.1);
+      counter("#s2-stat2 .num", 3, "%", 4.7, 0.7);
+      counter("#s2-stat3 .num", 100, "%", 4.95, 0.85);
+      // micro-bob
+      tl.to(["#s2-stat1","#s2-stat2","#s2-stat3"], { y: -5, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 1, stagger: 0.15 }, 5.5);
+      // exit
+      tl.to("#s2", { opacity: 0, scale: 0.96, x: -30, duration: 0.45, ease: "power2.in" }, 7.15);
 
-      // hide bubbles initially so they "stream in"
-      tl.set(["#s3-b1","#s3-b2","#s3-r1","#s3-typing1","#s3-b3"], { opacity: 0 }, 11.4);
+      // ─── SCENE 3 imsg save (7.3 - 16.0) ──────────────────
+      tl.fromTo("#s3 .scene-content",
+        { scale: 0.99, x: 12 },
+        { scale: 1.02, x: -8, duration: 8.7, ease: "none" }, 7.3);
+      tl.from("#s3", { opacity: 0, duration: 0.4, ease: "power2.out" }, 7.3);
+      tl.from("#s3-step", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 7.5);
+      tl.from("#s3-h", { opacity: 0, y: 60, duration: 0.7, ease: "expo.out" }, 7.65);
+      tl.from("#s3-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 7.95);
+      tl.from("#s3-phone-wrap", { opacity: 0, x: 110, scale: 0.88, rotation: 5, duration: 0.85, ease: "expo.out" }, 7.65);
 
-      // bubble 1: video link
-      tl.fromTo("#s3-b1", { opacity: 0, y: 24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 11.7);
-      // zoom to focus on phone bubble area
-      tl.to("#s3-phone-wrap", { scale: 1.08, duration: 0.6, ease: "power2.out" }, 11.5);
+      tl.set(["#s3-b1","#s3-b2","#s3-r1","#s3-typing1","#s3-b3"], { opacity: 0 }, 8.4);
 
-      // bubble 2: "got it, processing" + loading bar fills
-      tl.fromTo("#s3-b2", { opacity: 0, y: 22, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" }, 12.6);
-      // animate loading bar
+      // bubble 1 + zoom
+      tl.fromTo("#s3-b1", { opacity: 0, y: 30, scale: 0.82 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, 8.55);
+      tl.to("#s3-phone-wrap", { scale: 1.08, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 8.55);
+
+      // bubble 2 + loading bar
+      tl.fromTo("#s3-b2", { opacity: 0, y: 22, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" }, 9.3);
       tl.to({}, {
-        duration: 2.5, ease: "none",
+        duration: 1.7, ease: "none",
         onUpdate: function () {
           const p = this.progress();
           const bar = document.querySelector("#s3-bar");
@@ -751,149 +790,162 @@
             meta.textContent = `${labels[i]} · ${Math.floor(p*100)}%`;
           }
         },
-      }, 12.9);
-      tl.to("#s3-r1", { opacity: 1, duration: 0.3, ease: "power2.out" }, 13.2);
+      }, 9.5);
+      tl.to("#s3-r1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 9.85);
 
-      // typing indicator before final save card
-      tl.to("#s3-typing1", { opacity: 1, duration: 0.3, ease: "power2.out" }, 15.4);
-      tl.from("#s3-typing1", { y: 18, duration: 0.4, ease: "power3.out" }, 15.4);
-      // animate the three dots
-      tl.to("#s3-d1", { scale: 1.5, opacity: 1, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: 3 }, 15.6);
-      tl.to("#s3-d2", { scale: 1.5, opacity: 1, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: 3 }, 15.75);
-      tl.to("#s3-d3", { scale: 1.5, opacity: 1, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: 3 }, 15.9);
+      // typing
+      tl.to("#s3-typing1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 11.3);
+      tl.from("#s3-typing1", { y: 18, duration: 0.35, ease: "power3.out" }, 11.3);
+      tl.to("#s3-d1", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 11.45);
+      tl.to("#s3-d2", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 11.6);
+      tl.to("#s3-d3", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 11.75);
 
-      // hide typing, reveal save card
-      tl.to("#s3-typing1", { opacity: 0, duration: 0.3, ease: "power2.in" }, 17.6);
-      tl.fromTo("#s3-b3", { opacity: 0, y: 28, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }, 17.7);
-      tl.fromTo("#s3-b3", { boxShadow: "0 0 0 6px rgba(30,77,84,0.3)" }, { boxShadow: "0 0 0 0 rgba(30,77,84,0)", duration: 1.2, ease: "power2.out", overwrite: false }, 18.5);
+      // save card reveal
+      tl.to("#s3-typing1", { opacity: 0, duration: 0.25, ease: "power2.in" }, 12.6);
+      tl.fromTo("#s3-b3", { opacity: 0, y: 32, scale: 0.88 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.4)" }, 12.7);
+      tl.fromTo("#s3-b3",
+        { boxShadow: "0 0 0 8px rgba(30,77,84,0.4)" },
+        { boxShadow: "0 0 0 0 rgba(30,77,84,0)", duration: 1.0, ease: "power2.out", overwrite: false }, 13.3);
 
-      // gentle release of zoom
-      tl.to("#s3-phone-wrap", { scale: 1.0, duration: 0.8, ease: "power2.inOut" }, 19.0);
+      // release zoom
+      tl.to("#s3-phone-wrap", { scale: 1.0, duration: 0.7, ease: "power2.inOut" }, 14.4);
+      // exit
+      tl.to("#s3", { opacity: 0, scale: 0.96, x: -30, duration: 0.45, ease: "power2.in" }, 15.55);
 
-      // ─── SCENE 4 dashboard "all" (21.7 - 29.7) ──────────
-      tl.from("#s4", { opacity: 0, duration: 0.5, ease: "power2.out" }, 21.7);
-      tl.from("#s4-eye", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 22.0);
-      tl.from("#s4-dash", { opacity: 0, y: 30, duration: 0.7, ease: "expo.out" }, 22.1);
+      // ─── SCENE 4 dashboard "all" (15.7 - 20.6) ───────────
+      tl.fromTo("#s4 .scene-content",
+        { scale: 0.99, y: 8 },
+        { scale: 1.02, y: -10, duration: 4.9, ease: "none" }, 15.7);
+      tl.from("#s4", { opacity: 0, duration: 0.4, ease: "power2.out" }, 15.7);
+      tl.from("#s4-eye", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 15.9);
+      tl.from("#s4-dash", { opacity: 0, y: 40, scale: 0.97, duration: 0.6, ease: "expo.out" }, 16.0);
       tl.from(
         ["#s4-n1","#s4-n2","#s4-n3","#s4-n4","#s4-n5","#s4-n6","#s4-n7","#s4-n8","#s4-n9"],
-        { opacity: 0, x: -20, duration: 0.4, ease: "power3.out", stagger: 0.06 },
-        22.6
-      );
+        { opacity: 0, x: -22, duration: 0.35, ease: "power3.out", stagger: 0.04 }, 16.4);
       tl.from(
         ["#s4-c1","#s4-c2","#s4-c3","#s4-c4","#s4-c5","#s4-c6","#s4-c7","#s4-c8"],
-        { opacity: 0, y: 32, duration: 0.5, ease: "power3.out", stagger: 0.08 },
-        22.9
-      );
-      // simulate cursor moving to recipes nav at end of scene
-      // recipes button center: y ≈ 310 (60 padding + 25 eyebrow + 24 gap + dash 36 padding + brand 36 + 22 gap + label 14 + 22 gap + all-row 33 + 22 gap + recipes-row half 16) , x ≈ 200 (button mid-width inside 280-wide sidebar w/ 24 padding)
+        { opacity: 0, y: 36, scale: 0.9, duration: 0.5, ease: "back.out(1.3)", stagger: 0.05 }, 16.6);
+      // cursor
       tl.fromTo("#s4-cursor",
-        { opacity: 0, left: 1520, top: 820 },
-        { opacity: 0.9, left: 200, top: 308, duration: 1.55, ease: "power2.inOut" },
-        27.05
-      );
-      // click pulse on recipes button
-      tl.to("#s4-cursor", { scale: 0.5, duration: 0.13, ease: "power2.in", yoyo: true, repeat: 1, overwrite: "auto" }, 28.7);
-      // brief highlight on the recipes nav row when clicked
+        { opacity: 0, left: 1520, top: 820, scale: 1 },
+        { opacity: 0.9, left: 200, top: 308, duration: 1.4, ease: "power2.inOut" }, 18.4);
+      tl.to("#s4-cursor", { scale: 0.5, duration: 0.12, ease: "power2.in", yoyo: true, repeat: 1, overwrite: "auto" }, 19.85);
       tl.fromTo("#s4-n2",
         { backgroundColor: "transparent", borderColor: "transparent" },
-        { backgroundColor: "rgba(30,77,84,0.08)", borderColor: "rgba(30,77,84,0.4)", duration: 0.3, ease: "power2.out" },
-        28.7
-      );
+        { backgroundColor: "rgba(30,77,84,0.08)", borderColor: "rgba(30,77,84,0.4)", duration: 0.3, ease: "power2.out" }, 19.85);
+      // exit
+      tl.to("#s4", { opacity: 0, scale: 0.97, duration: 0.4, ease: "power2.in" }, 20.2);
 
-      // ─── SCENE 5 dashboard "recipes" filter (29.4 - 36.4) ───
-      tl.from("#s5", { opacity: 0, duration: 0.5, ease: "power2.out" }, 29.4);
-      tl.from("#s5-eye", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 29.7);
-      tl.from("#s5-active", { backgroundColor: "transparent", duration: 0.4, ease: "power2.out" }, 29.9);
+      // ─── SCENE 5 recipes filter (20.3 - 24.7) ────────────
+      tl.fromTo("#s5 .scene-content",
+        { scale: 0.99, y: 8 },
+        { scale: 1.02, y: -10, duration: 4.4, ease: "none" }, 20.3);
+      tl.from("#s5", { opacity: 0, duration: 0.4, ease: "power2.out" }, 20.3);
+      tl.from("#s5-eye", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 20.5);
+      tl.from("#s5-active", { backgroundColor: "transparent", duration: 0.4, ease: "power2.out" }, 20.7);
       tl.from(
         ["#s5-c1","#s5-c2","#s5-c3","#s5-c4","#s5-c5","#s5-c6","#s5-c7","#s5-c8"],
-        { opacity: 0, scale: 0.94, y: 24, duration: 0.5, ease: "power3.out", stagger: 0.08 },
-        30.0
-      );
+        { opacity: 0, scale: 0.85, y: 30, duration: 0.5, ease: "back.out(1.4)", stagger: 0.05 }, 20.8);
+      // exit
+      tl.to("#s5", { opacity: 0, scale: 0.97, duration: 0.4, ease: "power2.in" }, 24.3);
 
-      // ─── SCENE 6 semantic search (36.1 - 43.4) ──────────
-      tl.from("#s6", { opacity: 0, duration: 0.5, ease: "power2.out" }, 36.1);
-      tl.from("#s6-eye", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 36.4);
+      // ─── SCENE 6 search (24.4 - 29.4) ────────────────────
+      tl.fromTo("#s6 .scene-content",
+        { scale: 0.99, y: 6 },
+        { scale: 1.02, y: -8, duration: 5.0, ease: "none" }, 24.4);
+      tl.from("#s6", { opacity: 0, duration: 0.4, ease: "power2.out" }, 24.4);
+      tl.from("#s6-eye", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 24.6);
       const queryText = '"that ramen spot solo booths in nyc"';
-      typewriter("#s6-q", queryText, 36.8, 2.4);
-      // after typing, dim non-matches and emphasize matches
+      typewriter("#s6-q", queryText, 24.9, 1.8);
       tl.from(
         ["#s6-c1","#s6-c2","#s6-c4","#s6-c5","#s6-c6","#s6-c8"],
-        { opacity: 1, duration: 0.4, ease: "power2.out" },
-        39.5
-      );
-      tl.fromTo(
-        "#s6-c3",
+        { opacity: 1, duration: 0.4, ease: "power2.out" }, 26.7);
+      tl.fromTo("#s6-c3",
+        { boxShadow: "0 0 0 0 rgba(30,77,84,0)", scale: 1 },
+        { boxShadow: "0 0 0 5px rgba(30,77,84,0.3)", scale: 1.04, duration: 0.5, ease: "back.out(1.6)" }, 26.85);
+      tl.fromTo("#s6-c7",
+        { boxShadow: "0 0 0 0 rgba(30,77,84,0)", scale: 1 },
+        { boxShadow: "0 0 0 5px rgba(30,77,84,0.3)", scale: 1.04, duration: 0.5, ease: "back.out(1.6)" }, 27.1);
+      tl.to(["#s6-c3","#s6-c7"], { scale: 1.06, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 27.7);
+      // exit
+      tl.to("#s6", { opacity: 0, scale: 0.97, duration: 0.4, ease: "power2.in" }, 29.0);
+
+      // ─── SCENE 7 imsg recall (29.1 - 37.6) ───────────────
+      tl.fromTo("#s7 .scene-content",
+        { scale: 0.99, x: -10 },
+        { scale: 1.025, x: 10, duration: 8.5, ease: "none" }, 29.1);
+      tl.from("#s7", { opacity: 0, duration: 0.4, ease: "power2.out" }, 29.1);
+      tl.from("#s7-step", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 29.3);
+      tl.from("#s7-h", { opacity: 0, y: 60, duration: 0.75, ease: "expo.out" }, 29.45);
+      tl.from("#s7-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 29.75);
+      tl.from("#s7-phone-wrap", { opacity: 0, x: 110, scale: 0.88, rotation: -5, duration: 0.85, ease: "expo.out" }, 29.45);
+
+      tl.set(["#s7-b1","#s7-r1","#s7-typing1","#s7-b3","#s7-b4","#s7-b5","#s7-typing2","#s7-b6"], { opacity: 0 }, 30.2);
+
+      tl.fromTo("#s7-b1", { opacity: 0, y: 26, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 30.4);
+      tl.to("#s7-r1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 31.0);
+
+      tl.to("#s7-phone-wrap", { scale: 1.06, duration: 0.5, ease: "power2.out" }, 31.1);
+      tl.to("#s7-typing1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 31.3);
+      tl.to("#s7-d1", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 31.45);
+      tl.to("#s7-d2", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 31.6);
+      tl.to("#s7-d3", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 31.75);
+      tl.to("#s7-typing1", { opacity: 0, duration: 0.25, ease: "power2.in" }, 32.4);
+      tl.fromTo("#s7-b3", { opacity: 0, y: 30, scale: 0.88 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.3)" }, 32.5);
+      tl.fromTo("#s7-b4", { opacity: 0, y: 22, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" }, 33.3);
+
+      tl.fromTo("#s7-b5", { opacity: 0, y: 26, scale: 0.88 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.3)" }, 34.0);
+
+      tl.to("#s7-typing2", { opacity: 1, duration: 0.25, ease: "power2.out" }, 34.7);
+      tl.to("#s7-d4", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 34.85);
+      tl.to("#s7-d5", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 35.0);
+      tl.to("#s7-d6", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 35.15);
+      tl.to("#s7-typing2", { opacity: 0, duration: 0.25, ease: "power2.in" }, 35.65);
+      tl.fromTo("#s7-b6", { opacity: 0, y: 24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.3)" }, 35.75);
+
+      tl.to("#s7-phone-wrap", { scale: 1.0, duration: 0.6, ease: "power2.inOut" }, 36.4);
+      // exit
+      tl.to("#s7", { opacity: 0, scale: 0.96, x: 30, duration: 0.45, ease: "power2.in" }, 37.15);
+
+      // ─── SCENE 8 detail (37.3 - 42.0) ────────────────────
+      tl.fromTo("#s8 .scene-content",
+        { scale: 0.99, y: 8 },
+        { scale: 1.02, y: -10, duration: 4.7, ease: "none" }, 37.3);
+      tl.from("#s8", { opacity: 0, duration: 0.4, ease: "power2.out" }, 37.3);
+      tl.from("#s8-eye", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 37.5);
+      tl.from("#s8-detail", { opacity: 0, y: 40, scale: 0.97, duration: 0.6, ease: "expo.out" }, 37.6);
+      tl.from("#s8-cr", { opacity: 0, y: 16, duration: 0.4, ease: "power3.out" }, 38.0);
+      tl.from("#s8-title", { opacity: 0, y: 36, duration: 0.6, ease: "expo.out" }, 38.15);
+      tl.from("#s8-summary", { opacity: 0, y: 22, duration: 0.55, ease: "power3.out" }, 38.45);
+      tl.from("#s8-actions-h", { opacity: 0, x: -16, duration: 0.4, ease: "quint.out" }, 38.85);
+      tl.from(["#s8-a1","#s8-a2","#s8-a3"], { opacity: 0, x: -28, duration: 0.4, ease: "power3.out", stagger: 0.07 }, 39.0);
+      tl.fromTo("#s8-a1 .check",
+        { scale: 0.5 },
+        { scale: 1, duration: 0.4, ease: "back.out(2)" }, 39.35);
+      tl.from("#s8-rem", { opacity: 0, scale: 0.95, y: 14, duration: 0.5, ease: "power3.out" }, 39.6);
+      tl.fromTo("#s8-rem",
         { boxShadow: "0 0 0 0 rgba(30,77,84,0)" },
-        { boxShadow: "0 0 0 4px rgba(30,77,84,0.25)", duration: 0.5, ease: "power2.out" },
-        39.6
-      );
-      tl.fromTo(
-        "#s6-c7",
-        { boxShadow: "0 0 0 0 rgba(30,77,84,0)" },
-        { boxShadow: "0 0 0 4px rgba(30,77,84,0.25)", duration: 0.5, ease: "power2.out" },
-        39.85
-      );
+        { boxShadow: "0 0 0 6px rgba(30,77,84,0.22)", duration: 0.5, yoyo: true, repeat: 1, ease: "power2.inOut" }, 39.95);
+      tl.from("#s8-tags-h", { opacity: 0, x: -16, duration: 0.35, ease: "quint.out" }, 40.55);
+      tl.from(".detail .right .tag", { opacity: 0, y: 14, scale: 0.85, duration: 0.35, ease: "back.out(1.6)", stagger: 0.05 }, 40.7);
+      // exit
+      tl.to("#s8", { opacity: 0, scale: 0.97, duration: 0.4, ease: "power2.in" }, 41.55);
 
-      // ─── SCENE 7 imsg recall (43.1 - 53.0) ──────────────
-      tl.from("#s7", { opacity: 0, duration: 0.5, ease: "power2.out" }, 43.1);
-      tl.from("#s7-step", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 43.4);
-      tl.from("#s7-h", { opacity: 0, y: 50, duration: 0.75, ease: "expo.out" }, 43.6);
-      tl.from("#s7-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 43.9);
-      tl.from("#s7-phone-wrap", { opacity: 0, x: 80, scale: 0.92, duration: 0.8, ease: "expo.out" }, 43.6);
-
-      // hide bubbles initially
-      tl.set(["#s7-b1","#s7-r1","#s7-typing1","#s7-b3","#s7-b4","#s7-b5","#s7-typing2","#s7-b6"], { opacity: 0 }, 44.4);
-
-      // user's question
-      tl.fromTo("#s7-b1", { opacity: 0, y: 24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 44.7);
-      tl.to("#s7-r1", { opacity: 1, duration: 0.3, ease: "power2.out" }, 45.4);
-
-      // typing indicator → reply
-      tl.to("#s7-phone-wrap", { scale: 1.06, duration: 0.6, ease: "power2.out" }, 45.6);
-      tl.to("#s7-typing1", { opacity: 1, duration: 0.3, ease: "power2.out" }, 45.8);
-      tl.to("#s7-d1", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 2, ease: "sine.inOut" }, 46.0);
-      tl.to("#s7-d2", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 2, ease: "sine.inOut" }, 46.15);
-      tl.to("#s7-d3", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 2, ease: "sine.inOut" }, 46.3);
-      tl.to("#s7-typing1", { opacity: 0, duration: 0.25, ease: "power2.in" }, 47.4);
-      tl.fromTo("#s7-b3", { opacity: 0, y: 28, scale: 0.93 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }, 47.5);
-      tl.fromTo("#s7-b4", { opacity: 0, y: 22, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" }, 48.6);
-
-      // user follow-up
-      tl.fromTo("#s7-b5", { opacity: 0, y: 24, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 49.5);
-
-      // second typing → second reply
-      tl.to("#s7-typing2", { opacity: 1, duration: 0.3, ease: "power2.out" }, 50.3);
-      tl.to("#s7-d4", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 50.4);
-      tl.to("#s7-d5", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 50.55);
-      tl.to("#s7-d6", { scale: 1.5, opacity: 1, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 50.7);
-      tl.to("#s7-typing2", { opacity: 0, duration: 0.25, ease: "power2.in" }, 51.4);
-      tl.fromTo("#s7-b6", { opacity: 0, y: 24, scale: 0.93 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 51.5);
-
-      tl.to("#s7-phone-wrap", { scale: 1.0, duration: 0.8, ease: "power2.inOut" }, 52.0);
-
-      // ─── SCENE 8 save detail (52.7 - 58.7) ──────────────
-      tl.from("#s8", { opacity: 0, duration: 0.5, ease: "power2.out" }, 52.7);
-      tl.from("#s8-eye", { opacity: 0, x: -20, duration: 0.5, ease: "quint.out" }, 53.0);
-      tl.from("#s8-detail", { opacity: 0, y: 30, duration: 0.7, ease: "expo.out" }, 53.1);
-      tl.from("#s8-cr", { opacity: 0, y: 16, duration: 0.4, ease: "power3.out" }, 53.6);
-      tl.from("#s8-title", { opacity: 0, y: 30, duration: 0.7, ease: "expo.out" }, 53.75);
-      tl.from("#s8-summary", { opacity: 0, y: 22, duration: 0.6, ease: "power3.out" }, 54.0);
-      tl.from("#s8-actions-h", { opacity: 0, x: -16, duration: 0.4, ease: "quint.out" }, 54.4);
-      tl.from(["#s8-a1","#s8-a2","#s8-a3"], { opacity: 0, x: -22, duration: 0.4, ease: "power3.out", stagger: 0.08 }, 54.6);
-      tl.from("#s8-rem", { opacity: 0, scale: 0.97, duration: 0.5, ease: "power3.out" }, 55.5);
-      tl.fromTo("#s8-rem", { boxShadow: "0 0 0 0 rgba(30,77,84,0)" }, { boxShadow: "0 0 0 5px rgba(30,77,84,0.18)", duration: 0.5, yoyo: true, repeat: 1, ease: "power2.inOut" }, 55.9);
-      tl.from("#s8-tags-h", { opacity: 0, x: -16, duration: 0.4, ease: "quint.out" }, 56.7);
-      tl.from(".detail .right .tag", { opacity: 0, y: 12, duration: 0.35, ease: "power3.out", stagger: 0.05 }, 56.85);
-
-      // ─── SCENE 9 outro (58.4 - 62.0) ────────────────────
-      tl.from("#s9", { opacity: 0, duration: 0.5, ease: "power2.out" }, 58.4);
-      tl.from("#s9-eye", { opacity: 0, y: 20, duration: 0.5, ease: "power3.out" }, 58.7);
-      tl.from("#s9 .outro-h", { opacity: 0, y: 60, duration: 0.85, ease: "expo.out" }, 58.9);
-      tl.from("#s9-line", { scaleX: 0, duration: 0.5, ease: "power3.out" }, 59.5);
-      tl.from("#s9-tag", { opacity: 0, y: 24, duration: 0.6, ease: "power2.out" }, 59.7);
-      tl.from("#s9-url", { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" }, 60.1);
-      // gentle final fade
-      tl.to(["#s9-eye","#s9 .outro-h","#s9-line","#s9-tag","#s9-url"], { opacity: 0.85, duration: 0.6, ease: "power2.in" }, 61.4);
+      // ─── SCENE 9 outro + waitlist (41.7 - 45.0) ──────────
+      tl.fromTo("#s9 .center",
+        { scale: 0.97, y: 14 },
+        { scale: 1.02, y: -8, duration: 3.3, ease: "none" }, 41.7);
+      tl.from("#s9", { opacity: 0, duration: 0.4, ease: "power2.out" }, 41.7);
+      tl.from("#s9-eye", { opacity: 0, y: 20, duration: 0.45, ease: "power3.out" }, 41.85);
+      tl.from("#s9 .outro-h", { opacity: 0, y: 80, scale: 0.85, duration: 0.8, ease: "expo.out" }, 42.0);
+      tl.from("#s9-line", { scaleX: 0, duration: 0.5, ease: "power3.out" }, 42.5);
+      tl.from("#s9-tag", { opacity: 0, y: 22, duration: 0.5, ease: "power2.out" }, 42.65);
+      tl.from("#s9-cta", { opacity: 0, y: 32, scale: 0.8, duration: 0.6, ease: "back.out(1.7)" }, 43.0);
+      tl.fromTo("#s9-cta",
+        { boxShadow: "0 18px 44px rgba(30,77,84,0.32), 0 0 0 0 rgba(30,77,84,0.55)" },
+        { boxShadow: "0 18px 44px rgba(30,77,84,0.32), 0 0 0 24px rgba(30,77,84,0)", duration: 1.3, ease: "power2.out", repeat: 1 },
+        43.35);
+      tl.to("#s9-cta", { scale: 1.06, duration: 0.55, ease: "sine.inOut", yoyo: true, repeat: 1 }, 43.55);
 
       window.__timelines["main"] = tl;
     </script>
