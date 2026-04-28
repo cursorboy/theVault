@@ -11,20 +11,27 @@ export function setToken(token: string): void {
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const token = getToken();
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...init?.headers,
-    },
-  });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`${res.status}: ${text}`);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const res = await fetch(`${API_BASE}${path}`, {
+      ...init,
+      signal: ctrl.signal,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...init?.headers,
+      },
+    });
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`${res.status}: ${text}`);
+    }
+    if (res.status === 204) return undefined as T;
+    return res.json();
+  } finally {
+    clearTimeout(timer);
   }
-  if (res.status === 204) return undefined as T;
-  return res.json();
 }
 
 // Types
@@ -106,4 +113,15 @@ export const api = {
   getDigest: () => apiFetch<DigestSettings>("/api/digest"),
   updateDigest: (body: Partial<DigestSettings>) =>
     apiFetch<DigestSettings>("/api/digest", { method: "PATCH", body: JSON.stringify(body) }),
+
+  joinWaitlist: (input: { phone: string; name?: string; source?: string }) =>
+    apiFetch<{ ok: boolean; position: number }>("/api/waitlist", {
+      method: "POST",
+      body: JSON.stringify({
+        phone: input.phone,
+        name: input.name,
+        source: input.source ?? "web",
+      }),
+    }),
+  waitlistCount: () => apiFetch<{ count: number }>("/api/waitlist/count"),
 };

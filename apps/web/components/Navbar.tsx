@@ -14,9 +14,12 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 border-b border-edge bg-vault/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1320px] items-center justify-between px-6 py-3">
         <Link href="/" className="group flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-accent-ink font-display italic text-base">
-            V
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-icon.png"
+            alt=""
+            className="h-9 w-auto object-contain transition-transform group-hover:-rotate-3"
+          />
           <span className="font-display text-[20px] tracking-tight text-text leading-none">
             <span className="italic text-text2 mr-1">the</span>Vault
           </span>

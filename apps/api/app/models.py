@@ -170,3 +170,15 @@ class TTProcessedMessage(Base):
 
     message_id = Column(Text, primary_key=True)
     processed_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+
+
+class Waitlist(Base):
+    __tablename__ = "waitlist"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    phone = Column(Text, unique=True, nullable=False)
+    name = Column(Text, nullable=True)
+    source = Column(Text, nullable=True)  # 'web' | 'imsg' | etc
+    referrer = Column(Text, nullable=True)
+    user_agent = Column(Text, nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())

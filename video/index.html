@@ -785,15 +785,20 @@
         22.9
       );
       // simulate cursor moving to recipes nav at end of scene
+      // recipes button center: y ≈ 310 (60 padding + 25 eyebrow + 24 gap + dash 36 padding + brand 36 + 22 gap + label 14 + 22 gap + all-row 33 + 22 gap + recipes-row half 16) , x ≈ 200 (button mid-width inside 280-wide sidebar w/ 24 padding)
       tl.fromTo("#s4-cursor",
-        { opacity: 0, left: 1500, top: 800 },
-        { opacity: 0.85, left: 230, top: 460, duration: 1.6, ease: "power2.inOut" },
-        27.2
+        { opacity: 0, left: 1520, top: 820 },
+        { opacity: 0.9, left: 200, top: 308, duration: 1.55, ease: "power2.inOut" },
+        27.05
       );
-      // click pulse
-      tl.to("#s4-cursor", { scale: 0.6, duration: 0.15, ease: "power2.in", yoyo: true, repeat: 1, overwrite: "auto" }, 28.85);
-      // brief highlight on the recipes nav row
-      tl.fromTo("#s4-n2", { borderColor: "transparent" }, { borderColor: "rgba(30,77,84,0.4)", duration: 0.3, ease: "power2.out" }, 28.7);
+      // click pulse on recipes button
+      tl.to("#s4-cursor", { scale: 0.5, duration: 0.13, ease: "power2.in", yoyo: true, repeat: 1, overwrite: "auto" }, 28.7);
+      // brief highlight on the recipes nav row when clicked
+      tl.fromTo("#s4-n2",
+        { backgroundColor: "transparent", borderColor: "transparent" },
+        { backgroundColor: "rgba(30,77,84,0.08)", borderColor: "rgba(30,77,84,0.4)", duration: 0.3, ease: "power2.out" },
+        28.7
+      );
 
       // ─── SCENE 5 dashboard "recipes" filter (29.4 - 36.4) ───
       tl.from("#s5", { opacity: 0, duration: 0.5, ease: "power2.out" }, 29.4);
