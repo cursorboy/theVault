@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>reelvault — the film</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  html, body { margin: 0; padding: 0; background: #1a1814; min-height: 100vh; font-family: 'Inter', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="animations.jsx"></script>
+<script type="text/babel" src="anim-scenes.jsx"></script>
+<script type="text/babel" src="anim-scenes-2.jsx"></script>
+
+<script type="text/babel">
+  const App = () => {
+    const {
+      Scene01_Hook, Scene02_Graveyard, Scene03_Pivot, Scene04_TextBot,
+      Scene05_Library, Scene06_Search, Scene07_Memory, Scene08_Reminder, Scene09_Close,
+      Scene_TwoWays, Scene_Ask, Scene_Voice, Scene_Digest, Scene_Share,
+    } = window;
+
+    return (
+      <Stage width={1920} height={1080} duration={84} background="#1a1814" fps={60}>
+        <Sprite start={0}    end={4.5}><Scene01_Hook /></Sprite>
+        <Sprite start={4}    end={11}><Scene02_Graveyard /></Sprite>
+        <Sprite start={10.5} end={15}><Scene03_Pivot /></Sprite>
+        <Sprite start={14.5} end={24}><Scene04_TextBot /></Sprite>
+        <Sprite start={23.5} end={30.5}><Scene_TwoWays /></Sprite>
+        <Sprite start={30}   end={37}><Scene05_Library /></Sprite>
+        <Sprite start={36.5} end={44}><Scene06_Search /></Sprite>
+        <Sprite start={43.5} end={51}><Scene_Ask /></Sprite>
+        <Sprite start={50.5} end={57}><Scene07_Memory /></Sprite>
+        <Sprite start={56.5} end={62.5}><Scene_Voice /></Sprite>
+        <Sprite start={62}   end={68}><Scene08_Reminder /></Sprite>
+        <Sprite start={67.5} end={73.5}><Scene_Digest /></Sprite>
+        <Sprite start={73}   end={78.5}><Scene_Share /></Sprite>
+        <Sprite start={78}   end={84}><Scene09_Close /></Sprite>
+      </Stage>
+    );
+  };
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

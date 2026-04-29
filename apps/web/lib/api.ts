@@ -87,6 +87,18 @@ export const api = {
   verifyToken: (token: string) =>
     apiFetch<UserInfo>(`/auth/verify?token=${encodeURIComponent(token)}`),
 
+  requestLoginCode: (phone: string) =>
+    apiFetch<{ ok: boolean; expires_in_seconds: number }>("/auth/request-code", {
+      method: "POST",
+      body: JSON.stringify({ phone }),
+    }),
+
+  verifyLoginCode: (phone: string, code: string) =>
+    apiFetch<{ ok: boolean; token: string }>("/auth/verify-code", {
+      method: "POST",
+      body: JSON.stringify({ phone, code }),
+    }),
+
   listSaves: (params?: { category_id?: number; cluster_id?: string; limit?: number; offset?: number }) => {
     const q = new URLSearchParams();
     if (params?.category_id != null) q.set("category_id", String(params.category_id));

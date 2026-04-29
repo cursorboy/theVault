@@ -182,3 +182,14 @@ class Waitlist(Base):
     referrer = Column(Text, nullable=True)
     user_agent = Column(Text, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+
+
+class LoginCode(Base):
+    __tablename__ = "login_codes"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    phone = Column(Text, nullable=False)
+    code = Column(Text, nullable=False)
+    expires_at = Column(TIMESTAMP(timezone=True), nullable=False)
+    attempts = Column(SmallInteger, default=0)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())

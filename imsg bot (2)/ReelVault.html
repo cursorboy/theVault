@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>ReelVault — Designs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  html, body { margin: 0; padding: 0; background: #0A0A0B; color: #F4F4F0; font-family: 'Inter', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="reelvault.jsx"></script>
+<script type="text/babel" src="dashboard.jsx"></script>
+<script type="text/babel" src="detail.jsx"></script>
+<script type="text/babel" src="imessage.jsx"></script>
+<script type="text/babel" src="extras.jsx"></script>
+
+<script type="text/babel">
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection id="overview" title="ReelVault — Designs"
+        subtitle="dashboard + iMessage flows. dark vault aesthetic, gen-z casual voice, lime accent.">
+
+        <DCArtboard id="onboarding" label="01 · Landing / onboarding" width={1280} height={820}>
+          <Onboarding/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="dashboard" title="Web Dashboard"
+        subtitle="library feed · save detail · memory inspector · reminders.">
+
+        <DCArtboard id="library" label="02 · Library — grid view" width={1280} height={820}>
+          <DashboardLibrary density="grid" activeCat="All"/>
+        </DCArtboard>
+
+        <DCArtboard id="library-recipes" label="03 · Library — filtered (recipes)" width={1280} height={820}>
+          <DashboardLibrary density="grid" activeCat="Recipes"/>
+        </DCArtboard>
+
+        <DCArtboard id="library-search" label="04 · Library — semantic search" width={1280} height={820}>
+          <DashboardLibrary density="dense" activeCat="All" searchQuery='"that ramen spot solo booths in nyc"'/>
+        </DCArtboard>
+
+        <DCArtboard id="detail" label="05 · Save detail" width={1280} height={820}>
+          <SaveDetail/>
+        </DCArtboard>
+
+        <DCArtboard id="memory" label="06 · Memory inspector" width={1280} height={820}>
+          <MemoryInspector/>
+        </DCArtboard>
+
+        <DCArtboard id="reminders" label="07 · Reminders" width={1280} height={820}>
+          <RemindersView/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="imsg" title="iMessage Flows"
+        subtitle="how the bot actually feels in the user's inbox. four key moments.">
+
+        <DCArtboard id="imsg-save" label="08 · Save flow" width={400} height={780}>
+          <ImsgSaveFlow/>
+        </DCArtboard>
+
+        <DCArtboard id="imsg-recall" label="09 · Semantic recall" width={400} height={780}>
+          <ImsgRecallFlow/>
+        </DCArtboard>
+
+        <DCArtboard id="imsg-link" label="10 · Account linking" width={400} height={780}>
+          <ImsgLinkFlow/>
+        </DCArtboard>
+
+        <DCArtboard id="imsg-clarify" label="11 · Clarification" width={400} height={780}>
+          <ImsgClarifyFlow/>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+
+</body>
+</html>

@@ -14,289 +14,700 @@
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
         width: 1920px; height: 1080px; overflow: hidden;
-        background: #f5f0e8; font-family: "Inter", system-ui, sans-serif; color: #1f1b14;
+        font-family: "Inter", system-ui, sans-serif;
+        background: #f5f0e8; color: #1f1b14;
       }
       :root {
         --ink: #f5f0e8; --vault: #efe8dc; --panel: #fbf7f0;
         --edge: #e4dccc; --edge2: #d2c7b2;
-        --text: #1f1b14; --text2: #5a5142; --text3: #8c8470;
-        --accent: #1e4d54; --accentSoft: #3d7079; --accentInk: #f5f0e8;
-        --accent2: #7a4e2e;
-        --ig: #c44a6b; --tt: #3db8b2;
+        --text: #1f1b14; --text2: #5a5142; --text3: #8c8470; --text4: #b5ac95;
+        --teal: #1e4d54; --tealSoft: #3d7079; --tealInk: #f5f0e8;
+        --sienna: #7a4e2e; --warn: #c68a2e; --ok: #5c8a4e;
+        --ig: #c44a6b; --tt: #3db8b2; --yt: #cc4a3a;
       }
-      .scene {
-        position: absolute; inset: 0; width: 1920px; height: 1080px;
-        overflow: hidden; background: var(--ink);
-      }
+      .scene { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; }
       .scene::before {
         content: ""; position: absolute; inset: 0; pointer-events: none;
         background-image:
-          radial-gradient(circle at 18% 12%, rgba(122,78,46,0.05), transparent 50%),
-          radial-gradient(circle at 82% 88%, rgba(30,77,84,0.04), transparent 50%);
+          radial-gradient(circle at 18% 28%, rgba(0,0,0,0.025), transparent 50%),
+          radial-gradient(circle at 82% 72%, rgba(0,0,0,0.02), transparent 50%);
       }
-      .scene-content {
-        position: relative; width: 100%; height: 100%; padding: 110px 160px;
-        box-sizing: border-box;
-      }
-      .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; letter-spacing: 0.04em; }
+      .ink-bg { background: var(--ink); }
+      .vault-bg { background: var(--vault); }
+      .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; }
       .serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; }
-
-      /* ─ scene 1 brand ─ */
-      #s1 .center { height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px; }
-      #s1 .eyebrow { font-size: 22px; letter-spacing: 0.18em; color: var(--text3); text-transform: uppercase; }
-      #s1 .wordmark { display: flex; align-items: baseline; gap: 18px; font-family: "Instrument Serif", Georgia, serif; }
-      #s1 .wordmark .the { font-size: 140px; font-style: italic; color: var(--text2); }
-      #s1 .wordmark .vault { font-size: 240px; color: var(--text); letter-spacing: -0.02em; }
-      #s1 .underline { width: 120px; height: 4px; background: var(--accent); transform-origin: left center; }
-      #s1 .tagline { font-size: 26px; color: var(--text2); max-width: 720px; text-align: center; line-height: 1.4; }
-
-      /* ─ scene 2 pitch ─ */
-      #s2 .pitch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; height: 100%; align-items: center; }
-      #s2 .pitch-left { display: flex; flex-direction: column; gap: 36px; }
-      #s2 .label { font-size: 14px; letter-spacing: 0.22em; color: var(--accent); text-transform: uppercase; }
-      #s2 .pitch-h { font-family: "Instrument Serif", Georgia, serif; font-size: 128px; line-height: 0.96; color: var(--text); letter-spacing: -0.02em; }
-      #s2 .pitch-h .it { font-style: italic; color: var(--accent); }
-      #s2 .pitch-sub { font-size: 28px; line-height: 1.5; color: var(--text2); max-width: 540px; }
-      #s2 .stats { display: grid; grid-template-columns: 1fr; gap: 24px; }
-      #s2 .stat { background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 36px 40px; }
-      #s2 .stat .num { font-family: "Instrument Serif", Georgia, serif; font-size: 88px; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
-      #s2 .stat .num.accent { color: var(--accent); }
-      #s2 .stat .lbl { margin-top: 12px; font-size: 16px; color: var(--text2); font-weight: 500; }
-      #s2 .stat .meta { margin-top: 8px; font-size: 12px; color: var(--text3); letter-spacing: 0.1em; }
-
-      /* ─ imsg phone shared ─ */
-      .imsg-stage { height: 100%; display: grid; grid-template-columns: 1fr 760px; gap: 100px; align-items: center; }
-      .imsg-copy { display: flex; flex-direction: column; gap: 28px; max-width: 700px; }
-      .imsg-h { font-family: "Instrument Serif", Georgia, serif; font-size: 96px; line-height: 1; color: var(--text); letter-spacing: -0.02em; }
-      .imsg-sub { font-size: 22px; color: var(--text2); max-width: 580px; line-height: 1.5; }
-      .imsg-step { font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; }
-      .phone-frame { display: flex; justify-content: center; align-items: center; transform-origin: center center; }
-      .phone {
-        width: 480px; height: 940px; background: #000; border-radius: 56px;
-        border: 1px solid #2a2a2a;
-        box-shadow: 0 50px 100px rgba(31,27,20,0.18), 0 20px 40px rgba(31,27,20,0.1);
-        overflow: hidden; display: flex; flex-direction: column;
-        font-family: -apple-system, "SF Pro Text", system-ui; position: relative;
-      }
-      .phone .statusbar { padding: 18px 36px 8px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 16px; font-weight: 600; }
-      .phone .nav { padding: 4px 14px 12px; display: flex; align-items: center; gap: 10px; border-bottom: 0.5px solid #1a1a1a; }
-      .phone .nav-back { color: #2c8cff; font-size: 30px; line-height: 1; margin-top: -4px; }
-      .phone .nav-center { flex: 1; display: flex; flex-direction: column; align-items: center; }
-      .phone .nav-center .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--accentInk); font-family: "Instrument Serif", serif; font-style: italic; font-size: 22px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
-      .phone .nav-center .name { font-size: 13px; color: #fff; font-weight: 500; }
-      .phone .nav-center .sub { font-size: 10px; color: #76767c; }
-      .phone .messages { flex: 1; padding: 16px 16px 8px; display: flex; flex-direction: column; gap: 7px; overflow: hidden; }
-      .phone .compose { padding: 10px 14px 14px; border-top: 0.5px solid #1a1a1a; display: flex; align-items: center; gap: 10px; }
-      .phone .compose .plus { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #333; color: #888; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-      .phone .compose .input { flex: 1; height: 34px; border-radius: 18px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #5a5a5e; display: flex; align-items: center; padding: 0 14px; font-size: 14px; }
-      .phone .home { height: 34px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; }
-      .phone .home::after { content: ""; width: 144px; height: 5px; border-radius: 3px; background: #fff; }
-      .phone .system-note { text-align: center; font-size: 11px; color: #76767c; font-weight: 500; padding: 10px 0 6px; }
-      .bubble {
-        max-width: 78%; padding: 10px 16px; border-radius: 20px;
-        font-size: 17px; line-height: 1.34; background: #262629; color: #f4f4f0;
-        align-self: flex-start; word-break: break-word; font-weight: 400;
-      }
-      .bubble.me { background: #2c8cff; color: #fff; align-self: flex-end; }
-      .bubble.thumb { padding: 8px; align-self: flex-end; background: #2c8cff; }
-      .bubble.thumb .thumb-card { width: 220px; height: 308px; border-radius: 14px; background: linear-gradient(135deg, #d2c7b2 0%, #a8957a 100%); position: relative; overflow: hidden; }
-      .bubble.thumb .thumb-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 60%, rgba(31,27,20,0), rgba(31,27,20,0.5)); }
-      .bubble.thumb .thumb-meta { position: absolute; left: 12px; bottom: 10px; right: 12px; color: #fff; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
-      .bubble.thumb .thumb-plat { font-family: "JetBrains Mono", monospace; font-weight: 600; background: rgba(0,0,0,0.4); padding: 3px 7px; border-radius: 3px; }
-      .bubble.thumb .url { font-size: 11px; opacity: 0.85; margin-top: 6px; padding: 0 4px; }
-      .bubble.savecard { padding: 10px; background: #262629; }
-      .bubble.savecard .body { padding: 0 4px 8px; }
-      .bubble.savecard .link-card { margin-top: 8px; padding: 11px 13px; border-radius: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-      .bubble.savecard .link-card .badge { width: 32px; height: 32px; border-radius: 6px; background: var(--accent); color: var(--accentInk); font-family: "Instrument Serif", serif; font-style: italic; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-      .bubble.savecard .link-card .meta { flex: 1; min-width: 0; }
-      .bubble.savecard .link-card .title { font-size: 13px; font-weight: 500; }
-      .bubble.savecard .link-card .host { font-size: 11px; opacity: 0.6; }
-      .read-receipt { font-size: 11px; color: #8a8a90; align-self: flex-end; margin-top: -4px; padding: 0 8px; }
-      .typing { align-self: flex-start; padding: 14px 18px; border-radius: 20px; background: #262629; display: flex; gap: 6px; }
-      .typing span { width: 9px; height: 9px; border-radius: 50%; background: #888; }
-
-      /* loading bar inside an imsg bubble */
-      .bubble .loading-bar { margin-top: 8px; height: 3px; width: 100%; background: rgba(255,255,255,0.12); border-radius: 2px; overflow: hidden; }
-      .bubble .loading-bar::after { content: ""; display: block; width: 0%; height: 100%; background: var(--accent); border-radius: 2px; }
-      .bubble .loading-meta { font-size: 11px; opacity: 0.65; margin-top: 6px; font-family: "JetBrains Mono", monospace; letter-spacing: 0.1em; text-transform: uppercase; }
-
-      /* highlight ring around the most-recent bubble */
-      .focus-ring {
-        position: absolute; pointer-events: none;
-        border: 2px solid rgba(30, 77, 84, 0.7);
-        border-radius: 22px; opacity: 0;
-        box-shadow: 0 0 0 6px rgba(30, 77, 84, 0.15);
+      .eyebrow {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 22px; letter-spacing: 0.22em;
+        color: var(--text3); text-transform: uppercase;
       }
 
-      /* ─ dashboard ─ */
-      .dash {
-        position: relative; height: 100%; display: grid;
-        grid-template-columns: 280px 1fr;
-        background: var(--vault); border-radius: 14px; overflow: hidden;
-        border: 1px solid var(--edge);
-        box-shadow: 0 30px 60px rgba(31,27,20,0.08);
+      /* phone shared */
+      .phone-frame {
+        width: 380px; height: 780px; flex-shrink: 0;
+        background: #000; border-radius: 48px; padding: 14px;
+        position: relative;
+        box-shadow: 0 40px 80px rgba(0,0,0,0.25), 0 0 0 2px #2a2620;
       }
-      .dash-side { background: var(--panel); border-right: 1px solid var(--edge); padding: 36px 24px; display: flex; flex-direction: column; gap: 22px; }
-      .dash-side .brand { display: flex; align-items: center; gap: 12px; }
-      .dash-side .brand-mark { width: 36px; height: 36px; border-radius: 6px; background: var(--accent); color: var(--accentInk); font-family: "Instrument Serif", serif; font-style: italic; font-size: 22px; display: flex; align-items: center; justify-content: center; }
-      .dash-side .brand-name { font-family: "Instrument Serif", Georgia, serif; font-size: 22px; color: var(--text); }
-      .dash-side .brand-name .the { font-style: italic; color: var(--text2); margin-right: 4px; }
-      .dash-side .nav-group-label { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--text3); text-transform: uppercase; padding: 0 8px; }
-      .dash-side .nav-item {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 9px 10px; border-radius: 4px;
-        font-size: 13px; color: var(--text2); font-weight: 500;
-        border: 1px solid transparent;
-        transition: none;
+      .phone-frame.sm { width: 320px; height: 660px; border-radius: 40px; padding: 11px; }
+      .phone-screen {
+        width: 100%; height: 100%; border-radius: 36px;
+        overflow: hidden; background: #0a0a0b; position: relative;
       }
-      .dash-side .nav-item.active { background: rgba(30,77,84,0.08); color: var(--accent); border-color: rgba(30,77,84,0.18); }
-      .dash-side .nav-item .count { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text3); }
-      .dash-main { padding: 32px 36px; display: flex; flex-direction: column; gap: 22px; overflow: hidden; }
-      .dash-top { display: flex; justify-content: space-between; align-items: center; }
-      .dash-top h1 { font-family: "Instrument Serif", Georgia, serif; font-size: 38px; color: var(--text); letter-spacing: -0.01em; }
-      .dash-top h1 .ital { font-style: italic; color: var(--text2); margin-right: 8px; }
-      .dash-top h1 .swap { color: var(--accent); }
-      .dash-top .tools { display: flex; gap: 10px; align-items: center; }
-      .dash-top .search { background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 8px 12px; font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--text3); width: 280px; display: flex; align-items: center; gap: 8px; }
-      .dash-top .search-text { color: var(--text); }
-      .dash-top .toggle { background: var(--panel); border: 1px solid var(--edge); border-radius: 4px; padding: 5px; display: flex; gap: 4px; }
-      .dash-top .toggle .opt { padding: 4px 10px; border-radius: 3px; font-size: 11px; font-family: "JetBrains Mono", monospace; color: var(--text3); }
-      .dash-top .toggle .opt.active { background: var(--accent); color: var(--accentInk); }
-      .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-      .card { background: var(--panel); border: 1px solid var(--edge); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; }
-      .card .thumb { aspect-ratio: 9/14; position: relative; }
-      .card .thumb.t1 { background: linear-gradient(135deg, #c8a880 0%, #8a6a44 100%); }
-      .card .thumb.t2 { background: linear-gradient(135deg, #d2c7b2 0%, #a8957a 100%); }
-      .card .thumb.t3 { background: linear-gradient(135deg, #b9b8b0 0%, #7a7a72 100%); }
-      .card .thumb.t4 { background: linear-gradient(135deg, #c4a496 0%, #7a4e2e 100%); }
-      .card .thumb.t5 { background: linear-gradient(135deg, #d8cd9e 0%, #968a4e 100%); }
-      .card .thumb.t6 { background: linear-gradient(135deg, #c5b59c 0%, #847456 100%); }
-      .card .thumb.t7 { background: linear-gradient(135deg, #d2c7b2 0%, #957f60 100%); }
-      .card .thumb.t8 { background: linear-gradient(135deg, #b9aa90 0%, #6c5840 100%); }
-      .card .thumb.t9 { background: linear-gradient(135deg, #cfa97f 0%, #7c5530 100%); }
-      .card .thumb.t10 { background: linear-gradient(135deg, #c1b699 0%, #6e5e40 100%); }
-      .card .thumb.t11 { background: linear-gradient(135deg, #b9a98c 0%, #7a5b34 100%); }
-      .card .thumb.t12 { background: linear-gradient(135deg, #d4ba88 0%, #8c6932 100%); }
-      .card .thumb .badge-platform { position: absolute; top: 8px; left: 8px; font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 8px; border-radius: 3px; color: #fff; }
-      .card .thumb .badge-platform.ig { background: var(--ig); }
-      .card .thumb .badge-platform.tt { background: var(--tt); }
-      .card .thumb .badge-cat { position: absolute; bottom: 8px; left: 8px; font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 500; letter-spacing: 0.1em; padding: 3px 7px; border-radius: 3px; background: rgba(31,27,20,0.7); color: #fff; text-transform: uppercase; }
-      .card .body { padding: 14px 14px 16px; }
-      .card .title { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.25; }
-      .card .meta { margin-top: 6px; font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.06em; }
-      .card.match { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(30,77,84,0.15); }
-      .card.dim { opacity: 0.32; }
-
-      /* fake cursor */
-      .cursor {
-        position: absolute; width: 22px; height: 22px; pointer-events: none; z-index: 50;
-        background: var(--text); border-radius: 50%;
-        box-shadow: 0 0 0 3px rgba(245,240,232,0.9), 0 6px 16px rgba(0,0,0,0.2);
-        opacity: 0;
+      .phone-frame.sm .phone-screen { border-radius: 30px; }
+      .phone-notch {
+        position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+        width: 110px; height: 32px; background: #000;
+        border-radius: 20px; z-index: 5;
+      }
+      .browser {
+        background: var(--panel); border: 1.5px solid var(--edge2);
+        border-radius: 12px; overflow: hidden;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+      }
+      .browser-chrome {
+        padding: 11px 14px; border-bottom: 1px solid var(--edge);
+        background: var(--vault);
+        display: flex; align-items: center; gap: 8px;
+      }
+      .browser-dot { width: 11px; height: 11px; border-radius: 50%; }
+      .browser-dot.r { background: #e26b5a; }
+      .browser-dot.y { background: #d9a949; }
+      .browser-dot.g { background: #5c8a4e; }
+      .browser-url {
+        flex: 1; margin-left: 14px; padding: 5px 14px;
+        background: var(--panel); border: 1px solid var(--edge); border-radius: 5px;
+        font-size: 12px; color: var(--text3);
+        font-family: "JetBrains Mono", monospace; letter-spacing: 0.02em;
       }
 
-      /* ─ scene 8 detail ─ */
-      .detail {
-        position: relative; height: 100%; display: grid;
-        grid-template-columns: 580px 1fr; gap: 0;
-        background: var(--vault); border-radius: 14px; overflow: hidden;
-        border: 1px solid var(--edge);
-        box-shadow: 0 30px 60px rgba(31,27,20,0.08);
+      /* imsg shared */
+      .imsg-screen {
+        width: 100%; height: 100%; border-radius: 36px;
+        overflow: hidden; background: #000;
+        display: flex; flex-direction: column;
       }
-      .detail .hero {
-        background: linear-gradient(135deg, #c8a880 0%, #8a6a44 100%);
+      .phone-frame.sm .imsg-screen { border-radius: 30px; }
+      .imsg-status {
+        height: 50px; padding: 18px 36px 0;
+        display: flex; justify-content: space-between;
+        font-size: 14px; color: #fff; font-weight: 600;
+      }
+      .imsg-header {
+        padding: 6px 0 14px; text-align: center;
+        border-bottom: 0.5px solid #1c1c1e;
+      }
+      .imsg-avatar {
+        width: 50px; height: 50px; border-radius: 50%;
+        background: var(--teal); margin: 0 auto 4px;
+        display: flex; align-items: center; justify-content: center;
+        font-family: "Instrument Serif", serif;
+        font-size: 26px; font-style: italic; color: var(--tealInk);
+      }
+      .imsg-name { font-size: 11px; color: #fff; font-weight: 500; }
+      .imsg-num { font-size: 9px; color: #8e8e93; }
+      .imsg-msgs {
+        flex: 1; padding: 16px 12px;
+        display: flex; flex-direction: column; gap: 7px; overflow: hidden;
+      }
+      .imsg-bubble.in {
+        align-self: flex-start; max-width: 82%;
+        background: #1c1c1e; border-radius: 18px;
+        padding: 9px 13px; font-size: 13px; color: #fff; line-height: 1.4;
+      }
+      .imsg-bubble.out {
+        align-self: flex-end; max-width: 80%;
+        background: #0a84ff; border-radius: 18px;
+        padding: 9px 13px; font-size: 13px; color: #fff;
+      }
+      .imsg-bubble.media {
+        align-self: flex-end; max-width: 78%;
+        background: linear-gradient(180deg, #2c2c2e, #1c1c1e);
+        border: 1px solid #38383a;
+        border-radius: 18px; padding: 8px;
+      }
+      .imsg-bubble.media .thumb {
+        width: 200px; height: 200px; border-radius: 12px;
+        background: linear-gradient(135deg, #5a3825, #3a2a3a);
+        position: relative;
+        display: flex; align-items: flex-end; padding: 8px;
+      }
+      .imsg-bubble.media .thumb-meta {
+        font-size: 10px; color: rgba(255,255,255,0.78); font-weight: 600; line-height: 1.3;
+      }
+      .imsg-bubble.media .thumb-platform {
+        position: absolute; top: 8px; left: 8px;
+        background: rgba(0,0,0,0.5); border-radius: 4px;
+        padding: 3px 7px; font-size: 9px; color: #fff;
+        font-family: "JetBrains Mono", monospace; letter-spacing: 0.06em;
+      }
+      .imsg-bubble.media .reel-info {
+        font-size: 10px; color: #8e8e93; padding: 4px 4px 0;
+      }
+      .imsg-bubble.savecard {
+        align-self: flex-start; max-width: 82%;
+        background: #1c1c1e; border-radius: 18px; padding: 8px;
+      }
+      .imsg-bubble.savecard .body { padding: 4px 6px 6px; font-size: 13px; color: #fff; line-height: 1.4; }
+      .imsg-bubble.savecard .link {
+        display: flex; align-items: center; gap: 8px;
+        margin-top: 6px; padding: 8px 10px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+      }
+      .imsg-bubble.savecard .link .badge {
+        width: 26px; height: 26px; border-radius: 4px;
+        background: var(--teal);
+        display: flex; align-items: center; justify-content: center;
+        font-family: "Instrument Serif", serif; font-style: italic;
+        font-size: 14px; color: var(--tealInk); flex-shrink: 0;
+      }
+      .imsg-bubble.savecard .link .info { flex: 1; min-width: 0; }
+      .imsg-bubble.savecard .link .t1 { font-size: 11px; color: #fff; font-weight: 600; }
+      .imsg-bubble.savecard .link .t2 {
+        font-size: 9px; color: rgba(255,255,255,0.6);
+        font-family: "JetBrains Mono", monospace; margin-top: 1px;
+      }
+      .imsg-typing {
+        align-self: flex-start;
+        background: #1c1c1e; border-radius: 18px;
+        padding: 10px 14px; display: flex; gap: 4px;
+      }
+      .imsg-typing span { width: 6px; height: 6px; border-radius: 50%; background: #8e8e93; }
+      .read-receipt {
+        font-size: 10px; color: #8a8a90; align-self: flex-end;
+        padding: 0 8px; margin-top: -2px;
+      }
+      .imsg-input {
+        padding: 8px 14px 22px;
+        border-top: 0.5px solid #1c1c1e;
+        display: flex; gap: 8px; align-items: center;
+      }
+      .imsg-input .field { flex: 1; height: 28px; border-radius: 14px; border: 0.5px solid #38383a; }
+      .imsg-input .send { width: 28px; height: 28px; border-radius: 50%; background: #1c1c1e; }
+
+      /* ═════ SCENE 1 HOOK ═════ */
+      #s1 .center {
+        position: absolute; inset: 0;
+        display: flex; flex-direction: column;
+        justify-content: center; align-items: center; gap: 36px;
+      }
+      #s1 .h1 {
+        font-family: "Instrument Serif", serif;
+        font-size: 200px; line-height: 0.96; color: var(--text);
+        letter-spacing: -0.03em; text-align: center;
+      }
+      #s1 .h1 .it { font-style: italic; color: var(--teal); }
+      #s1 .cursor { color: var(--teal); }
+
+      /* ═════ SCENE 2 GRAVEYARD ═════ */
+      #s2 .gy-stage {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center; gap: 130px;
+      }
+      #s2 .gy-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 2px; padding-top: 50px; height: 100%;
+      }
+      #s2 .gy-tile { aspect-ratio: 9/16; position: relative; }
+      #s2 .gy-tile::after {
+        content: "▶"; position: absolute; top: 4px; left: 4px;
+        font-size: 8px; color: rgba(255,255,255,0.4);
+      }
+      #s2 .gy-stat { max-width: 720px; }
+      #s2 .gy-counter {
+        font-family: "Instrument Serif", serif;
+        font-size: 280px; line-height: 0.9; color: var(--text);
+        letter-spacing: -0.035em; font-variant-numeric: tabular-nums;
+        transform-origin: left center;
+      }
+      #s2 .gy-tagline {
+        font-family: "Instrument Serif", serif;
+        font-size: 56px; color: var(--text2); margin-top: 16px;
+        font-style: italic; letter-spacing: -0.02em; line-height: 1.15;
+      }
+      #s2 .gy-tagline .accent { color: var(--teal); }
+      #s2 .gy-disclaimer {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px; color: var(--text3);
+        margin-top: 28px; letter-spacing: 0.03em;
+      }
+
+      /* ═════ SCENE 3 PIVOT ═════ */
+      #s3 .pv-stage {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        padding: 0 200px;
+      }
+      #s3 .pv-line {
+        font-family: "Instrument Serif", serif;
+        font-size: 160px; line-height: 1.05; color: var(--text);
+        letter-spacing: -0.025em; text-align: center; max-width: 1500px;
+      }
+      #s3 .pv-word { display: inline-block; margin-right: 24px; }
+      #s3 .pv-word.it { font-style: italic; color: var(--teal); }
+
+      /* ═════ SCENE 4 SAVE (textbot) ═════ */
+      #s4 .tb-stage {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center; gap: 130px;
+      }
+      #s4 .tb-copy { width: 540px; }
+      #s4 .tb-h {
+        font-family: "Instrument Serif", serif;
+        font-size: 92px; line-height: 1.02; color: var(--text);
+        letter-spacing: -0.03em; margin-top: 20px;
+      }
+      #s4 .tb-h .it { font-style: italic; color: var(--teal); }
+      #s4 .tb-sub {
+        font-size: 22px; color: var(--text2); margin-top: 30px;
+        line-height: 1.55; max-width: 480px;
+      }
+
+      /* ═════ SCENE 5 RECALL (ask) ═════ */
+      #s5 .rc-stage {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center; gap: 130px;
+      }
+      #s5 .rc-copy { width: 540px; }
+      #s5 .rc-h {
+        font-family: "Instrument Serif", serif;
+        font-size: 92px; line-height: 1.02; color: var(--text);
+        letter-spacing: -0.03em; margin-top: 20px;
+      }
+      #s5 .rc-h .it { font-style: italic; color: var(--teal); }
+      #s5 .rc-h .quote { color: var(--text3); font-style: italic; font-weight: 400; }
+      #s5 .rc-sub {
+        font-size: 22px; color: var(--text2); margin-top: 30px;
+        line-height: 1.55; max-width: 480px;
+      }
+      #s5 .rc-tags {
+        margin-top: 26px; display: flex; gap: 8px; flex-wrap: wrap;
+      }
+      #s5 .rc-tags .tag {
+        font-family: "JetBrains Mono", monospace; font-size: 11px;
+        padding: 5px 10px; border: 1px solid var(--edge2); border-radius: 999px;
+        color: var(--text2); letter-spacing: 0.08em; text-transform: uppercase;
+      }
+      #s5 .rc-tags .tag.on { background: var(--teal); color: var(--tealInk); border-color: var(--teal); }
+
+      /* ═════ SCENE 6 TWO WAYS ═════ */
+      #s6 .tw-stage { position: absolute; inset: 0; }
+      #s6 .tw-top {
+        position: absolute; top: 70px; left: 0; right: 0; text-align: center;
+      }
+      #s6 .tw-h {
+        font-family: "Instrument Serif", serif; font-size: 92px; line-height: 1.0;
+        color: var(--text); letter-spacing: -0.03em; margin-top: 16px;
+      }
+      #s6 .tw-h .it { font-style: italic; color: var(--teal); }
+      #s6 .tw-row {
+        position: absolute; top: 320px; bottom: 90px; left: 90px; right: 90px;
+        display: flex; align-items: center; justify-content: center; gap: 70px;
+      }
+      #s6 .tw-col { flex: 1; max-width: 760px; display: flex; flex-direction: column; }
+      #s6 .tw-col-label {
+        font-family: "JetBrains Mono", monospace; font-size: 13px;
+        color: var(--text3); letter-spacing: 0.18em; text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      #s6 .tw-browser-body { padding: 32px 36px; }
+      #s6 .tw-browser-h {
+        font-family: "Instrument Serif", serif; font-size: 32px;
+        color: var(--text); letter-spacing: -0.02em; line-height: 1.1;
+      }
+      #s6 .tw-browser-h .it { font-style: italic; color: var(--teal); }
+      #s6 .tw-paste {
+        margin-top: 22px; padding: 16px 18px;
+        background: var(--vault); border: 2px dashed var(--edge2);
+        border-radius: 10px; display: flex; align-items: center; gap: 14px;
+      }
+      #s6 .tw-paste .plus { font-size: 22px; color: var(--text3); }
+      #s6 .tw-paste .url {
+        flex: 1; font-size: 14px; color: var(--text2);
+        font-family: "JetBrains Mono", monospace;
+      }
+      #s6 .tw-paste .save {
+        padding: 8px 14px; border-radius: 6px; font-size: 12px;
+        background: var(--text); color: var(--ink); font-weight: 500;
+      }
+      #s6 .tw-rows { margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+      #s6 .tw-row-item {
+        display: flex; gap: 12px; align-items: center;
+        padding: 9px 12px; background: var(--vault);
+        border: 1px solid var(--edge); border-radius: 8px;
+      }
+      #s6 .tw-row-item .tn { width: 36px; height: 36px; border-radius: 5px; }
+      #s6 .tw-row-item .ti { flex: 1; }
+      #s6 .tw-row-item .ti .t1 { font-size: 12px; color: var(--text); }
+      #s6 .tw-row-item .ti .t2 {
+        font-size: 10px; color: var(--text3); margin-top: 2px;
+        font-family: "JetBrains Mono", monospace;
+      }
+      #s6 .tw-row-item.fresh { border-color: var(--teal); background: rgba(30,77,84,0.06); }
+      #s6 .tw-connect {
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--ink); border: 1.5px solid var(--edge2);
+        border-radius: 999px; padding: 14px 22px;
+        display: flex; flex-direction: column; align-items: center; gap: 4px;
+        box-shadow: 0 12px 24px rgba(0,0,0,0.06); z-index: 5;
+      }
+      #s6 .tw-connect .lab {
+        font-family: "JetBrains Mono", monospace; font-size: 10px;
+        color: var(--text3); letter-spacing: 0.2em; text-transform: uppercase;
+      }
+      #s6 .tw-connect .arr {
+        font-family: "Instrument Serif", serif; font-size: 28px;
+        font-style: italic; color: var(--teal); line-height: 1;
+      }
+
+      /* ═════ SCENE 7 LIBRARY+SEARCH ═════ */
+      #s7 .lib-browser {
+        position: absolute; inset: 50px 70px;
+        background: var(--ink); border: 1.5px solid var(--edge2);
+        border-radius: 14px; overflow: hidden;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+        display: flex; flex-direction: column;
+      }
+      .lib-chrome {
+        padding: 11px 16px; border-bottom: 1px solid var(--edge);
+        background: var(--vault);
+        display: flex; align-items: center; gap: 10px;
+      }
+      .lib-url {
+        flex: 1; max-width: 400px; margin-left: 14px;
+        padding: 5px 14px;
+        background: var(--panel); border: 1px solid var(--edge); border-radius: 5px;
+        font-size: 12px; color: var(--text3);
+        font-family: "JetBrains Mono", monospace;
+      }
+      .lib-topbar {
+        display: flex; align-items: center; gap: 16px;
+        padding: 14px 22px; border-bottom: 1px solid var(--edge);
+        background: var(--vault);
+      }
+      .lib-logo { display: flex; align-items: center; gap: 10px; }
+      .lib-logo .mark {
+        width: 28px; height: 28px; border-radius: 50%;
+        background: var(--teal);
+        display: flex; align-items: center; justify-content: center;
+        font-family: "Instrument Serif", serif; font-style: italic;
+        font-size: 16px; color: var(--tealInk);
+      }
+      .lib-logo .name {
+        font-family: "Instrument Serif", serif; font-size: 18px;
+        color: var(--text); letter-spacing: -0.01em;
+      }
+      .lib-search {
+        flex: 1; max-width: 540px;
+        display: flex; align-items: center; gap: 10px;
+        padding: 8px 14px; border-radius: 6px;
+        background: var(--panel); border: 1px solid var(--edge2);
         position: relative;
       }
-      .detail .hero::before {
-        content: ""; position: absolute; inset: 0;
-        background: radial-gradient(circle at 50% 60%, rgba(31,27,20,0), rgba(31,27,20,0.5));
+      .lib-search .ic { font-size: 14px; color: var(--text3); position: absolute; left: 14px; top: 50%; transform: translateY(-50%); }
+      .lib-search .qbox {
+        flex: 1; font-size: 13px; color: var(--text);
+        display: flex; align-items: center; justify-content: center;
+        text-align: center;
       }
-      .detail .hero .hero-meta {
-        position: absolute; bottom: 32px; left: 32px; right: 32px;
-        color: #fff; display: flex; flex-direction: column; gap: 8px;
+      .lib-search .ph { font-size: 13px; color: var(--text3); }
+      .lib-search .typed { font-size: 13px; color: var(--text); }
+      .lib-search .cur { color: var(--teal); margin-left: 1px; }
+      .lib-search .kbd {
+        font-family: "JetBrains Mono", monospace; font-size: 9px;
+        padding: 2px 5px; border: 1px solid var(--edge2);
+        border-radius: 3px; color: var(--text3);
+        position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
       }
-      .detail .hero .hero-meta .plat {
-        align-self: flex-start;
-        font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
-        background: rgba(0,0,0,0.45); padding: 5px 10px; border-radius: 3px;
-        letter-spacing: 0.14em; text-transform: uppercase;
+      .lib-stats {
+        display: flex; align-items: center; gap: 18px;
+        color: var(--text3); font-size: 11px;
+        font-family: "JetBrains Mono", monospace;
       }
-      .detail .hero .hero-meta .duration {
-        font-family: "JetBrains Mono", monospace; font-size: 13px;
-        letter-spacing: 0.12em; opacity: 0.85;
+      .lib-stats .live { display: flex; align-items: center; gap: 6px; }
+      .lib-stats .live .d { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+      .lib-stats .av {
+        width: 28px; height: 28px; border-radius: 50%;
+        background: linear-gradient(135deg, #c45a6b, #c49a3a);
+        border: 1px solid var(--edge2);
       }
-      .detail .right { padding: 36px 44px; display: flex; flex-direction: column; gap: 24px; overflow: hidden; }
-      .detail .right .crumbs {
-        font-family: "JetBrains Mono", monospace; font-size: 11px;
-        letter-spacing: 0.18em; color: var(--text3); text-transform: uppercase;
+      .lib-body { display: flex; flex: 1; overflow: hidden; position: relative; }
+      .lib-side {
+        width: 220px; padding: 18px 14px;
+        border-right: 1px solid var(--edge); background: var(--vault);
+        display: flex; flex-direction: column; gap: 4px;
       }
-      .detail .right .crumbs .accent { color: var(--accent); }
-      .detail .right .title {
-        font-family: "Instrument Serif", Georgia, serif; font-size: 56px;
-        line-height: 1.05; color: var(--text); letter-spacing: -0.01em;
+      .lib-side .grp {
+        font-size: 11px; color: var(--text3); padding: 0 10px 8px; font-weight: 500;
       }
-      .detail .right .summary { font-size: 19px; line-height: 1.55; color: var(--text2); max-width: 720px; }
-      .detail .right .section-h {
-        font-family: "JetBrains Mono", monospace; font-size: 11px;
-        letter-spacing: 0.22em; color: var(--text3); text-transform: uppercase;
+      .lib-nav {
+        display: flex; align-items: center; gap: 10px;
+        padding: 7px 10px; border-radius: 5px;
+        font-size: 13px; color: var(--text2);
+        border: 1px solid transparent; background: transparent;
       }
-      .detail .right .actions { display: flex; flex-direction: column; gap: 8px; }
-      .detail .right .action {
-        background: var(--panel); border: 1px solid var(--edge); border-radius: 4px;
-        padding: 14px 16px; font-size: 15px; color: var(--text2); display: flex; gap: 12px; align-items: center;
+      .lib-nav.active {
+        background: var(--panel); color: var(--text);
+        border-color: var(--edge2);
       }
-      .detail .right .action .check {
-        width: 18px; height: 18px; border: 1.5px solid var(--edge2); border-radius: 50%; flex-shrink: 0;
+      .lib-nav .ic-d { width: 14px; height: 14px; border-radius: 3px; background: var(--text3); }
+      .lib-nav.active .ic-d { background: var(--teal); }
+      .lib-nav .nm { flex: 1; }
+      .lib-nav .ct { font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--text3); }
+      .lib-channels {
+        margin-top: auto; padding: 12px;
+        background: var(--panel); border: 1px solid var(--edge);
+        border-radius: 6px;
+        display: flex; flex-direction: column; gap: 8px;
       }
-      .detail .right .action.done .check { background: var(--accent); border-color: var(--accent); }
-      .detail .right .reminder-box {
-        background: rgba(30,77,84,0.08); border: 1px solid rgba(30,77,84,0.22);
-        border-radius: 4px; padding: 16px 18px;
-        display: flex; justify-content: space-between; align-items: center;
+      .lib-channels .h { font-size: 10px; color: var(--text3); font-weight: 500; }
+      .lib-channels .ch { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+      .lib-channels .ch .d { width: 5px; height: 5px; border-radius: 50%; background: var(--ok); }
+      .lib-channels .ch .lbl { color: var(--text2); flex: 1; }
+      .lib-channels .ch .sub {
+        font-family: "JetBrains Mono", monospace; font-size: 9px; color: var(--text4);
       }
-      .detail .right .reminder-box .left { display: flex; flex-direction: column; gap: 4px; }
-      .detail .right .reminder-box .label {
-        font-family: "JetBrains Mono", monospace; font-size: 10px;
-        letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase;
+      .lib-main { flex: 1; overflow: hidden; padding: 22px 30px; display: flex; flex-direction: column; gap: 18px; }
+      .lib-titlewrap { position: relative; height: 110px; }
+      .lib-ts {
+        position: absolute; inset: 0; display: flex; flex-direction: column; gap: 4px;
       }
-      .detail .right .reminder-box .when { font-size: 18px; color: var(--text); font-weight: 500; }
-      .detail .right .reminder-box .btn {
-        font-family: "JetBrains Mono", monospace; font-size: 11px;
-        background: var(--accent); color: var(--accentInk); padding: 8px 14px;
-        border-radius: 3px; letter-spacing: 0.12em; text-transform: uppercase;
+      .lib-ts .crumb { font-size: 11px; color: var(--text3); }
+      .lib-ts .crumb .it { color: var(--teal); font-style: italic; }
+      .lib-ts h1 {
+        font-family: "Instrument Serif", serif;
+        font-size: 42px; font-weight: 400; letter-spacing: -0.025em;
+        color: var(--text); margin-top: 4px;
       }
-      .detail .right .tags { display: flex; gap: 6px; flex-wrap: wrap; }
-      .detail .right .tag {
-        font-family: "JetBrains Mono", monospace; font-size: 10px;
-        letter-spacing: 0.12em; padding: 4px 8px;
-        border: 1px solid var(--edge2); color: var(--text2); border-radius: 3px;
-        text-transform: uppercase;
+      .lib-ts h1 .it { font-style: italic; color: var(--teal); }
+      .lib-ts .meta { font-size: 13px; color: var(--text2); margin-top: 6px; }
+      .lib-tools-wrap {
+        position: absolute; right: 0; top: 0;
+        display: flex; gap: 8px;
+      }
+      .lib-density {
+        display: flex; padding: 3px; border-radius: 6px;
+        background: var(--panel); border: 1px solid var(--edge2);
+      }
+      .lib-density .opt {
+        padding: 5px 14px; border-radius: 4px; font-size: 12px;
+        color: var(--text3); font-weight: 500;
+      }
+      .lib-density .opt.active { background: var(--teal); color: var(--tealInk); }
+      .lib-add {
+        padding: 8px 14px; border-radius: 6px; font-size: 12px;
+        background: var(--text); color: var(--ink); font-weight: 500;
+      }
+      .lib-activity {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 14px; border-radius: 6px;
+        background: linear-gradient(90deg, rgba(30,77,84,0.06), transparent);
+        border: 1px solid rgba(30,77,84,0.15);
+      }
+      .lib-activity .icon {
+        width: 22px; height: 22px; border-radius: 4px; background: var(--teal);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--tealInk); font-size: 12px;
+      }
+      .lib-activity .txt { flex: 1; font-size: 13px; color: var(--text); }
+      .lib-activity .txt .em {
+        font-style: italic; color: var(--teal);
+        font-family: "Instrument Serif", serif; font-size: 15px;
+      }
+      .lib-activity .bar {
+        width: 140px; height: 3px; background: var(--edge2); border-radius: 2px; overflow: hidden;
+      }
+      .lib-activity .bar .fill { width: 34%; height: 100%; background: var(--teal); }
+      .lib-activity .pct {
+        font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text3);
+      }
+      .lib-grid {
+        flex: 1; display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px;
+        overflow: hidden;
+      }
+      .lib-card {
+        background: var(--panel); border: 1px solid var(--edge);
+        border-radius: 12px; overflow: hidden;
+        display: flex; flex-direction: column;
+      }
+      .lib-card .thumb { aspect-ratio: 9/16; position: relative; }
+      .lib-card .thumb .b1 {
+        position: absolute; top: 8px; left: 8px;
+        font-size: 9px; color: #fff; font-family: "JetBrains Mono", monospace;
+        background: rgba(0,0,0,0.45); padding: 3px 7px; border-radius: 3px;
+        text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;
+      }
+      .lib-card .thumb .b1.ig { background: var(--ig); }
+      .lib-card .thumb .b1.tt { background: var(--tt); }
+      .lib-card .thumb .b1.yt { background: var(--yt); }
+      .lib-card .thumb .b2 {
+        position: absolute; bottom: 8px; left: 8px;
+        font-size: 9px; color: rgba(255,255,255,0.85);
+        font-family: "JetBrains Mono", monospace;
+      }
+      .lib-card .meta { padding: 8px 10px; }
+      .lib-card .cat {
+        font-size: 8px; font-weight: 600; letter-spacing: 0.08em;
+        text-transform: uppercase; font-family: "JetBrains Mono", monospace;
+      }
+      .lib-card .cat.ig { color: var(--ig); }
+      .lib-card .cat.tt { color: var(--tt); }
+      .lib-card .cat.yt { color: var(--yt); }
+      .lib-card .title {
+        font-size: 11px; color: var(--text); font-weight: 500;
+        margin-top: 3px; line-height: 1.25;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .lib-cursor {
+        position: absolute; width: 22px; height: 22px;
+        background: var(--text); border-radius: 50%;
+        box-shadow: 0 0 0 3px rgba(245,240,232,0.9), 0 6px 16px rgba(0,0,0,0.2);
+        pointer-events: none; opacity: 0; z-index: 60;
       }
 
-      /* ─ scene 9 outro ─ */
-      #s9 .center { height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 32px; }
-      #s9 .outro-h { font-family: "Instrument Serif", Georgia, serif; font-size: 200px; line-height: 0.94; color: var(--text); letter-spacing: -0.02em; text-align: center; }
-      #s9 .outro-h .it { font-style: italic; color: var(--text2); }
-      #s9 .outro-line { width: 400px; height: 1px; background: var(--edge2); }
-      #s9 .outro-tagline { font-size: 26px; color: var(--text2); }
-      #s9 .url { font-family: "JetBrains Mono", monospace; font-size: 18px; color: var(--accent); letter-spacing: 0.12em; margin-top: 12px; }
+      /* ═════ SCENE 8 MEMORY ═════ */
+      #s8 .mm-stage {
+        position: absolute; inset: 70px 120px;
+        display: flex; gap: 80px;
+      }
+      #s8 .mm-left { flex: 1; padding-top: 30px; }
+      #s8 .mm-h {
+        font-family: "Instrument Serif", serif;
+        font-size: 96px; line-height: 1.02; color: var(--text);
+        letter-spacing: -0.03em; margin-top: 14px;
+      }
+      #s8 .mm-h .it { font-style: italic; color: var(--teal); }
+      #s8 .mm-sub {
+        font-size: 22px; color: var(--text2);
+        margin-top: 28px; line-height: 1.55; max-width: 540px;
+      }
+      #s8 .mm-sub .quote { font-style: italic; color: var(--text); }
+      #s8 .mm-side {
+        font-family: "JetBrains Mono", monospace; font-size: 14px;
+        color: var(--text3); letter-spacing: 0.15em; text-transform: uppercase;
+        margin-top: 36px;
+      }
+      #s8 .mm-side b {
+        color: var(--teal); font-family: "Instrument Serif", serif;
+        font-style: italic; font-weight: 400; font-size: 18px; letter-spacing: 0;
+      }
+      #s8 .mm-right {
+        flex: 1; padding-top: 30px;
+        display: flex; flex-direction: column; gap: 12px;
+      }
+      .mm-card {
+        background: var(--panel); border: 1px solid var(--edge);
+        border-radius: 10px; padding: 14px 22px;
+      }
+      .mm-card .kind {
+        display: inline-block; font-size: 11px;
+        padding: 3px 10px; border-radius: 999px;
+        background: rgba(0,0,0,0.04);
+        border: 1px solid var(--edge); font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .mm-card .kind.fact { color: var(--teal); }
+      .mm-card .kind.preference { color: var(--sienna); }
+      .mm-card .kind.goal { color: var(--warn); }
+      .mm-card .kind.project { color: #8a6478; }
+      .mm-card .kind.people { color: #5c8a6e; }
+      .mm-card .txt { font-size: 17px; color: var(--text); line-height: 1.35; }
+      .mm-card .age {
+        font-size: 11px; color: var(--text3); margin-top: 6px;
+        font-family: "JetBrains Mono", monospace;
+      }
 
-      /* shared scene tag */
-      .scene-tag { position: absolute; bottom: 70px; left: 160px; font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: 0.18em; color: var(--text3); text-transform: uppercase; }
-      .scene-tag .num { color: var(--accent); margin-right: 12px; }
+      /* ═════ SCENE 9 REMINDER ═════ */
+      #s9 .rm-stage {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center; gap: 110px;
+      }
+      #s9 .rm-copy { width: 600px; }
+      #s9 .rm-h {
+        font-family: "Instrument Serif", serif;
+        font-size: 80px; line-height: 1.05; color: var(--text);
+        letter-spacing: -0.03em; margin-top: 18px;
+      }
+      #s9 .rm-h .it { font-style: italic; color: var(--teal); }
+      #s9 .rm-sub {
+        font-size: 22px; color: var(--text2);
+        margin-top: 40px; line-height: 1.55; max-width: 520px;
+      }
+      .lockscreen {
+        width: 100%; height: 100%; border-radius: 36px; overflow: hidden;
+        background: linear-gradient(180deg, #1a1814, #0a0a0b);
+        position: relative;
+      }
+      .lockscreen .lock-time {
+        position: absolute; top: 80px; left: 0; right: 0;
+        text-align: center; color: #fff;
+      }
+      .lockscreen .lock-date { font-size: 16px; font-weight: 500; }
+      .lockscreen .lock-clock {
+        font-family: "Instrument Serif", serif;
+        font-size: 88px; font-weight: 300; letter-spacing: -0.035em;
+      }
+      .rm-notif {
+        position: absolute; top: 280px; left: 16px; right: 16px;
+        background: rgba(40,40,42,0.92);
+        border-radius: 18px; padding: 14px;
+        display: flex; gap: 12px;
+        opacity: 0;
+      }
+      .rm-notif .icon {
+        width: 38px; height: 38px; border-radius: 8px;
+        background: var(--teal);
+        display: flex; align-items: center; justify-content: center;
+        font-family: "Instrument Serif", serif; font-style: italic;
+        font-size: 22px; color: var(--tealInk);
+      }
+      .rm-notif .body { flex: 1; }
+      .rm-notif .row1 {
+        display: flex; justify-content: space-between;
+        font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 2px;
+      }
+      .rm-notif .app { font-weight: 600; color: rgba(255,255,255,0.85); }
+      .rm-notif .title { font-size: 13px; color: #fff; font-weight: 600; margin-bottom: 2px; }
+      .rm-notif .body-text { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.35; }
 
-      /* outro waitlist CTA */
-      #s9-cta {
-        margin-top: 26px;
-        padding: 22px 52px;
-        background: var(--accent);
-        color: var(--accentInk);
+      /* ═════ SCENE 10 CLOSE ═════ */
+      #s10 .close-stage {
+        position: absolute; inset: 0;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+      }
+      #s10 .seal {
+        width: 140px; height: 140px; border-radius: 50%;
+        background: var(--teal);
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 0 0 8px var(--ink), 0 0 0 9px var(--edge2);
+      }
+      #s10 .seal .mark {
+        font-family: "Instrument Serif", serif;
+        font-size: 100px; font-style: italic; color: var(--tealInk);
+        line-height: 1; margin-top: -4px;
+      }
+      #s10 .wordmark {
+        font-family: "Instrument Serif", serif;
+        font-size: 200px; line-height: 1; color: var(--text);
+        letter-spacing: -0.04em; margin-top: 28px;
+      }
+      #s10 .tagline {
+        font-family: "Instrument Serif", serif;
+        font-size: 42px; line-height: 1.2; color: var(--text2);
+        letter-spacing: -0.02em; font-style: italic;
+        margin-top: 18px; text-align: center;
+      }
+      #s10 .cta {
+        margin-top: 40px; padding: 22px 56px;
+        background: var(--teal); color: var(--tealInk);
         font-family: "Inter", system-ui, sans-serif;
-        font-size: 26px;
-        font-weight: 600;
-        border-radius: 999px;
-        letter-spacing: 0.01em;
-        box-shadow: 0 18px 44px rgba(30,77,84,0.32);
+        font-size: 26px; font-weight: 600;
+        border-radius: 999px; letter-spacing: 0.01em;
+        box-shadow: 0 22px 56px rgba(30,77,84,0.32);
       }
     </style>
   </head>
@@ -305,392 +716,421 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="45"
+      data-duration="58"
       data-width="1920"
       data-height="1080"
     >
-      <!-- BACKGROUND MUSIC -->
       <audio
         id="bed"
         class="clip"
         data-start="0"
-        data-duration="45"
+        data-duration="58"
         data-track-index="0"
         data-volume="0.85"
         src="audio/bed.mp3"
       ></audio>
 
-      <!-- SCENE 1: brand reveal (0 - 5.0) -->
-      <div id="s1" class="clip scene" data-start="0" data-duration="3.5" data-track-index="1">
+      <!-- SCENE 1: HOOK (0 - 2.5) -->
+      <div id="s1" class="clip scene ink-bg" data-start="0" data-duration="3.5" data-track-index="1">
         <div class="center">
-          <div id="s1-eye" class="mono eyebrow">an imessage assistant</div>
-          <div class="wordmark">
-            <div id="s1-the" class="the">the</div>
-            <div id="s1-vault" class="vault">Vault</div>
+          <div id="s1-eye" class="eyebrow">a short film about</div>
+          <div id="s1-h" class="h1">
+            everything you<br/>
+            <span class="it">almost</span> remembered<span id="s1-cursor" class="cursor">.</span>
           </div>
-          <div id="s1-line" class="underline"></div>
-          <div id="s1-tag" class="serif tagline">forward a reel. it remembers everything.</div>
         </div>
       </div>
 
-      <!-- SCENE 2: pitch + stats (4.7 - 10.4) -->
-      <div id="s2" class="clip scene" data-start="3.2" data-duration="4.4" data-track-index="2">
-        <div class="scene-content">
-          <div class="pitch-grid">
-            <div class="pitch-left">
-              <div id="s2-label" class="mono label">the problem</div>
-              <div id="s2-h" class="pitch-h">you save<br/>reels you<br/><span class="it">never see again</span>.</div>
-              <div id="s2-sub" class="pitch-sub">
-                short-form content is consumed at firehose speed but acted on at near-zero rate.
-                the save folder becomes a graveyard.
-              </div>
+      <!-- SCENE 2: GRAVEYARD (2.2 - 6.2) -->
+      <div id="s2" class="clip scene vault-bg" data-start="3.2" data-duration="5.5" data-track-index="2">
+        <div class="gy-stage">
+          <div id="s2-phone" class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-notch"></div>
+              <div id="s2-grid" class="gy-grid"></div>
             </div>
-            <div class="stats">
-              <div id="s2-stat1" class="stat">
-                <div class="num">0+</div>
-                <div class="lbl">reels saved by an avg user / year</div>
-                <div class="meta mono">SOURCE · TIKTOK INTERNAL</div>
-              </div>
-              <div id="s2-stat2" class="stat">
-                <div class="num accent">0%</div>
-                <div class="lbl">that get revisited</div>
-                <div class="meta mono">SOURCE · CHARTBEAT 2025</div>
-              </div>
-              <div id="s2-stat3" class="stat">
-                <div class="num">0%</div>
-                <div class="lbl">retrievable with theVault</div>
-                <div class="meta mono">SOURCE · THIS DEMO</div>
-              </div>
+          </div>
+          <div class="gy-stat">
+            <div id="s2-eye" class="eyebrow">the average person has</div>
+            <div id="s2-counter" class="gy-counter">0</div>
+            <div id="s2-tag" class="gy-tagline">
+              saved reels they will <span class="accent">never</span> see again.
+            </div>
+            <div id="s2-disc" class="gy-disclaimer">
+              * we made that up. but you know it's right.
             </div>
           </div>
         </div>
       </div>
 
-      <!-- SCENE 3: imsg save w/ zoom + loading (10.1 - 22.0) -->
-      <div id="s3" class="clip scene" data-start="7.3" data-duration="8.7" data-track-index="1">
-        <div class="scene-content">
-          <div class="imsg-stage">
-            <div class="imsg-copy">
-              <div id="s3-step" class="imsg-step">step 01 · save</div>
-              <div id="s3-h" class="imsg-h">forward<br/>a reel.</div>
-              <div id="s3-sub" class="imsg-sub">
-                drop a tiktok or instagram link into imessage. theVault watches the video,
-                transcribes it, summarizes it, and files it under the right category.
-              </div>
-            </div>
-            <div id="s3-phone-wrap" class="phone-frame">
-              <div id="s3-phone" class="phone">
-                <div class="statusbar"><span>9:41</span><span class="mono">100</span></div>
-                <div class="nav">
-                  <div class="nav-back">‹</div>
-                  <div class="nav-center">
-                    <div class="avatar">V</div>
-                    <div class="name">theVault</div>
-                    <div class="sub">imessage</div>
-                  </div>
-                </div>
-                <div id="s3-msgs" class="messages">
-                  <div class="system-note">today 11:42 am</div>
-                  <div id="s3-b1" class="bubble thumb">
-                    <div class="thumb-card">
-                      <div class="thumb-meta">
-                        <span class="thumb-plat">tiktok</span>
-                        <span>0:47</span>
-                      </div>
-                    </div>
-                    <div class="url mono">tiktok.com/@chefsteps</div>
-                  </div>
-                  <div id="s3-b2" class="bubble">
-                    <div>got it, processing</div>
-                    <div class="loading-bar"><div id="s3-bar"></div></div>
-                    <div id="s3-bar-meta" class="loading-meta">downloading · 0:00 / 0:47</div>
-                  </div>
-                  <div id="s3-r1" class="read-receipt">read 11:42 am</div>
-                  <div id="s3-typing1" class="typing">
-                    <span id="s3-d1"></span><span id="s3-d2"></span><span id="s3-d3"></span>
-                  </div>
-                  <div id="s3-b3" class="bubble savecard">
-                    <div class="body">saved · one-pan miso butter salmon. lowkey the easiest weeknight dinner ngl</div>
-                    <div class="link-card">
-                      <div class="badge">V</div>
-                      <div class="meta">
-                        <div class="title">miso butter salmon</div>
-                        <div class="host mono">tiktok · recipes</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="compose">
-                  <div class="plus">+</div>
-                  <div class="input">imessage</div>
-                </div>
-                <div class="home"></div>
-              </div>
-            </div>
+      <!-- SCENE 3: PIVOT (5.9 - 7.9) -->
+      <div id="s3" class="clip scene ink-bg" data-start="8.4" data-duration="2.8" data-track-index="1">
+        <div class="pv-stage">
+          <div class="pv-line">
+            <span class="pv-word">what</span>
+            <span class="pv-word">if</span>
+            <span class="pv-word">you</span>
+            <span class="pv-word">just&hellip;</span>
+            <span class="pv-word it">texted</span>
+            <span class="pv-word">them</span>
+            <span class="pv-word it">somewhere?</span>
           </div>
-          <div class="scene-tag"><span class="num">01</span>save flow · imessage</div>
         </div>
       </div>
 
-      <!-- SCENE 4: dashboard library "all" (21.7 - 29.7) -->
-      <div id="s4" class="clip scene" data-start="15.7" data-duration="4.9" data-track-index="2">
-        <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
-          <div id="s4-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 02 · the library</div>
-          <div id="s4-dash" class="dash" style="height: 880px">
-            <div class="dash-side">
-              <div class="brand">
-                <div class="brand-mark">V</div>
-                <div class="brand-name"><span class="the">the</span>Vault</div>
-              </div>
-              <div class="nav-group-label">categories</div>
-              <div id="s4-n1" class="nav-item active">all <span class="count">214</span></div>
-              <div id="s4-n2" class="nav-item">recipes <span class="count">42</span></div>
-              <div id="s4-n3" class="nav-item">fitness <span class="count">31</span></div>
-              <div id="s4-n4" class="nav-item">places to eat <span class="count">28</span></div>
-              <div id="s4-n5" class="nav-item">things to do <span class="count">37</span></div>
-              <div id="s4-n6" class="nav-item">shopping <span class="count">24</span></div>
-              <div id="s4-n7" class="nav-item">professional <span class="count">19</span></div>
-              <div id="s4-n8" class="nav-item">coding projects <span class="count">11</span></div>
-              <div id="s4-n9" class="nav-item">other <span class="count">22</span></div>
+      <!-- SCENE 4: SAVE (textbot) (7.6 - 11.5) -->
+      <div id="s4" class="clip scene vault-bg" data-start="10.9" data-duration="5.5" data-track-index="2">
+        <div class="tb-stage">
+          <div class="tb-copy">
+            <div id="s4-eye" class="eyebrow">step 01 · share</div>
+            <div id="s4-h" class="tb-h">
+              you share a reel.<br/>
+              <span class="it">we remember it</span> for you.
             </div>
-            <div class="dash-main">
-              <div class="dash-top">
-                <h1><span class="ital">your</span>library</h1>
-                <div class="tools">
-                  <div class="search"><span style="color: var(--text3)">search</span></div>
-                  <div class="toggle"><span class="opt active">grid</span><span class="opt">list</span></div>
+            <div id="s4-sub" class="tb-sub">
+              no app to download. just text it to a phone number, like a friend who actually has their stuff together.
+            </div>
+          </div>
+          <div id="s4-phone" class="phone-frame">
+            <div class="imsg-screen">
+              <div class="imsg-status"><span>9:41</span><span>● ● ●</span></div>
+              <div class="imsg-header">
+                <div class="imsg-avatar">v</div>
+                <div class="imsg-name">vault</div>
+                <div class="imsg-num">+1 (415) 555-VLT</div>
+              </div>
+              <div class="imsg-msgs">
+                <div id="s4-b1" class="imsg-bubble media">
+                  <div class="thumb">
+                    <span class="thumb-platform">instagram reel</span>
+                    <div class="thumb-meta">@nyceatswithjess<br/>ichiran ramen, midtown 🍜</div>
+                  </div>
+                  <div class="reel-info">instagram · 1:12</div>
+                </div>
+                <div id="s4-typing" class="imsg-typing">
+                  <span id="s4-d1"></span><span id="s4-d2"></span><span id="s4-d3"></span>
+                </div>
+                <div id="s4-b2" class="imsg-bubble in">
+                  got it · <span style="color: var(--tealSoft)">ichiran ramen</span>, midtown nyc.
+                </div>
+                <div id="s4-b3" class="imsg-bubble in">
+                  saved to <span style="color: var(--tealSoft); font-weight:600">places to eat</span> ✓
                 </div>
               </div>
-              <div class="grid">
-                <div id="s4-c1" class="card"><div class="thumb t1"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">miso butter salmon</div><div class="meta">SAVED · 2h AGO</div></div></div>
-                <div id="s4-c2" class="card"><div class="thumb t2"><span class="badge-platform ig">ig</span><span class="badge-cat">fitness</span></div><div class="body"><div class="title">doorway pull-up progression</div><div class="meta">SAVED · 1d AGO</div></div></div>
-                <div id="s4-c3" class="card"><div class="thumb t3"><span class="badge-platform tt">tt</span><span class="badge-cat">places</span></div><div class="body"><div class="title">ichiran ramen midtown</div><div class="meta">SAVED · 3w AGO</div></div></div>
-                <div id="s4-c4" class="card"><div class="thumb t4"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">korean braised tofu</div><div class="meta">SAVED · 5d AGO</div></div></div>
-                <div id="s4-c5" class="card"><div class="thumb t5"><span class="badge-platform tt">tt</span><span class="badge-cat">things</span></div><div class="body"><div class="title">3 day boston itinerary</div><div class="meta">SAVED · 1w AGO</div></div></div>
-                <div id="s4-c6" class="card"><div class="thumb t6"><span class="badge-platform ig">ig</span><span class="badge-cat">shopping</span></div><div class="body"><div class="title">ceramic pour-over kettle</div><div class="meta">SAVED · 2d AGO</div></div></div>
-                <div id="s4-c7" class="card"><div class="thumb t7"><span class="badge-platform tt">tt</span><span class="badge-cat">fitness</span></div><div class="body"><div class="title">zone 2 cardio for runners</div><div class="meta">SAVED · 4d AGO</div></div></div>
-                <div id="s4-c8" class="card"><div class="thumb t8"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">smashburger weeknight</div><div class="meta">SAVED · 6d AGO</div></div></div>
+              <div class="imsg-input">
+                <div class="field"></div>
+                <div class="send"></div>
               </div>
             </div>
           </div>
-          <div id="s4-cursor" class="cursor"></div>
-          <div class="scene-tag"><span class="num">02</span>library · 214 saves</div>
         </div>
       </div>
 
-      <!-- SCENE 5: dashboard "recipes" filter (29.4 - 36.4) -->
-      <div id="s5" class="clip scene" data-start="20.3" data-duration="4.4" data-track-index="1">
-        <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
-          <div id="s5-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 03 · filter by category</div>
-          <div class="dash" style="height: 880px">
-            <div class="dash-side">
-              <div class="brand">
-                <div class="brand-mark">V</div>
-                <div class="brand-name"><span class="the">the</span>Vault</div>
-              </div>
-              <div class="nav-group-label">categories</div>
-              <div class="nav-item">all <span class="count">214</span></div>
-              <div id="s5-active" class="nav-item active">recipes <span class="count">42</span></div>
-              <div class="nav-item">fitness <span class="count">31</span></div>
-              <div class="nav-item">places to eat <span class="count">28</span></div>
-              <div class="nav-item">things to do <span class="count">37</span></div>
-              <div class="nav-item">shopping <span class="count">24</span></div>
-              <div class="nav-item">professional <span class="count">19</span></div>
-              <div class="nav-item">coding projects <span class="count">11</span></div>
-              <div class="nav-item">other <span class="count">22</span></div>
+      <!-- SCENE 5: RECALL (ask the bot) (11.2 - 16.2) -->
+      <div id="s5" class="clip scene ink-bg" data-start="16.1" data-duration="7.0" data-track-index="1">
+        <div class="rc-stage">
+          <div class="rc-copy">
+            <div id="s5-eye" class="eyebrow">step 02 · ask</div>
+            <div id="s5-h" class="rc-h">
+              <span class="quote">"what was that</span><br/>
+              <span class="it">ramen spot?"</span>
             </div>
-            <div class="dash-main">
-              <div class="dash-top">
-                <h1><span class="ital">your</span><span class="swap">recipes</span></h1>
-                <div class="tools">
-                  <div class="search"><span style="color: var(--text3)">search</span></div>
-                  <div class="toggle"><span class="opt active">grid</span><span class="opt">list</span></div>
-                </div>
-              </div>
-              <div class="grid">
-                <div id="s5-c1" class="card"><div class="thumb t1"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">miso butter salmon</div><div class="meta">SAVED · 2h AGO</div></div></div>
-                <div id="s5-c2" class="card"><div class="thumb t4"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">korean braised tofu</div><div class="meta">SAVED · 5d AGO</div></div></div>
-                <div id="s5-c3" class="card"><div class="thumb t8"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">smashburger weeknight</div><div class="meta">SAVED · 6d AGO</div></div></div>
-                <div id="s5-c4" class="card"><div class="thumb t9"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">cacio e pepe under 8 min</div><div class="meta">SAVED · 8d AGO</div></div></div>
-                <div id="s5-c5" class="card"><div class="thumb t10"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">no-knead focaccia</div><div class="meta">SAVED · 12d AGO</div></div></div>
-                <div id="s5-c6" class="card"><div class="thumb t11"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">taiwanese popcorn chicken</div><div class="meta">SAVED · 15d AGO</div></div></div>
-                <div id="s5-c7" class="card"><div class="thumb t12"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">crispy gnocchi sheet pan</div><div class="meta">SAVED · 18d AGO</div></div></div>
-                <div id="s5-c8" class="card"><div class="thumb t2"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">soy butter pasta</div><div class="meta">SAVED · 21d AGO</div></div></div>
-              </div>
+            <div id="s5-sub" class="rc-sub">
+              natural language. it pulls back the place, who shared it, and what you said about it three weeks ago.
+            </div>
+            <div id="s5-tags" class="rc-tags">
+              <div class="tag on">semantic</div>
+              <div class="tag">across all saves</div>
+              <div class="tag">remembers context</div>
             </div>
           </div>
-          <div class="scene-tag"><span class="num">03</span>filter · 42 recipes</div>
-        </div>
-      </div>
-
-      <!-- SCENE 6: semantic search (36.1 - 43.4) -->
-      <div id="s6" class="clip scene" data-start="24.4" data-duration="5.0" data-track-index="2">
-        <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
-          <div id="s6-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 04 · semantic search</div>
-          <div class="dash" style="height: 880px">
-            <div class="dash-side">
-              <div class="brand">
-                <div class="brand-mark">V</div>
-                <div class="brand-name"><span class="the">the</span>Vault</div>
+          <div id="s5-phone" class="phone-frame">
+            <div class="imsg-screen">
+              <div class="imsg-status"><span>8:14</span><span>● ● ●</span></div>
+              <div class="imsg-header">
+                <div class="imsg-avatar">v</div>
+                <div class="imsg-name">vault</div>
+                <div class="imsg-num">+1 (415) 555-VLT</div>
               </div>
-              <div class="nav-group-label">categories</div>
-              <div class="nav-item active">all <span class="count">214</span></div>
-              <div class="nav-item">recipes <span class="count">42</span></div>
-              <div class="nav-item">fitness <span class="count">31</span></div>
-              <div class="nav-item">places to eat <span class="count">28</span></div>
-              <div class="nav-item">things to do <span class="count">37</span></div>
-            </div>
-            <div class="dash-main">
-              <div class="dash-top">
-                <h1><span class="ital">your</span>library</h1>
-                <div class="tools">
-                  <div class="search" style="border-color: var(--accent); width: 420px">
-                    <span style="color: var(--text3)">search</span>
-                    <span id="s6-q" class="search-text"></span>
-                  </div>
-                  <div class="toggle"><span class="opt active">grid</span><span class="opt">list</span></div>
+              <div id="s5-msgs" class="imsg-msgs">
+                <div id="s5-b1" class="imsg-bubble out">what was that ramen spot in nyc i saved</div>
+                <div id="s5-r1" class="read-receipt">read 8:14 pm</div>
+                <div id="s5-typing1" class="imsg-typing">
+                  <span id="s5-d1"></span><span id="s5-d2"></span><span id="s5-d3"></span>
                 </div>
-              </div>
-              <div class="grid">
-                <div id="s6-c1" class="card dim"><div class="thumb t1"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">miso butter salmon</div><div class="meta">SAVED · 2h AGO</div></div></div>
-                <div id="s6-c2" class="card dim"><div class="thumb t2"><span class="badge-platform ig">ig</span><span class="badge-cat">fitness</span></div><div class="body"><div class="title">doorway pull-up progression</div><div class="meta">SAVED · 1d AGO</div></div></div>
-                <div id="s6-c3" class="card match"><div class="thumb t3"><span class="badge-platform tt">tt</span><span class="badge-cat">places</span></div><div class="body"><div class="title">ichiran ramen midtown</div><div class="meta">MATCH · 0.91</div></div></div>
-                <div id="s6-c4" class="card dim"><div class="thumb t4"><span class="badge-platform ig">ig</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">korean braised tofu</div><div class="meta">SAVED · 5d AGO</div></div></div>
-                <div id="s6-c5" class="card dim"><div class="thumb t5"><span class="badge-platform tt">tt</span><span class="badge-cat">things</span></div><div class="body"><div class="title">3 day boston itinerary</div><div class="meta">SAVED · 1w AGO</div></div></div>
-                <div id="s6-c6" class="card dim"><div class="thumb t6"><span class="badge-platform ig">ig</span><span class="badge-cat">shopping</span></div><div class="body"><div class="title">ceramic pour-over kettle</div><div class="meta">SAVED · 2d AGO</div></div></div>
-                <div id="s6-c7" class="card match"><div class="thumb t7"><span class="badge-platform tt">tt</span><span class="badge-cat">places</span></div><div class="body"><div class="title">totto ramen midtown west</div><div class="meta">MATCH · 0.84</div></div></div>
-                <div id="s6-c8" class="card dim"><div class="thumb t8"><span class="badge-platform tt">tt</span><span class="badge-cat">recipes</span></div><div class="body"><div class="title">smashburger weeknight</div><div class="meta">SAVED · 6d AGO</div></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="scene-tag"><span class="num">04</span>semantic search · vector similarity</div>
-        </div>
-      </div>
-
-      <!-- SCENE 7: imsg recall (43.1 - 53.0) -->
-      <div id="s7" class="clip scene" data-start="29.1" data-duration="8.5" data-track-index="1">
-        <div class="scene-content">
-          <div class="imsg-stage">
-            <div class="imsg-copy">
-              <div id="s7-step" class="imsg-step">step 05 · recall</div>
-              <div id="s7-h" class="imsg-h">
-                <span class="serif" style="font-style: italic; color: var(--accent2)">"</span>what was<br/>that ramen<br/>spot
-                <span class="serif" style="font-style: italic; color: var(--accent2)">"</span>
-              </div>
-              <div id="s7-sub" class="imsg-sub">
-                ask in plain language. theVault recalls the right save, plus what
-                you said about it three weeks ago.
-              </div>
-            </div>
-            <div id="s7-phone-wrap" class="phone-frame">
-              <div id="s7-phone" class="phone">
-                <div class="statusbar"><span>8:14</span><span class="mono">87</span></div>
-                <div class="nav">
-                  <div class="nav-back">‹</div>
-                  <div class="nav-center">
-                    <div class="avatar">V</div>
-                    <div class="name">theVault</div>
-                    <div class="sub">imessage</div>
-                  </div>
+                <div id="s5-b2" class="imsg-bubble in">
+                  ichiran in midtown. solo booths, open till 4am 🍜
                 </div>
-                <div id="s7-msgs" class="messages">
-                  <div class="system-note">8:14 pm</div>
-                  <div id="s7-b1" class="bubble me">what was that ramen spot in nyc i saved</div>
-                  <div id="s7-r1" class="read-receipt">read 8:14 pm</div>
-                  <div id="s7-typing1" class="typing">
-                    <span id="s7-d1"></span><span id="s7-d2"></span><span id="s7-d3"></span>
-                  </div>
-                  <div id="s7-b3" class="bubble savecard">
-                    <div class="body">ichiran in midtown. solo booth thing, open till 4am. jess said get the kaedama</div>
-                    <div class="link-card">
-                      <div class="badge">V</div>
-                      <div class="meta">
-                        <div class="title">ichiran ramen midtown nyc</div>
-                        <div class="host mono">tiktok · places</div>
-                      </div>
+                <div id="s5-b3" class="imsg-bubble savecard">
+                  <div class="body">u saved it 3 weeks ago from <span style="color: var(--tealSoft); font-weight:600">@nyceatswithjess</span></div>
+                  <div class="link">
+                    <div class="badge">v</div>
+                    <div class="info">
+                      <div class="t1">ichiran ramen, midtown</div>
+                      <div class="t2">places to eat · 0:35 · tiktok</div>
                     </div>
                   </div>
-                  <div id="s7-b4" class="bubble">u saved it 3 weeks ago from @nyceatswithjess</div>
-                  <div id="s7-b5" class="bubble me">cool sam wants to go tonight, is it good for 2</div>
-                  <div id="s7-typing2" class="typing">
-                    <span id="s7-d4"></span><span id="s7-d5"></span><span id="s7-d6"></span>
+                </div>
+                <div id="s5-b4" class="imsg-bubble out">is it good for 2 ppl tho</div>
+                <div id="s5-typing2" class="imsg-typing">
+                  <span id="s5-d4"></span><span id="s5-d5"></span><span id="s5-d6"></span>
+                </div>
+                <div id="s5-b5" class="imsg-bubble in">
+                  nah it's solo booths kinda the whole vibe. u prob want totto.
+                </div>
+              </div>
+              <div class="imsg-input">
+                <div class="field"></div>
+                <div class="send"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 6: TWO WAYS (extended) (15.9 - 20.7) -->
+      <div id="s6" class="clip scene vault-bg" data-start="22.8" data-duration="6.0" data-track-index="2">
+        <div class="tw-stage">
+          <div class="tw-top">
+            <div id="s6-eye" class="eyebrow">two ways in. one vault.</div>
+            <div id="s6-h" class="tw-h">
+              text it. <span class="it">or</span> open it.
+            </div>
+          </div>
+          <div class="tw-row">
+            <div id="s6-web" class="tw-col">
+              <div class="tw-col-label">on the web</div>
+              <div class="browser">
+                <div class="browser-chrome">
+                  <span class="browser-dot r"></span>
+                  <span class="browser-dot y"></span>
+                  <span class="browser-dot g"></span>
+                  <span class="browser-url">vault / save</span>
+                </div>
+                <div class="tw-browser-body">
+                  <div class="tw-browser-h">
+                    paste a link, drop a file, <span class="it">or just keep scrolling.</span>
                   </div>
-                  <div id="s7-b6" class="bubble">nah it's solo booths kinda the whole vibe. u prob want totto</div>
+                  <div class="tw-paste">
+                    <div class="plus">+</div>
+                    <div class="url">instagram.com/reel/C9k...</div>
+                    <div class="save">save it</div>
+                  </div>
+                  <div class="tw-rows">
+                    <div id="s6-row1" class="tw-row-item"><div class="tn" style="background:#3a2a30"></div><div class="ti"><div class="t1">ichiran ramen, midtown</div><div class="t2">just synced from imessage</div></div></div>
+                    <div class="tw-row-item"><div class="tn" style="background:#5a4030"></div><div class="ti"><div class="t1">crispy gnocchi sheet pan</div><div class="t2">saved 4h ago</div></div></div>
+                    <div class="tw-row-item"><div class="tn" style="background:#304a55"></div><div class="ti"><div class="t1">20-min beginner pilates</div><div class="t2">saved 1d ago</div></div></div>
+                  </div>
                 </div>
-                <div class="compose">
-                  <div class="plus">+</div>
-                  <div class="input">imessage</div>
+              </div>
+            </div>
+            <div id="s6-phone" class="tw-col" style="max-width:340px">
+              <div class="tw-col-label">in your texts</div>
+              <div class="phone-frame sm">
+                <div class="imsg-screen">
+                  <div class="imsg-status"><span>9:41</span><span>● ● ●</span></div>
+                  <div class="imsg-header">
+                    <div class="imsg-avatar" style="width:42px;height:42px;font-size:22px">v</div>
+                    <div class="imsg-name">vault</div>
+                  </div>
+                  <div class="imsg-msgs">
+                    <div class="imsg-bubble media" style="max-width:84%">
+                      <div class="thumb" style="width:160px;height:160px">
+                        <span class="thumb-platform">reel</span>
+                        <div class="thumb-meta" style="font-size:9px">@nyceatswithjess</div>
+                      </div>
+                    </div>
+                    <div id="s6-saved" class="imsg-bubble in" style="font-size:12px">
+                      saved to <span style="color: var(--tealSoft); font-weight:600">places to eat</span> ✓
+                    </div>
+                  </div>
                 </div>
-                <div class="home"></div>
               </div>
             </div>
           </div>
-          <div class="scene-tag"><span class="num">05</span>semantic recall · long-term memory</div>
+          <div id="s6-connect" class="tw-connect">
+            <div class="lab">same vault</div>
+            <div class="arr">↔</div>
+          </div>
         </div>
       </div>
 
-      <!-- SCENE 8: save detail (52.7 - 58.7) -->
-      <div id="s8" class="clip scene" data-start="37.3" data-duration="4.7" data-track-index="2">
-        <div class="scene-content" style="padding: 60px 80px; display: flex; flex-direction: column; gap: 24px">
-          <div id="s8-eye" class="mono" style="color: var(--accent); font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase">step 06 · save detail</div>
-          <div id="s8-detail" class="detail" style="height: 880px">
-            <div class="hero">
-              <div class="hero-meta">
-                <span class="plat" style="background: var(--tt)">tiktok</span>
-                <span class="duration">0:47 · @chefsteps</span>
+      <!-- SCENE 7: LIBRARY + SEARCH demo (20.4 - 30.2) -->
+      <div id="s7" class="clip scene ink-bg" data-start="28.5" data-duration="13.5" data-track-index="1">
+        <div id="s7-browser" class="lib-browser">
+          <div class="lib-chrome">
+            <span class="browser-dot r"></span>
+            <span class="browser-dot y"></span>
+            <span class="browser-dot g"></span>
+            <span class="lib-url" id="s7-url">vault / library</span>
+          </div>
+          <div class="lib-topbar">
+            <div class="lib-logo">
+              <div class="mark">v</div>
+              <div class="name">the vault</div>
+            </div>
+            <div class="lib-search">
+              <span class="ic">⌕</span>
+              <span class="qbox">
+                <span id="s7-ph" class="ph">try "that ramen spot in nyc" or "quick weeknight dinners"</span>
+                <span id="s7-typed" class="typed"></span>
+                <span id="s7-cur" class="cur" style="opacity:0">|</span>
+              </span>
+              <span class="kbd">⌘K</span>
+            </div>
+            <div style="flex:1"></div>
+            <div class="lib-stats">
+              <div class="live"><span class="d"></span><span>bot online</span></div>
+              <span style="color:var(--text2)">247 saves</span>
+              <div class="av"></div>
+            </div>
+          </div>
+          <div class="lib-body">
+            <div class="lib-side">
+              <div class="grp">categories</div>
+              <div id="s7-n-all" class="lib-nav active s7n"><div class="ic-d"></div><div class="nm">all</div><div class="ct">247</div></div>
+              <div id="s7-n-rec" class="lib-nav s7n"><div class="ic-d"></div><div class="nm">recipes</div><div class="ct">42</div></div>
+              <div id="s7-n-pl" class="lib-nav s7n"><div class="ic-d"></div><div class="nm">places to eat</div><div class="ct">28</div></div>
+              <div class="lib-nav s7n"><div class="ic-d"></div><div class="nm">workouts</div><div class="ct">31</div></div>
+              <div class="lib-nav s7n"><div class="ic-d"></div><div class="nm">travel</div><div class="ct">18</div></div>
+              <div class="lib-nav s7n"><div class="ic-d"></div><div class="nm">projects</div><div class="ct">11</div></div>
+              <div style="height:8px"></div>
+              <div class="grp">your stuff</div>
+              <div class="lib-nav s7n"><div class="ic-d"></div><div class="nm">reminders</div><div class="ct">4</div></div>
+              <div class="lib-nav s7n"><div class="ic-d"></div><div class="nm">memory</div><div class="ct">86</div></div>
+              <div class="lib-nav s7n"><div class="ic-d"></div><div class="nm">profile</div><div class="ct"></div></div>
+              <div class="lib-channels">
+                <div class="h">connected to</div>
+                <div class="ch"><span class="d"></span><span class="lbl">iMessage</span><span class="sub">+1 786…</span></div>
+                <div class="ch"><span class="d"></span><span class="lbl">instagram</span><span class="sub">@you</span></div>
+                <div class="ch"><span class="d"></span><span class="lbl">tiktok</span><span class="sub">@you</span></div>
+                <div class="ch"><span class="d"></span><span class="lbl">youtube</span><span class="sub">@you</span></div>
               </div>
             </div>
-            <div class="right">
-              <div id="s8-cr" class="crumbs">library <span class="accent">› recipes ›</span> save</div>
-              <div id="s8-title" class="title">one-pan miso butter salmon</div>
-              <div id="s8-summary" class="summary">
-                sheet-pan dinner, one fillet of salmon, miso, butter, soy. 25 min total.
-                doubles easy. no flipping. broiler at the end for crisp.
+            <div class="lib-main">
+              <div class="lib-titlewrap">
+                <div id="s7-ts-all" class="lib-ts" style="opacity:1">
+                  <div class="crumb">your library → all</div>
+                  <h1>everything <span class="it">worth</span> remembering.</h1>
+                  <div class="meta">247 reels saved · ur last one was 2 hours ago.</div>
+                </div>
+                <div id="s7-ts-rec" class="lib-ts" style="opacity:0">
+                  <div class="crumb">your library → <span class="it">recipes</span></div>
+                  <h1>your <span class="it">recipes</span>.</h1>
+                  <div class="meta">42 saved · ig · tiktok · youtube shorts</div>
+                </div>
+                <div id="s7-ts-wd" class="lib-ts" style="opacity:0">
+                  <div class="crumb">recipes → search "quick weeknight dinners"</div>
+                  <h1><span class="it">2 results</span> · ready in 30 min.</h1>
+                  <div class="meta">semantic match across transcripts and tags.</div>
+                </div>
+                <div id="s7-ts-nyc" class="lib-ts" style="opacity:0">
+                  <div class="crumb">search "<span class="it">nyc eat spots</span>"</div>
+                  <h1><span class="it">3 places</span> in nyc you saved.</h1>
+                  <div class="meta">all from tiktok · sorted by recent.</div>
+                </div>
+                <div class="lib-tools-wrap">
+                  <div class="lib-density">
+                    <div class="opt active">grid</div>
+                    <div class="opt">cozy</div>
+                    <div class="opt">list</div>
+                  </div>
+                  <div class="lib-add">+ add a reel</div>
+                </div>
               </div>
-              <div id="s8-actions-h" class="section-h">action items</div>
-              <div class="actions">
-                <div id="s8-a1" class="action done">
-                  <span class="check"></span>
-                  <span>buy white miso</span>
-                </div>
-                <div id="s8-a2" class="action">
-                  <span class="check"></span>
-                  <span>thaw salmon thursday morning</span>
-                </div>
-                <div id="s8-a3" class="action">
-                  <span class="check"></span>
-                  <span>broil last 2 minutes for crispy top</span>
-                </div>
+              <div id="s7-activity" class="lib-activity">
+                <div class="icon">⌇</div>
+                <div class="txt">cooking up <span class="em">"how to make perfect risotto"</span> · listening through it now</div>
+                <div class="bar"><div class="fill" id="s7-bar"></div></div>
+                <div class="pct" id="s7-pct">34%</div>
               </div>
-              <div id="s8-rem" class="reminder-box">
-                <div class="left">
-                  <div class="label">reminder set</div>
-                  <div class="when">thursday 6:00 pm · "make miso butter salmon"</div>
-                </div>
-                <div class="btn">cancel</div>
-              </div>
-              <div id="s8-tags-h" class="section-h">tags</div>
-              <div class="tags">
-                <div class="tag">salmon</div>
-                <div class="tag">sheet pan</div>
-                <div class="tag">25 min</div>
-                <div class="tag">weeknight</div>
-                <div class="tag">miso</div>
+              <div class="lib-grid">
+                <div id="s7-c1" class="lib-card"><div class="thumb" style="background:#3a2a30"><span class="b1 tt">TT</span><span class="b2">0:35</span></div><div class="meta"><div class="cat tt">places · nyc</div><div class="title">ichiran ramen, midtown</div></div></div>
+                <div id="s7-c2" class="lib-card"><div class="thumb" style="background:#5a4030"><span class="b1 ig">IG</span><span class="b2">0:28</span></div><div class="meta"><div class="cat ig">recipes</div><div class="title">crispy gnocchi sheet pan</div></div></div>
+                <div id="s7-c3" class="lib-card"><div class="thumb" style="background:#304a55"><span class="b1 tt">TT</span><span class="b2">0:42</span></div><div class="meta"><div class="cat tt">workouts</div><div class="title">20-min beginner pilates</div></div></div>
+                <div id="s7-c4" class="lib-card"><div class="thumb" style="background:#3a2a20"><span class="b1 tt">TT</span><span class="b2">0:51</span></div><div class="meta"><div class="cat tt">places · nyc</div><div class="title">xi'an famous foods, eastvill</div></div></div>
+                <div id="s7-c5" class="lib-card"><div class="thumb" style="background:#604030"><span class="b1 ig">IG</span><span class="b2">0:49</span></div><div class="meta"><div class="cat ig">recipes</div><div class="title">one-pot orzo with feta</div></div></div>
+                <div id="s7-c6" class="lib-card"><div class="thumb" style="background:#3a4a3a"><span class="b1 tt">TT</span><span class="b2">0:56</span></div><div class="meta"><div class="cat tt">travel</div><div class="title">lisbon hidden viewpoints</div></div></div>
+                <div id="s7-c7" class="lib-card"><div class="thumb" style="background:#4a4045"><span class="b1 ig">IG</span><span class="b2">1:03</span></div><div class="meta"><div class="cat ig">home</div><div class="title">closet organization hack</div></div></div>
+                <div id="s7-c8" class="lib-card"><div class="thumb" style="background:#3a4a30"><span class="b1 yt">YT</span><span class="b2">2:12</span></div><div class="meta"><div class="cat yt">recipes · shorts</div><div class="title">green goddess dressing</div></div></div>
+                <div id="s7-c9" class="lib-card"><div class="thumb" style="background:#3a2a25"><span class="b1 tt">TT</span><span class="b2">0:44</span></div><div class="meta"><div class="cat tt">places · nyc</div><div class="title">joe's pizza, grand st</div></div></div>
+                <div id="s7-c10" class="lib-card"><div class="thumb" style="background:#5a3525"><span class="b1 yt">YT</span><span class="b2">1:48</span></div><div class="meta"><div class="cat yt">recipes · shorts</div><div class="title">korean braised tofu</div></div></div>
+                <div id="s7-c11" class="lib-card"><div class="thumb" style="background:#2a2a35"><span class="b1 yt">YT</span><span class="b2">3:01</span></div><div class="meta"><div class="cat yt">projects · shorts</div><div class="title">rust vector db tutorial</div></div></div>
+                <div id="s7-c12" class="lib-card"><div class="thumb" style="background:#3a4a2a"><span class="b1 yt">YT</span><span class="b2">2:36</span></div><div class="meta"><div class="cat yt">recipes · shorts</div><div class="title">ginger chicken meatballs</div></div></div>
               </div>
             </div>
           </div>
-          <div class="scene-tag"><span class="num">06</span>save detail · transcript, actions, reminder</div>
+          <div id="s7-cursor" class="lib-cursor"></div>
         </div>
       </div>
 
-      <!-- SCENE 9: outro (58.4 - 62.0) -->
-      <div id="s9" class="clip scene" data-start="41.7" data-duration="3.3" data-track-index="1">
-        <div class="center">
-          <div id="s9-eye" class="mono" style="font-size: 18px; letter-spacing: 0.22em; color: var(--text3); text-transform: uppercase">save once. recall forever.</div>
-          <div class="outro-h"><span class="it">the</span> Vault</div>
-          <div id="s9-line" class="outro-line"></div>
-          <div id="s9-tag" class="outro-tagline">an imessage assistant for everything you save.</div>
-          <div id="s9-cta">join the waitlist now</div>
+      <!-- SCENE 8: MEMORY (29.9 - 35.4) -->
+      <div id="s8" class="clip scene vault-bg" data-start="41.7" data-duration="7.0" data-track-index="2">
+        <div class="mm-stage">
+          <div class="mm-left">
+            <div id="s8-eye" class="eyebrow">it learns you</div>
+            <div id="s8-h" class="mm-h">
+              the more you<br/>send, the more<br/>it <span class="it">knows you.</span>
+            </div>
+            <div id="s8-sub" class="mm-sub">
+              so when you ask <span class="quote">"that ramen place"</span>, it doesn't ask <span class="quote">which one.</span>
+            </div>
+            <div id="s8-side" class="mm-side">
+              memory grows quietly · <b>86 things</b> learned so far
+            </div>
+          </div>
+          <div class="mm-right">
+            <div class="mm-card s8m"><div class="kind fact">fact</div><div class="txt">lives in brooklyn, ny</div><div class="age">learned 6mo ago</div></div>
+            <div class="mm-card s8m"><div class="kind preference">preference</div><div class="txt">mostly pescatarian, eats fish occasionally</div><div class="age">learned 3mo ago</div></div>
+            <div class="mm-card s8m"><div class="kind goal">goal</div><div class="txt">training for first half marathon, target sub-2hr</div><div class="age">learned 1mo ago</div></div>
+            <div class="mm-card s8m"><div class="kind project">project</div><div class="txt">building a tiny vector db in rust on weekends</div><div class="age">learned 3w ago</div></div>
+            <div class="mm-card s8m"><div class="kind people">people</div><div class="txt">partner sam — they pick restaurants together</div><div class="age">learned 4mo ago</div></div>
+            <div class="mm-card s8m"><div class="kind preference">preference</div><div class="txt">prefers solo dining over big group reservations</div><div class="age">learned 2mo ago</div></div>
+            <div class="mm-card s8m"><div class="kind fact">fact</div><div class="txt">going to lisbon in 3 weeks, first time</div><div class="age">learned 2w ago</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 9: REMINDER (35.1 - 39.5) -->
+      <div id="s9" class="clip scene ink-bg" data-start="48.4" data-duration="5.5" data-track-index="1">
+        <div class="rm-stage">
+          <div class="rm-copy">
+            <div id="s9-eye" class="eyebrow">and it remembers, even when you forget</div>
+            <div id="s9-h" class="rm-h">
+              <span class="it">"hey,</span> you said<br/>
+              you wanted to do<br/>
+              this on a sunday.<span class="it">"</span>
+            </div>
+            <div id="s9-sub" class="rm-sub">
+              ask it to remind you. set a recurrence. or trust it to nudge you when the moment fits.
+            </div>
+          </div>
+          <div id="s9-phone" class="phone-frame">
+            <div class="lockscreen">
+              <div class="lock-time">
+                <div class="lock-date">Sunday, March 9</div>
+                <div class="lock-clock">10:42</div>
+              </div>
+              <div id="s9-notif" class="rm-notif">
+                <div class="icon">v</div>
+                <div class="body">
+                  <div class="row1"><span class="app">vault</span><span>now</span></div>
+                  <div class="title">that pottery class</div>
+                  <div class="body-text">you saved it 3 weeks ago and said you wanted to do it on a sunday. it's sunday.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 10: CLOSE (39.2 - 45.0) -->
+      <div id="s10" class="clip scene ink-bg" data-start="53.6" data-duration="4.4" data-track-index="2">
+        <div class="close-stage">
+          <div id="s10-seal" class="seal"><div class="mark">v</div></div>
+          <div id="s10-mark" class="wordmark">the vault</div>
+          <div id="s10-tag" class="tagline">a vault for the things you almost forgot.</div>
+          <div id="s10-cta" class="cta">join the waitlist now</div>
         </div>
       </div>
     </div>
@@ -699,10 +1139,24 @@
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
 
-      // typewriter helper
-      function typewriter(selector, text, startTime, duration, ease = "none") {
+      // populate the graveyard tile grid
+      (function buildGy() {
+        const grid = document.getElementById("s2-grid");
+        if (!grid) return;
+        for (let i = 0; i < 18; i++) {
+          const el = document.createElement("div");
+          el.className = "gy-tile s2t";
+          const hue = (i * 47 + 200) % 360;
+          const lum = 15 + (i % 3) * 8;
+          el.style.background = "hsl(" + hue + ", 30%, " + lum + "%)";
+          grid.appendChild(el);
+        }
+      })();
+
+      function typewriter(selector, text, startTime, duration, ease) {
+        ease = ease || "none";
         tl.to({}, {
-          duration, ease,
+          duration: duration, ease: ease,
           onUpdate: function () {
             const p = this.progress();
             const n = Math.floor(p * text.length);
@@ -711,241 +1165,318 @@
           },
         }, startTime);
       }
-
-      // numeric counter helper
-      function counter(selector, target, suffix, startTime, duration) {
+      function eraser(selector, startTime, duration) {
         tl.to({}, {
-          duration, ease: "power2.out",
+          duration: duration, ease: "power2.in",
+          onUpdate: function () {
+            const p = this.progress();
+            const el = document.querySelector(selector);
+            if (!el) return;
+            const txt = el.textContent;
+            const targetLen = Math.floor((1 - p) * txt.length);
+            if (targetLen < txt.length) el.textContent = txt.slice(0, targetLen);
+          },
+        }, startTime);
+      }
+      function counter(selector, target, suffix, startTime, duration, ease) {
+        ease = ease || "power3.out";
+        tl.to({}, {
+          duration: duration, ease: ease,
           onUpdate: function () {
             const p = this.progress();
             const n = Math.floor(p * target);
             const el = document.querySelector(selector);
-            if (el) el.textContent = `${n.toLocaleString()}${suffix}`;
+            if (el) el.textContent = n.toLocaleString() + suffix;
           },
         }, startTime);
       }
+      function setText(selector, value, time) {
+        tl.to({}, {
+          duration: 0.05,
+          onUpdate: function () {
+            const el = document.querySelector(selector);
+            if (el) el.textContent = value;
+          },
+        }, time);
+      }
 
-      // ─── SCENE 1 brand reveal (0 - 3.5) ──────────────────
-      tl.fromTo("#s1 .center",
-        { scale: 0.985, y: 14 },
-        { scale: 1.025, y: -10, duration: 3.5, ease: "none" }, 0);
-      tl.from("#s1", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
-      tl.from("#s1-eye", { opacity: 0, y: 20, letterSpacing: "0.4em", duration: 0.55, ease: "power3.out" }, 0.15);
-      tl.from("#s1-the", { opacity: 0, y: 60, scale: 0.85, duration: 0.7, ease: "expo.out" }, 0.35);
-      tl.from("#s1-vault", { opacity: 0, y: 100, scale: 0.8, duration: 0.85, ease: "expo.out" }, 0.5);
-      tl.from("#s1-line", { scaleX: 0, duration: 0.5, ease: "power3.out" }, 1.05);
-      tl.from("#s1-tag", { opacity: 0, y: 24, duration: 0.5, ease: "power2.out" }, 1.25);
-      // exit drift
-      tl.to("#s1", { opacity: 0, scale: 1.06, duration: 0.45, ease: "power2.in" }, 3.05);
+      // ─── SCENE 1 HOOK (0 - 3.5) ─────────────────────────
+      tl.from("#s1", { opacity: 0, duration: 0.4, ease: "power2.out" }, 0);
+      tl.fromTo("#s1 .center", { scale: 0.97, y: 18 }, { scale: 1.05, y: -14, duration: 3.5, ease: "none" }, 0);
+      tl.from("#s1-eye", { opacity: 0, y: 22, duration: 0.55, ease: "power3.out" }, 0.2);
+      tl.from("#s1-h", { opacity: 0, y: 60, scale: 0.95, duration: 0.85, ease: "expo.out" }, 0.55);
+      tl.fromTo("#s1-cursor", { opacity: 0 }, { opacity: 1, duration: 0.32, ease: "steps(1)", repeat: 6, yoyo: true }, 1.6);
+      tl.to("#s1", { opacity: 0, scale: 1.18, y: -40, rotation: 1, duration: 0.45, ease: "power3.in" }, 3.05);
 
-      // ─── SCENE 2 pitch (3.2 - 7.6) ───────────────────────
-      tl.fromTo("#s2 .scene-content",
-        { scale: 0.99, x: 14 },
-        { scale: 1.025, x: -10, duration: 4.4, ease: "none" }, 3.2);
-      tl.from("#s2", { opacity: 0, duration: 0.4, ease: "power2.out" }, 3.2);
-      tl.from("#s2-label", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 3.4);
-      tl.from("#s2-h", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 3.55);
-      tl.from("#s2-h .it", { color: "#1f1b14", duration: 0.6, ease: "power2.out" }, 4.0);
-      tl.from("#s2-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 3.85);
-      tl.from("#s2-stat1", { opacity: 0, x: 80, duration: 0.5, ease: "power3.out" }, 4.0);
-      tl.from("#s2-stat2", { opacity: 0, x: 80, duration: 0.5, ease: "power3.out" }, 4.18);
-      tl.from("#s2-stat3", { opacity: 0, x: 80, duration: 0.5, ease: "power3.out" }, 4.36);
-      // counters
-      counter("#s2-stat1 .num", 2400, "+", 4.4, 1.1);
-      counter("#s2-stat2 .num", 3, "%", 4.7, 0.7);
-      counter("#s2-stat3 .num", 100, "%", 4.95, 0.85);
-      // micro-bob
-      tl.to(["#s2-stat1","#s2-stat2","#s2-stat3"], { y: -5, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 1, stagger: 0.15 }, 5.5);
-      // exit
-      tl.to("#s2", { opacity: 0, scale: 0.96, x: -30, duration: 0.45, ease: "power2.in" }, 7.15);
+      // ─── SCENE 2 GRAVEYARD (3.2 - 8.7) ──────────────────
+      tl.fromTo("#s2", { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power3.out" }, 3.2);
+      tl.fromTo("#s2 .gy-stage", { x: 30 }, { x: -16, duration: 5.5, ease: "none" }, 3.2);
+      tl.fromTo("#s2-phone",
+        { opacity: 0, x: -240, rotation: -10, scale: 0.78 },
+        { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.85, ease: "expo.out" }, 3.35);
+      tl.fromTo(".s2t",
+        { opacity: 0, y: -50, scale: 0.78 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: "power3.out", stagger: 0.05 }, 3.7);
+      tl.from("#s2-eye", { opacity: 0, x: -36, duration: 0.5, ease: "power3.out" }, 3.7);
+      tl.from("#s2-counter", { opacity: 0, y: 36, scale: 0.9, duration: 0.6, ease: "expo.out" }, 4.05);
+      counter("#s2-counter", 847, "", 4.2, 2.0, "expo.out");
+      tl.from("#s2-tag", { opacity: 0, y: 28, duration: 0.55, ease: "power3.out" }, 6.4);
+      tl.fromTo("#s2-tag .accent",
+        { color: "#5a5142" }, { color: "#1e4d54", duration: 0.5, ease: "power2.out" }, 6.85);
+      tl.from("#s2-disc", { opacity: 0, y: 14, duration: 0.55, ease: "power3.out" }, 7.2);
+      tl.to("#s2-counter", { scale: 1.45, duration: 0.45, ease: "power3.in", overwrite: "auto" }, 8.2);
+      tl.to("#s2", { opacity: 0, x: -50, duration: 0.45, ease: "power3.in" }, 8.2);
 
-      // ─── SCENE 3 imsg save (7.3 - 16.0) ──────────────────
-      tl.fromTo("#s3 .scene-content",
-        { scale: 0.99, x: 12 },
-        { scale: 1.02, x: -8, duration: 8.7, ease: "none" }, 7.3);
-      tl.from("#s3", { opacity: 0, duration: 0.4, ease: "power2.out" }, 7.3);
-      tl.from("#s3-step", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 7.5);
-      tl.from("#s3-h", { opacity: 0, y: 60, duration: 0.7, ease: "expo.out" }, 7.65);
-      tl.from("#s3-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 7.95);
-      tl.from("#s3-phone-wrap", { opacity: 0, x: 110, scale: 0.88, rotation: 5, duration: 0.85, ease: "expo.out" }, 7.65);
+      // ─── SCENE 3 PIVOT (8.4 - 11.2) ─────────────────────
+      tl.fromTo("#s3", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.35, ease: "power3.out" }, 8.4);
+      tl.fromTo("#s3 .pv-stage", { scale: 0.99 }, { scale: 1.04, duration: 2.8, ease: "none" }, 8.4);
+      const pvWords = document.querySelectorAll("#s3 .pv-word");
+      pvWords.forEach(function (w, i) {
+        tl.fromTo(w,
+          { opacity: 0, y: 50, rotationX: -30 },
+          { opacity: 1, y: 0, rotationX: 0, duration: 0.45, ease: "back.out(1.4)" },
+          8.55 + i * 0.14);
+      });
+      tl.to(".pv-word", { opacity: 0, scale: 1.4, duration: 0.4, ease: "power3.in", stagger: 0.025 }, 10.75);
+      tl.to("#s3", { opacity: 0, duration: 0.35, ease: "power2.in" }, 10.8);
 
-      tl.set(["#s3-b1","#s3-b2","#s3-r1","#s3-typing1","#s3-b3"], { opacity: 0 }, 8.4);
+      // ─── SCENE 4 SAVE (10.9 - 16.4) ─────────────────────
+      tl.fromTo("#s4", { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power3.out" }, 10.9);
+      tl.fromTo("#s4 .tb-stage", { x: 16 }, { x: -14, duration: 5.5, ease: "none" }, 10.9);
+      tl.from("#s4-eye", { opacity: 0, x: -28, duration: 0.5, ease: "quint.out" }, 11.1);
+      tl.from("#s4-h", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 11.25);
+      tl.from("#s4-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 11.7);
+      tl.fromTo("#s4-phone",
+        { opacity: 0, x: 220, rotation: 10, scale: 0.85 },
+        { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.85, ease: "expo.out" }, 11.25);
 
-      // bubble 1 + zoom
-      tl.fromTo("#s3-b1", { opacity: 0, y: 30, scale: 0.82 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, 8.55);
-      tl.to("#s3-phone-wrap", { scale: 1.08, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 8.55);
+      tl.set(["#s4-b1", "#s4-typing", "#s4-b2", "#s4-b3"], { opacity: 0 }, 12.2);
+      tl.fromTo("#s4-b1", { opacity: 0, y: 30, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, 12.4);
+      tl.to("#s4-typing", { opacity: 1, duration: 0.25, ease: "power2.out" }, 13.0);
+      tl.to("#s4-d1", { scale: 1.5, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 13.15);
+      tl.to("#s4-d2", { scale: 1.5, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 13.3);
+      tl.to("#s4-d3", { scale: 1.5, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 13.45);
+      tl.to("#s4-typing", { opacity: 0, duration: 0.25, ease: "power2.in" }, 14.15);
+      tl.fromTo("#s4-b2", { opacity: 0, y: 24, scale: 0.88 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 14.3);
+      tl.fromTo("#s4-b3", { opacity: 0, y: 24, scale: 0.88 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 15.15);
+      tl.to("#s4-phone", { x: -360, scale: 0.55, opacity: 0, duration: 0.5, ease: "power3.in", overwrite: "auto" }, 15.95);
+      tl.to("#s4 .tb-copy", { opacity: 0, x: 30, duration: 0.45, ease: "power3.in" }, 15.95);
 
-      // bubble 2 + loading bar
-      tl.fromTo("#s3-b2", { opacity: 0, y: 22, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" }, 9.3);
-      tl.to({}, {
-        duration: 1.7, ease: "none",
-        onUpdate: function () {
-          const p = this.progress();
-          const bar = document.querySelector("#s3-bar");
-          if (bar) bar.style.cssText = `width:${p*100}%; height:100%; background:#1e4d54; border-radius:2px;`;
-          const meta = document.querySelector("#s3-bar-meta");
-          if (meta) {
-            const labels = ["downloading", "transcribing", "summarizing", "categorizing", "embedding"];
-            const i = Math.min(labels.length - 1, Math.floor(p * labels.length));
-            meta.textContent = `${labels[i]} · ${Math.floor(p*100)}%`;
-          }
-        },
-      }, 9.5);
-      tl.to("#s3-r1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 9.85);
+      // ─── SCENE 5 RECALL (16.1 - 23.1) ───────────────────
+      tl.fromTo("#s5", { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power3.out" }, 16.1);
+      tl.fromTo("#s5 .rc-stage", { x: -16 }, { x: 14, duration: 7.0, ease: "none" }, 16.1);
+      tl.from("#s5-eye", { opacity: 0, x: -28, duration: 0.5, ease: "quint.out" }, 16.3);
+      tl.from("#s5-h", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 16.45);
+      tl.from("#s5-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 16.95);
+      tl.from("#s5-tags > *", { opacity: 0, y: 14, duration: 0.45, ease: "power3.out", stagger: 0.1 }, 17.5);
+      tl.fromTo("#s5-phone",
+        { opacity: 0, x: 240, rotation: 6, scale: 0.85 },
+        { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.85, ease: "expo.out" }, 16.4);
 
-      // typing
-      tl.to("#s3-typing1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 11.3);
-      tl.from("#s3-typing1", { y: 18, duration: 0.35, ease: "power3.out" }, 11.3);
-      tl.to("#s3-d1", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 11.45);
-      tl.to("#s3-d2", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 11.6);
-      tl.to("#s3-d3", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 11.75);
+      tl.set(["#s5-b1","#s5-r1","#s5-typing1","#s5-b2","#s5-b3","#s5-b4","#s5-typing2","#s5-b5"], { opacity: 0 }, 17.0);
 
-      // save card reveal
-      tl.to("#s3-typing1", { opacity: 0, duration: 0.25, ease: "power2.in" }, 12.6);
-      tl.fromTo("#s3-b3", { opacity: 0, y: 32, scale: 0.88 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.4)" }, 12.7);
-      tl.fromTo("#s3-b3",
-        { boxShadow: "0 0 0 8px rgba(30,77,84,0.4)" },
-        { boxShadow: "0 0 0 0 rgba(30,77,84,0)", duration: 1.0, ease: "power2.out", overwrite: false }, 13.3);
+      tl.fromTo("#s5-b1",
+        { opacity: 0, y: 28, scale: 0.86 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 17.4);
+      tl.to("#s5-r1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 18.1);
 
-      // release zoom
-      tl.to("#s3-phone-wrap", { scale: 1.0, duration: 0.7, ease: "power2.inOut" }, 14.4);
-      // exit
-      tl.to("#s3", { opacity: 0, scale: 0.96, x: -30, duration: 0.45, ease: "power2.in" }, 15.55);
+      tl.to("#s5-typing1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 18.3);
+      tl.to("#s5-d1", { scale: 1.5, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 18.45);
+      tl.to("#s5-d2", { scale: 1.5, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 18.6);
+      tl.to("#s5-d3", { scale: 1.5, duration: 0.22, yoyo: true, repeat: 2, ease: "sine.inOut" }, 18.75);
+      tl.to("#s5-typing1", { opacity: 0, duration: 0.25, ease: "power2.in" }, 19.4);
 
-      // ─── SCENE 4 dashboard "all" (15.7 - 20.6) ───────────
-      tl.fromTo("#s4 .scene-content",
-        { scale: 0.99, y: 8 },
-        { scale: 1.02, y: -10, duration: 4.9, ease: "none" }, 15.7);
-      tl.from("#s4", { opacity: 0, duration: 0.4, ease: "power2.out" }, 15.7);
-      tl.from("#s4-eye", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 15.9);
-      tl.from("#s4-dash", { opacity: 0, y: 40, scale: 0.97, duration: 0.6, ease: "expo.out" }, 16.0);
-      tl.from(
-        ["#s4-n1","#s4-n2","#s4-n3","#s4-n4","#s4-n5","#s4-n6","#s4-n7","#s4-n8","#s4-n9"],
-        { opacity: 0, x: -22, duration: 0.35, ease: "power3.out", stagger: 0.04 }, 16.4);
-      tl.from(
-        ["#s4-c1","#s4-c2","#s4-c3","#s4-c4","#s4-c5","#s4-c6","#s4-c7","#s4-c8"],
-        { opacity: 0, y: 36, scale: 0.9, duration: 0.5, ease: "back.out(1.3)", stagger: 0.05 }, 16.6);
-      // cursor
-      tl.fromTo("#s4-cursor",
-        { opacity: 0, left: 1520, top: 820, scale: 1 },
-        { opacity: 0.9, left: 200, top: 308, duration: 1.4, ease: "power2.inOut" }, 18.4);
-      tl.to("#s4-cursor", { scale: 0.5, duration: 0.12, ease: "power2.in", yoyo: true, repeat: 1, overwrite: "auto" }, 19.85);
-      tl.fromTo("#s4-n2",
-        { backgroundColor: "transparent", borderColor: "transparent" },
-        { backgroundColor: "rgba(30,77,84,0.08)", borderColor: "rgba(30,77,84,0.4)", duration: 0.3, ease: "power2.out" }, 19.85);
-      // exit
-      tl.to("#s4", { opacity: 0, scale: 0.97, duration: 0.4, ease: "power2.in" }, 20.2);
+      tl.fromTo("#s5-b2",
+        { opacity: 0, y: 26, scale: 0.88 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 19.55);
+      tl.fromTo("#s5-b3",
+        { opacity: 0, y: 26, scale: 0.9 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.4)" }, 20.35);
 
-      // ─── SCENE 5 recipes filter (20.3 - 24.7) ────────────
-      tl.fromTo("#s5 .scene-content",
-        { scale: 0.99, y: 8 },
-        { scale: 1.02, y: -10, duration: 4.4, ease: "none" }, 20.3);
-      tl.from("#s5", { opacity: 0, duration: 0.4, ease: "power2.out" }, 20.3);
-      tl.from("#s5-eye", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 20.5);
-      tl.from("#s5-active", { backgroundColor: "transparent", duration: 0.4, ease: "power2.out" }, 20.7);
-      tl.from(
-        ["#s5-c1","#s5-c2","#s5-c3","#s5-c4","#s5-c5","#s5-c6","#s5-c7","#s5-c8"],
-        { opacity: 0, scale: 0.85, y: 30, duration: 0.5, ease: "back.out(1.4)", stagger: 0.05 }, 20.8);
-      // exit
-      tl.to("#s5", { opacity: 0, scale: 0.97, duration: 0.4, ease: "power2.in" }, 24.3);
+      tl.fromTo("#s5-b4",
+        { opacity: 0, y: 24, scale: 0.88 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 21.3);
 
-      // ─── SCENE 6 search (24.4 - 29.4) ────────────────────
-      tl.fromTo("#s6 .scene-content",
-        { scale: 0.99, y: 6 },
-        { scale: 1.02, y: -8, duration: 5.0, ease: "none" }, 24.4);
-      tl.from("#s6", { opacity: 0, duration: 0.4, ease: "power2.out" }, 24.4);
-      tl.from("#s6-eye", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 24.6);
-      const queryText = '"that ramen spot solo booths in nyc"';
-      typewriter("#s6-q", queryText, 24.9, 1.8);
-      tl.from(
-        ["#s6-c1","#s6-c2","#s6-c4","#s6-c5","#s6-c6","#s6-c8"],
-        { opacity: 1, duration: 0.4, ease: "power2.out" }, 26.7);
-      tl.fromTo("#s6-c3",
-        { boxShadow: "0 0 0 0 rgba(30,77,84,0)", scale: 1 },
-        { boxShadow: "0 0 0 5px rgba(30,77,84,0.3)", scale: 1.04, duration: 0.5, ease: "back.out(1.6)" }, 26.85);
-      tl.fromTo("#s6-c7",
-        { boxShadow: "0 0 0 0 rgba(30,77,84,0)", scale: 1 },
-        { boxShadow: "0 0 0 5px rgba(30,77,84,0.3)", scale: 1.04, duration: 0.5, ease: "back.out(1.6)" }, 27.1);
-      tl.to(["#s6-c3","#s6-c7"], { scale: 1.06, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 27.7);
-      // exit
-      tl.to("#s6", { opacity: 0, scale: 0.97, duration: 0.4, ease: "power2.in" }, 29.0);
+      tl.to("#s5-typing2", { opacity: 1, duration: 0.25, ease: "power2.out" }, 21.95);
+      tl.to("#s5-d4", { scale: 1.5, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 22.1);
+      tl.to("#s5-d5", { scale: 1.5, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 22.25);
+      tl.to("#s5-d6", { scale: 1.5, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 22.4);
+      tl.to("#s5-typing2", { opacity: 0, duration: 0.25, ease: "power2.in" }, 22.95);
+      tl.fromTo("#s5-b5",
+        { opacity: 0, y: 24, scale: 0.88 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 22.85);
+      tl.to("#s5-phone", { x: 240, scale: 0.7, opacity: 0, duration: 0.45, ease: "power3.in", overwrite: "auto" }, 22.7);
+      tl.to("#s5 .rc-copy", { opacity: 0, x: -36, duration: 0.45, ease: "power3.in" }, 22.7);
 
-      // ─── SCENE 7 imsg recall (29.1 - 37.6) ───────────────
-      tl.fromTo("#s7 .scene-content",
-        { scale: 0.99, x: -10 },
-        { scale: 1.025, x: 10, duration: 8.5, ease: "none" }, 29.1);
-      tl.from("#s7", { opacity: 0, duration: 0.4, ease: "power2.out" }, 29.1);
-      tl.from("#s7-step", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 29.3);
-      tl.from("#s7-h", { opacity: 0, y: 60, duration: 0.75, ease: "expo.out" }, 29.45);
-      tl.from("#s7-sub", { opacity: 0, y: 30, duration: 0.55, ease: "power3.out" }, 29.75);
-      tl.from("#s7-phone-wrap", { opacity: 0, x: 110, scale: 0.88, rotation: -5, duration: 0.85, ease: "expo.out" }, 29.45);
-
-      tl.set(["#s7-b1","#s7-r1","#s7-typing1","#s7-b3","#s7-b4","#s7-b5","#s7-typing2","#s7-b6"], { opacity: 0 }, 30.2);
-
-      tl.fromTo("#s7-b1", { opacity: 0, y: 26, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 30.4);
-      tl.to("#s7-r1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 31.0);
-
-      tl.to("#s7-phone-wrap", { scale: 1.06, duration: 0.5, ease: "power2.out" }, 31.1);
-      tl.to("#s7-typing1", { opacity: 1, duration: 0.25, ease: "power2.out" }, 31.3);
-      tl.to("#s7-d1", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 31.45);
-      tl.to("#s7-d2", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 31.6);
-      tl.to("#s7-d3", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 31.75);
-      tl.to("#s7-typing1", { opacity: 0, duration: 0.25, ease: "power2.in" }, 32.4);
-      tl.fromTo("#s7-b3", { opacity: 0, y: 30, scale: 0.88 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.3)" }, 32.5);
-      tl.fromTo("#s7-b4", { opacity: 0, y: 22, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" }, 33.3);
-
-      tl.fromTo("#s7-b5", { opacity: 0, y: 26, scale: 0.88 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.3)" }, 34.0);
-
-      tl.to("#s7-typing2", { opacity: 1, duration: 0.25, ease: "power2.out" }, 34.7);
-      tl.to("#s7-d4", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 34.85);
-      tl.to("#s7-d5", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 35.0);
-      tl.to("#s7-d6", { scale: 1.5, opacity: 1, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.inOut" }, 35.15);
-      tl.to("#s7-typing2", { opacity: 0, duration: 0.25, ease: "power2.in" }, 35.65);
-      tl.fromTo("#s7-b6", { opacity: 0, y: 24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.3)" }, 35.75);
-
-      tl.to("#s7-phone-wrap", { scale: 1.0, duration: 0.6, ease: "power2.inOut" }, 36.4);
-      // exit
-      tl.to("#s7", { opacity: 0, scale: 0.96, x: 30, duration: 0.45, ease: "power2.in" }, 37.15);
-
-      // ─── SCENE 8 detail (37.3 - 42.0) ────────────────────
-      tl.fromTo("#s8 .scene-content",
-        { scale: 0.99, y: 8 },
-        { scale: 1.02, y: -10, duration: 4.7, ease: "none" }, 37.3);
-      tl.from("#s8", { opacity: 0, duration: 0.4, ease: "power2.out" }, 37.3);
-      tl.from("#s8-eye", { opacity: 0, x: -24, duration: 0.45, ease: "quint.out" }, 37.5);
-      tl.from("#s8-detail", { opacity: 0, y: 40, scale: 0.97, duration: 0.6, ease: "expo.out" }, 37.6);
-      tl.from("#s8-cr", { opacity: 0, y: 16, duration: 0.4, ease: "power3.out" }, 38.0);
-      tl.from("#s8-title", { opacity: 0, y: 36, duration: 0.6, ease: "expo.out" }, 38.15);
-      tl.from("#s8-summary", { opacity: 0, y: 22, duration: 0.55, ease: "power3.out" }, 38.45);
-      tl.from("#s8-actions-h", { opacity: 0, x: -16, duration: 0.4, ease: "quint.out" }, 38.85);
-      tl.from(["#s8-a1","#s8-a2","#s8-a3"], { opacity: 0, x: -28, duration: 0.4, ease: "power3.out", stagger: 0.07 }, 39.0);
-      tl.fromTo("#s8-a1 .check",
-        { scale: 0.5 },
-        { scale: 1, duration: 0.4, ease: "back.out(2)" }, 39.35);
-      tl.from("#s8-rem", { opacity: 0, scale: 0.95, y: 14, duration: 0.5, ease: "power3.out" }, 39.6);
-      tl.fromTo("#s8-rem",
+      // ─── SCENE 6 TWO WAYS (22.8 - 28.8) ─────────────────
+      tl.fromTo("#s6", { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "power2.out" }, 22.8);
+      tl.from("#s6-eye", { opacity: 0, y: 14, duration: 0.5, ease: "power3.out" }, 22.95);
+      tl.from("#s6-h", { opacity: 0, y: 36, duration: 0.7, ease: "expo.out" }, 23.1);
+      tl.fromTo("#s6-web",
+        { opacity: 0, x: -340, scale: 0.9 },
+        { opacity: 1, x: 0, scale: 1, duration: 1.1, ease: "expo.out" }, 23.3);
+      tl.fromTo("#s6-phone",
+        { opacity: 0, x: 280, scale: 0.85 },
+        { opacity: 1, x: 0, scale: 1, duration: 1.1, ease: "expo.out" }, 23.4);
+      tl.from("#s6-saved", { opacity: 0, y: 18, duration: 0.55, ease: "back.out(1.4)" }, 24.6);
+      tl.fromTo("#s6-connect",
+        { opacity: 0, scale: 0.5 },
+        { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, 25.0);
+      tl.to("#s6-connect .arr", { rotation: 180, duration: 0.6, ease: "power2.inOut" }, 25.65);
+      tl.fromTo("#s6-row1",
         { boxShadow: "0 0 0 0 rgba(30,77,84,0)" },
-        { boxShadow: "0 0 0 6px rgba(30,77,84,0.22)", duration: 0.5, yoyo: true, repeat: 1, ease: "power2.inOut" }, 39.95);
-      tl.from("#s8-tags-h", { opacity: 0, x: -16, duration: 0.35, ease: "quint.out" }, 40.55);
-      tl.from(".detail .right .tag", { opacity: 0, y: 14, scale: 0.85, duration: 0.35, ease: "back.out(1.6)", stagger: 0.05 }, 40.7);
-      // exit
-      tl.to("#s8", { opacity: 0, scale: 0.97, duration: 0.4, ease: "power2.in" }, 41.55);
+        { boxShadow: "0 0 0 4px rgba(30,77,84,0.32)", duration: 0.55, yoyo: true, repeat: 1, ease: "power2.inOut" }, 25.9);
+      tl.to("#s6-saved", { scale: 1.06, duration: 0.45, ease: "sine.inOut", yoyo: true, repeat: 1 }, 25.9);
+      tl.fromTo("#s6-connect",
+        { boxShadow: "0 12px 24px rgba(0,0,0,0.06), 0 0 0 0 rgba(30,77,84,0.5)" },
+        { boxShadow: "0 12px 24px rgba(0,0,0,0.06), 0 0 0 24px rgba(30,77,84,0)", duration: 1.1, ease: "power2.out", repeat: 1 }, 26.05);
+      tl.to("#s6-connect .arr", { rotation: 360, duration: 0.6, ease: "power2.inOut" }, 27.3);
+      tl.fromTo("#s6-web", { x: 0 }, { x: -10, duration: 6.0, ease: "none", overwrite: false }, 22.8);
+      tl.fromTo("#s6-phone", { x: 0 }, { x: 10, duration: 6.0, ease: "none", overwrite: false }, 22.8);
+      tl.to("#s6-web", { x: -200, opacity: 0, duration: 0.5, ease: "power3.in", overwrite: "auto" }, 28.3);
+      tl.to("#s6-phone", { x: 200, opacity: 0, duration: 0.5, ease: "power3.in", overwrite: "auto" }, 28.3);
+      tl.to("#s6-connect", { scale: 0.5, opacity: 0, duration: 0.45, ease: "power3.in", overwrite: "auto" }, 28.3);
+      tl.to("#s6 .tw-top", { opacity: 0, y: -16, duration: 0.45, ease: "power2.in" }, 28.3);
 
-      // ─── SCENE 9 outro + waitlist (41.7 - 45.0) ──────────
-      tl.fromTo("#s9 .center",
-        { scale: 0.97, y: 14 },
-        { scale: 1.02, y: -8, duration: 3.3, ease: "none" }, 41.7);
-      tl.from("#s9", { opacity: 0, duration: 0.4, ease: "power2.out" }, 41.7);
-      tl.from("#s9-eye", { opacity: 0, y: 20, duration: 0.45, ease: "power3.out" }, 41.85);
-      tl.from("#s9 .outro-h", { opacity: 0, y: 80, scale: 0.85, duration: 0.8, ease: "expo.out" }, 42.0);
-      tl.from("#s9-line", { scaleX: 0, duration: 0.5, ease: "power3.out" }, 42.5);
-      tl.from("#s9-tag", { opacity: 0, y: 22, duration: 0.5, ease: "power2.out" }, 42.65);
-      tl.from("#s9-cta", { opacity: 0, y: 32, scale: 0.8, duration: 0.6, ease: "back.out(1.7)" }, 43.0);
-      tl.fromTo("#s9-cta",
-        { boxShadow: "0 18px 44px rgba(30,77,84,0.32), 0 0 0 0 rgba(30,77,84,0.55)" },
-        { boxShadow: "0 18px 44px rgba(30,77,84,0.32), 0 0 0 24px rgba(30,77,84,0)", duration: 1.3, ease: "power2.out", repeat: 1 },
-        43.35);
-      tl.to("#s9-cta", { scale: 1.06, duration: 0.55, ease: "sine.inOut", yoyo: true, repeat: 1 }, 43.55);
+      // ─── SCENE 7 LIBRARY+SEARCH (28.5 - 42.0, extended) ─
+      tl.fromTo("#s7", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 28.5);
+      tl.fromTo("#s7-browser",
+        { scale: 0.7, y: 80, opacity: 0 },
+        { scale: 1, y: 0, opacity: 1, duration: 0.95, ease: "expo.out", overwrite: "auto" }, 28.55);
+      tl.fromTo("#s7-browser", { x: 0 }, { x: -16, duration: 13.0, ease: "none", overwrite: false }, 29.6);
+      tl.from(".lib-chrome", { opacity: 0, y: -8, duration: 0.4, ease: "power2.out" }, 29.3);
+      tl.from(".lib-logo", { opacity: 0, x: -16, duration: 0.45, ease: "power3.out" }, 29.4);
+      tl.from(".lib-search", { opacity: 0, scale: 0.95, duration: 0.5, ease: "back.out(1.3)" }, 29.5);
+      tl.from(".lib-stats", { opacity: 0, x: 16, duration: 0.45, ease: "power3.out" }, 29.6);
+      tl.from(".s7n", { opacity: 0, x: -14, duration: 0.32, ease: "power3.out", stagger: 0.03 }, 29.7);
+      tl.from(".lib-channels", { opacity: 0, y: 12, duration: 0.45, ease: "power3.out" }, 30.0);
+      tl.from(".lib-titlewrap", { opacity: 0, y: 14, duration: 0.55, ease: "expo.out" }, 29.7);
+      tl.from("#s7-activity", { opacity: 0, y: 14, duration: 0.5, ease: "power3.out" }, 30.0);
+      tl.fromTo("#s7-bar", { width: "0%" }, { width: "34%", duration: 1.6, ease: "power2.out" }, 30.2);
+      const s7cards = ["#s7-c1","#s7-c2","#s7-c3","#s7-c4","#s7-c5","#s7-c6","#s7-c7","#s7-c8","#s7-c9","#s7-c10","#s7-c11","#s7-c12"];
+      tl.fromTo(s7cards,
+        { opacity: 0, y: 30, scale: 0.92 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.3)", stagger: 0.05 }, 30.15);
+
+      // PHASE B: cursor → click recipes (31.4 - 33.5)
+      tl.set("#s7-cursor", { left: 540, top: 480, opacity: 0 }, 31.4);
+      tl.to("#s7-cursor", { opacity: 0.95, duration: 0.3, ease: "power2.out" }, 31.4);
+      tl.to("#s7-cursor", { left: 110, top: 230, duration: 1.0, ease: "power2.inOut" }, 31.7);
+      tl.to("#s7-cursor", { scale: 0.55, duration: 0.12, ease: "power2.in", yoyo: true, repeat: 1, overwrite: "auto" }, 32.7);
+      tl.to("#s7-n-rec", {
+        backgroundColor: "#fbf7f0", borderColor: "#d2c7b2", color: "#1f1b14",
+        duration: 0.35, ease: "power2.out"
+      }, 32.75);
+      tl.to("#s7-n-rec .ic-d", { backgroundColor: "#1e4d54", duration: 0.35 }, 32.75);
+      tl.to("#s7-n-all", {
+        backgroundColor: "rgba(0,0,0,0)", borderColor: "rgba(0,0,0,0)", color: "#5a5142",
+        duration: 0.35, ease: "power2.out"
+      }, 32.75);
+      tl.to("#s7-n-all .ic-d", { backgroundColor: "#8c8470", duration: 0.35 }, 32.75);
+      tl.to("#s7-ts-all", { opacity: 0, duration: 0.4 }, 32.75);
+      tl.to("#s7-ts-rec", { opacity: 1, duration: 0.45 }, 32.8);
+      tl.to(["#s7-c1","#s7-c3","#s7-c4","#s7-c6","#s7-c7","#s7-c9","#s7-c11"], {
+        opacity: 0.12, duration: 0.5, ease: "power2.out"
+      }, 32.8);
+      tl.to(["#s7-c2","#s7-c5","#s7-c8","#s7-c10","#s7-c12"], {
+        scale: 1.04, borderColor: "#1e4d54", duration: 0.5, ease: "back.out(1.3)", overwrite: "auto"
+      }, 32.8);
+
+      // PHASE C: cursor → search "quick weeknight dinners" (33.7 - 36.6)
+      tl.to("#s7-cursor", { left: 540, top: 70, duration: 0.85, ease: "power2.inOut" }, 33.7);
+      tl.to("#s7-cursor", { scale: 0.55, duration: 0.12, ease: "power2.in", yoyo: true, repeat: 1, overwrite: "auto" }, 34.55);
+      tl.to("#s7-ph", { opacity: 0, duration: 0.25 }, 34.6);
+      tl.to("#s7-cur", { opacity: 1, duration: 0.25 }, 34.6);
+      typewriter("#s7-typed", "quick weeknight dinners", 34.75, 1.4);
+      tl.fromTo("#s7-cur", { opacity: 1 }, { opacity: 0.2, duration: 0.32, ease: "steps(1)", repeat: 3, yoyo: true }, 35.0);
+      tl.to(["#s7-c2","#s7-c8","#s7-c10"], {
+        opacity: 0.32, scale: 1, borderColor: "#e4dccc", duration: 0.45, ease: "power2.out", overwrite: "auto"
+      }, 36.25);
+      tl.to(["#s7-c5","#s7-c12"], {
+        opacity: 1, scale: 1.08, borderColor: "#1e4d54", duration: 0.5, ease: "back.out(1.5)", overwrite: "auto"
+      }, 36.25);
+      tl.to("#s7-ts-rec", { opacity: 0, duration: 0.35 }, 36.25);
+      tl.to("#s7-ts-wd", { opacity: 1, duration: 0.45 }, 36.3);
+
+      // PHASE D: erase → search "nyc eat spots" (37.4 - 41.0)
+      eraser("#s7-typed", 37.45, 0.5);
+      typewriter("#s7-typed", "nyc eat spots", 38.05, 1.1);
+      tl.to("#s7-n-rec", {
+        backgroundColor: "rgba(0,0,0,0)", borderColor: "rgba(0,0,0,0)", color: "#5a5142",
+        duration: 0.35, ease: "power2.out"
+      }, 39.2);
+      tl.to("#s7-n-rec .ic-d", { backgroundColor: "#8c8470", duration: 0.35 }, 39.2);
+      tl.to("#s7-n-pl", {
+        backgroundColor: "#fbf7f0", borderColor: "#d2c7b2", color: "#1f1b14",
+        duration: 0.35, ease: "power2.out"
+      }, 39.2);
+      tl.to("#s7-n-pl .ic-d", { backgroundColor: "#1e4d54", duration: 0.35 }, 39.2);
+      setText("#s7-url", "vault / search?q=nyc+eat+spots", 39.3);
+      tl.to(s7cards, {
+        opacity: 0.12, scale: 1, borderColor: "#e4dccc", duration: 0.5, ease: "power2.out", overwrite: "auto"
+      }, 39.55);
+      tl.to(["#s7-c1","#s7-c4","#s7-c9"], {
+        opacity: 1, scale: 1.08, borderColor: "#1e4d54", duration: 0.6, ease: "back.out(1.6)", overwrite: "auto"
+      }, 39.7);
+      tl.to(["#s7-c1","#s7-c4","#s7-c9"], {
+        scale: 1.12, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1
+      }, 40.4);
+      tl.to("#s7-ts-wd", { opacity: 0, duration: 0.35 }, 39.55);
+      tl.to("#s7-ts-nyc", { opacity: 1, duration: 0.45 }, 39.6);
+      tl.to("#s7-cursor", { opacity: 0, duration: 0.35, ease: "power2.in" }, 41.2);
+
+      // exit
+      tl.to(["#s7-c1","#s7-c4","#s7-c9"], {
+        scale: 1.4, opacity: 0, duration: 0.5, ease: "power3.in", stagger: 0.05, overwrite: "auto"
+      }, 41.5);
+      tl.to("#s7-browser", { scale: 0.85, y: 60, opacity: 0, duration: 0.55, ease: "power3.in", overwrite: "auto" }, 41.65);
+
+      // ─── SCENE 8 MEMORY (41.7 - 48.7) ───────────────────
+      tl.fromTo("#s8", { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "power2.out" }, 41.7);
+      tl.fromTo("#s8 .mm-stage", { x: -16 }, { x: 16, duration: 7.0, ease: "none" }, 41.7);
+      tl.from("#s8-eye", { opacity: 0, x: -24, duration: 0.5, ease: "quint.out" }, 41.9);
+      tl.from("#s8-h", { opacity: 0, y: 40, duration: 0.75, ease: "expo.out" }, 42.05);
+      tl.from("#s8-sub", { opacity: 0, y: 24, duration: 0.6, ease: "power3.out" }, 42.65);
+      tl.from("#s8-side", { opacity: 0, y: 16, duration: 0.55, ease: "power3.out" }, 46.5);
+      tl.fromTo(".s8m",
+        { opacity: 0, x: 80, rotation: 4 },
+        { opacity: 1, x: 0, rotation: 0, duration: 0.55, ease: "power3.out", stagger: 0.55 }, 42.8);
+      tl.to(".s8m", { x: -160, opacity: 0, duration: 0.5, ease: "power3.in", stagger: 0.05, overwrite: "auto" }, 48.2);
+      tl.to("#s8 .mm-left", { opacity: 0, x: -30, duration: 0.5, ease: "power3.in" }, 48.2);
+
+      // ─── SCENE 9 REMINDER (48.4 - 53.9) ─────────────────
+      tl.fromTo("#s9", { opacity: 0, scale: 1.05 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power3.out" }, 48.4);
+      tl.fromTo("#s9 .rm-stage", { x: 14 }, { x: -10, duration: 5.5, ease: "none" }, 48.4);
+      tl.from("#s9-eye", { opacity: 0, x: -24, duration: 0.5, ease: "quint.out" }, 48.55);
+      tl.from("#s9-h", { opacity: 0, y: 40, duration: 0.75, ease: "expo.out" }, 48.7);
+      tl.from("#s9-sub", { opacity: 0, y: 22, duration: 0.55, ease: "power3.out" }, 49.5);
+      tl.fromTo("#s9-phone",
+        { opacity: 0, y: -260, rotation: -3, scale: 0.92 },
+        { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.95, ease: "bounce.out" }, 48.7);
+      tl.fromTo("#s9-notif",
+        { opacity: 0, y: -160 },
+        { opacity: 1, y: 0, duration: 0.75, ease: "back.out(1.6)" }, 50.3);
+      tl.fromTo("#s9-notif",
+        { boxShadow: "0 0 0 0 rgba(30,77,84,0)" },
+        { boxShadow: "0 0 0 8px rgba(30,77,84,0.22)", duration: 0.6, yoyo: true, repeat: 1, ease: "power2.inOut" }, 51.2);
+      tl.to("#s9-phone", { x: "+=6", duration: 0.04, repeat: 11, yoyo: true, ease: "none" }, 51.4);
+      tl.to("#s9-phone", { scale: 1.15, opacity: 0, duration: 0.45, ease: "power3.in", overwrite: "auto" }, 53.4);
+      tl.to("#s9 .rm-copy", { opacity: 0, x: -36, duration: 0.45, ease: "power3.in" }, 53.4);
+
+      // ─── SCENE 10 CLOSE (53.6 - 58.0) ───────────────────
+      tl.fromTo("#s10", { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "power2.out" }, 53.6);
+      tl.fromTo("#s10 .close-stage", { scale: 0.97, y: 10 }, { scale: 1.02, y: -6, duration: 4.4, ease: "none" }, 53.6);
+      tl.fromTo("#s10-seal",
+        { opacity: 0, scale: 0.4, rotation: -45 },
+        { opacity: 1, scale: 1, rotation: 0, duration: 0.75, ease: "back.out(1.7)" }, 53.85);
+      tl.from("#s10-mark", { opacity: 0, y: 70, scale: 0.85, duration: 0.75, ease: "expo.out" }, 54.45);
+      tl.from("#s10-tag", { opacity: 0, y: 22, duration: 0.55, ease: "power3.out" }, 55.05);
+      tl.from("#s10-cta", { opacity: 0, y: 32, scale: 0.8, duration: 0.65, ease: "back.out(1.7)" }, 55.5);
+      tl.fromTo("#s10-cta",
+        { boxShadow: "0 22px 56px rgba(30,77,84,0.32), 0 0 0 0 rgba(30,77,84,0.6)" },
+        { boxShadow: "0 22px 56px rgba(30,77,84,0.32), 0 0 0 32px rgba(30,77,84,0)", duration: 1.4, ease: "power2.out", repeat: 1 },
+        56.2);
+      tl.to("#s10-cta", { scale: 1.05, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 2 }, 56.3);
 
       window.__timelines["main"] = tl;
     </script>
