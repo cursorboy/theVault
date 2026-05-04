@@ -109,10 +109,13 @@ function Onboarding() {
 
           <div className="mt-12 lg:mt-0">
             <h1 className="font-display text-[88px] leading-[0.94] tracking-[-0.03em] text-text mb-7 max-w-[640px]">
-              ur <WordRotator words={["reels", "tiktoks", "shorts"]} interval={2400} /><br />
-              <span className="italic text-text2">actually</span><br />
-              go somewhere<br />
-              <span className="italic text-accent">now.</span>
+              save ur <WordRotator words={["reels", "tiktoks", "shorts"]} interval={2400} /><br />
+              to a vault that<br />
+              <span className="italic text-text2">actually</span>{" "}
+              <WordRotator
+                words={["watches", "organizes", "chats", "understands"]}
+                interval={2200}
+              />.
             </h1>
 
             <p className="text-[16px] leading-[1.6] text-text2 max-w-[520px] mb-9">
