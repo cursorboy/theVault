@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { initAuthFromUrl } from "@/lib/auth";
 import { api } from "@/lib/api";
 
@@ -97,12 +98,12 @@ function Onboarding() {
               v0.4 · invite-only
             </span>
             <div className="ml-auto">
-              <button
-                onClick={() => setLoginOpen(true)}
+              <Link
+                href="/login"
                 className="font-mono text-[11px] uppercase tracking-[0.18em] px-4 py-2 rounded border border-edge2 text-text2 hover:text-accent hover:border-accent transition-colors"
               >
                 log in
-              </button>
+              </Link>
             </div>
           </header>
 

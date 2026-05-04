@@ -27,7 +27,7 @@ function SettingsPage() {
   });
   const { data: reminders } = useQuery({
     queryKey: ["reminders"],
-    queryFn: api.listReminders,
+    queryFn: () => api.listReminders(),
   });
 
   const [form, setForm] = useState<typeof digest | null>(null);

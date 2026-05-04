@@ -60,10 +60,33 @@ export interface Category {
 
 export interface Reminder {
   id: string;
-  save_id: string;
+  save_id: string | null;
+  body: string | null;
+  note: string | null;
   fire_at: string;
   recur: string | null;
   status: string;
+  save_title?: string | null;
+}
+
+export interface Memory {
+  id: string;
+  kind: string;
+  content: string;
+  importance: number;
+  created_at: string | null;
+  last_accessed_at: string | null;
+  access_count: number;
+  source_save_id: string | null;
+  source_conversation_id: string | null;
+}
+
+export interface MemoryStats {
+  total_memories: number;
+  memories_by_kind: Record<string, number>;
+  saves_count: number;
+  conversations_count: number;
+  last_30_days: { saves: number; conversations: number; memories_added: number };
 }
 
 export interface UserInfo {
@@ -116,11 +139,32 @@ export const api = {
 
   listCategories: () => apiFetch<Category[]>("/api/categories"),
 
-  listReminders: () => apiFetch<Reminder[]>("/api/reminders"),
-  createReminder: (body: { save_id: string; fire_at: string; recur?: string }) =>
+  listReminders: (status?: string) =>
+    apiFetch<Reminder[]>(`/api/reminders${status ? `?status=${status}` : ""}`),
+  recentReminders: (limit = 20) =>
+    apiFetch<Reminder[]>(`/api/reminders/recent?limit=${limit}`),
+  createReminder: (body: {
+    save_id?: string;
+    body?: string;
+    note?: string;
+    fire_at: string;
+    recur?: string;
+  }) =>
     apiFetch<Reminder>("/api/reminders", { method: "POST", body: JSON.stringify(body) }),
+  snoozeReminder: (id: string, minutes = 60) =>
+    apiFetch<Reminder>(`/api/reminders/${id}/snooze?minutes=${minutes}`, {
+      method: "POST",
+    }),
+  doneReminder: (id: string) =>
+    apiFetch<Reminder>(`/api/reminders/${id}/done`, { method: "POST" }),
   cancelReminder: (id: string) =>
     apiFetch<void>(`/api/reminders/${id}`, { method: "DELETE" }),
+
+  listMemories: (kind?: string) =>
+    apiFetch<Memory[]>(`/api/memories${kind ? `?kind=${kind}` : ""}`),
+  forgetMemory: (id: string) =>
+    apiFetch<void>(`/api/memories/${id}`, { method: "DELETE" }),
+  memoryStats: () => apiFetch<MemoryStats>("/api/memories/stats"),
 
   getDigest: () => apiFetch<DigestSettings>("/api/digest"),
   updateDigest: (body: Partial<DigestSettings>) =>

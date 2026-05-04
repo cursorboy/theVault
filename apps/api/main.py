@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine
-from app.routers import webhook, reminders, internal, saves, categories, digest, auth, waitlist
+from app.routers import webhook, reminders, internal, saves, categories, digest, auth, waitlist, memories
 
 
 @asynccontextmanager
@@ -26,6 +26,7 @@ app.include_router(categories.router)
 app.include_router(digest.router)
 app.include_router(auth.router)
 app.include_router(waitlist.router)
+app.include_router(memories.router)
 app.include_router(internal.router)
 
 

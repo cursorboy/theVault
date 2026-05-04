@@ -91,6 +91,27 @@ function FeedPage() {
 
       {/* Main */}
       <main className="flex-1 min-w-0 px-10 py-9">
+        {(() => {
+          const processing = saves?.find((s) => !["done", "failed"].includes(s.status));
+          if (!processing) return null;
+          return (
+            <div className="mb-6 flex items-center gap-3 px-4 py-2.5 rounded-md border border-[rgba(30,77,84,0.22)] bg-[linear-gradient(90deg,rgba(30,77,84,0.06),transparent)]">
+              <div className="h-5 w-5 rounded-sm bg-accent text-accent-ink flex items-center justify-center flex-shrink-0">
+                <span className="block h-1.5 w-1.5 rounded-full bg-accent-ink animate-pulse" />
+              </div>
+              <div className="flex-1 text-[13px] text-text">
+                cooking up{" "}
+                <span className="font-display italic text-[15px] text-accent">
+                  "{processing.title || "ur latest reel"}"
+                </span>
+                <span className="text-text3"> · {processing.status}</span>
+              </div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-text3">
+                live
+              </div>
+            </div>
+          );
+        })()}
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-text3 mb-1">

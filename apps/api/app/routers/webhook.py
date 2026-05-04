@@ -26,6 +26,82 @@ URL_PATTERN = re.compile(
     r"\S+"
 )
 
+# TikTok CDN thumbnail hosts — when iMessage strips the share URL, the cover
+# image still comes from these CDNs and embeds the video_id in the filename.
+TIKTOK_CDN_HOSTS = (
+    "tiktokcdn.com",
+    "tiktokcdn-us.com",
+    "ttwstatic.com",
+    "byteoversea.com",
+)
+
+# Detects iMessage / Sendblue rich-preview shares of TikTok / Instagram where the
+# raw URL has been stripped but brand markers remain in the body.
+PREVIEW_PATTERN = re.compile(
+    r"(?:\bTikTok\b\s*[·•|-]|\btiktok\.com\b|\binstagram\.com\b|\bReel by\b|\bInstagram\b\s*[·•|-])",
+    re.IGNORECASE,
+)
+
+
+def _scan_payload_for_video_url(payload: dict) -> str | None:
+    """Walk every string in the Sendblue payload and return the first
+    TikTok / Instagram video URL we find. Rich previews often carry the
+    real URL in fields outside `content` (link, share_url, attachments[]…)."""
+    def _walk(node):
+        if isinstance(node, str):
+            m = URL_PATTERN.search(node)
+            if m:
+                return m.group(0)
+            return None
+        if isinstance(node, dict):
+            for v in node.values():
+                hit = _walk(v)
+                if hit:
+                    return hit
+        if isinstance(node, list):
+            for v in node:
+                hit = _walk(v)
+                if hit:
+                    return hit
+        return None
+    return _walk(payload)
+
+
+def _resolve_tiktok_from_thumbnail(image_url: str) -> str | None:
+    """When iMessage stripped the share URL but left a TikTok CDN thumbnail,
+    try the TikTok oEmbed API + TikTok's image-to-post resolver to recover
+    the canonical video URL.
+
+    The thumbnail filename embeds the video_id, e.g.
+      https://p16-sign-va.tiktokcdn.com/.../<video_id>~tplv-....jpg
+    We pull the longest digit run and probe oEmbed for a matching post."""
+    import re as _re
+    import httpx
+
+    if not any(h in image_url for h in TIKTOK_CDN_HOSTS):
+        return None
+
+    digit_runs = _re.findall(r"\d{15,}", image_url)
+    if not digit_runs:
+        return None
+    video_id = max(digit_runs, key=len)
+
+    candidate = f"https://www.tiktok.com/embed/v2/{video_id}"
+    try:
+        r = httpx.get(
+            "https://www.tiktok.com/oembed",
+            params={"url": candidate},
+            timeout=8.0,
+        )
+        if r.status_code == 200:
+            data = r.json()
+            author = (data.get("author_unique_id") or "").lstrip("@")
+            if author:
+                return f"https://www.tiktok.com/@{author}/video/{video_id}"
+    except Exception:
+        logger.exception("tiktok oembed lookup failed")
+    return None
+
 
 def _verify_hmac(body: bytes, signature: str) -> bool:
     expected = hmac.new(
@@ -275,7 +351,12 @@ async def _try_consume_link_code(code: str, phone: str) -> bool:
     return True
 
 
-async def _process_message_async(from_number: str, content: str, image_urls: list[str] | None = None):
+async def _process_message_async(
+    from_number: str,
+    content: str,
+    image_urls: list[str] | None = None,
+    full_payload: dict | None = None,
+):
     """Full message processing runs in background so webhook returns immediately."""
     import asyncio
     from app.database import async_session_factory
@@ -295,10 +376,50 @@ async def _process_message_async(from_number: str, content: str, image_urls: lis
         try:
             user = await _get_or_create_user(db, from_number)
 
-            # Fast path: raw URL = save
+            # 1) raw URL in body = save
             url_match = URL_PATTERN.search(content)
             if url_match:
                 await _handle_save_url(db, user, url_match.group(0), from_number)
+                return
+
+            # 2) URL hidden in another payload field (rich preview link, attachments…)
+            if full_payload:
+                hidden = _scan_payload_for_video_url(full_payload)
+                if hidden:
+                    logger.info("Recovered video URL from payload: %s", hidden)
+                    await _handle_save_url(db, user, hidden, from_number)
+                    return
+
+            # 3) Rich preview thumbnail from TikTok CDN — resolve via oEmbed
+            preview_text = content or ""
+            looks_like_preview = bool(PREVIEW_PATTERN.search(preview_text))
+            if image_urls:
+                for img in image_urls:
+                    if any(h in img for h in TIKTOK_CDN_HOSTS):
+                        looks_like_preview = True
+                        try:
+                            resolved = await asyncio.to_thread(
+                                _resolve_tiktok_from_thumbnail, img
+                            )
+                        except Exception:
+                            resolved = None
+                        if resolved:
+                            logger.info("Recovered TikTok URL from thumbnail: %s", resolved)
+                            await _handle_save_url(db, user, resolved, from_number)
+                            return
+
+            # 4) Couldn't recover the URL — tell the user, don't fall through to chat
+            if looks_like_preview:
+                platform = "tiktok" if re.search(r"tiktok", preview_text, re.IGNORECASE) or any(
+                    "tiktok" in u for u in (image_urls or [])
+                ) else "ig reel"
+                share_app = "tiktok" if platform == "tiktok" else "ig"
+                await sendblue.send_message(
+                    from_number,
+                    f"got the {platform} preview but imsg ate the actual link. "
+                    f"open it in {share_app} → share → copy link → paste it here "
+                    f"and ill watch the whole thing",
+                )
                 return
 
             # IG link code: 6-char alphanumeric uppercase
@@ -345,5 +466,5 @@ async def sendblue_webhook(
         return {"ok": True}
 
     # Return 200 immediately so Sendblue doesn't retry; do all work in background
-    background.add_task(_process_message_async, from_number, content, image_urls)
+    background.add_task(_process_message_async, from_number, content, image_urls, payload)
     return {"ok": True}

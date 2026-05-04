@@ -32,7 +32,7 @@ function SaveDetail() {
 
   const { data: reminders } = useQuery({
     queryKey: ["reminders"],
-    queryFn: api.listReminders,
+    queryFn: () => api.listReminders(),
   });
 
   const createReminder = useMutation({
