@@ -68,6 +68,14 @@ function Onboarding() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
+      {/* fixed top-right login */}
+      <Link
+        href="/login"
+        className="fixed top-5 right-5 z-50 font-mono text-[11px] uppercase tracking-[0.18em] px-4 py-2 rounded border border-edge2 bg-vault/80 backdrop-blur-sm text-text2 hover:text-accent hover:border-accent transition-colors"
+      >
+        log in
+      </Link>
+
       {/* faint grid background */}
       <div
         className="absolute inset-0 pointer-events-none opacity-40"
@@ -97,14 +105,6 @@ function Onboarding() {
             <span className="ml-3 font-mono text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded border border-edge2 text-text3">
               v0.4 · invite-only
             </span>
-            <div className="ml-auto">
-              <Link
-                href="/login"
-                className="font-mono text-[11px] uppercase tracking-[0.18em] px-4 py-2 rounded border border-edge2 text-text2 hover:text-accent hover:border-accent transition-colors"
-              >
-                log in
-              </Link>
-            </div>
           </header>
 
           <div className="mt-12 lg:mt-0">
